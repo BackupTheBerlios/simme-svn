@@ -18,9 +18,7 @@ public class SendableUITest extends TestCase {
     public void testMessages() {
         String title = "Title";
         String message = "Test message";
-        SendableUI sui = new SendableUI();
-        sui.setTitle(title);
-        sui.setText(message);
+        SendableUI sui = new SendableUI(title, message);
         System.out.println(sui.getXmlString());
     }
 }
