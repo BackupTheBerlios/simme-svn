@@ -1,11 +1,12 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: SessionManager.java
-//                  $Date: 2004/08/25 15:46:42 $
-//              $Revision: 1.6 $
+//                  $Date: 2004/09/02 10:24:51 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
+import java.net.URL;
 import java.util.*;
 
 import at.einspiel.base.User;
@@ -13,23 +14,32 @@ import at.einspiel.base.UserException;
 import at.einspiel.db.UserDB;
 import at.einspiel.messaging.LoginMessage;
 import at.einspiel.messaging.SimpleClientMessage;
+import at.einspiel.simme.server.menu.MenuCreateException;
+import at.einspiel.simme.server.menu.MenuManager;
 
 /**
  * This class is intended to be the primary interface to the client. A new user
- * logs into the system by calling {@linkplain #addUser(String, String)} with
+ * logs into the system by calling {@linkplain #addUser(String, String)}with
  * username and password.
  * 
- * The class {@linkplain at.einspiel.simme.server.UserManager} is used for user
+ * The class {@linkplain at.einspiel.simme.server.UserManager}is used for user
  * management.
  * 
  * @author kariem
  */
 public class SessionManager {
 
-	private static final String MGMT_PAGE = "sessionMgr.jsp";
+	private static final String MGMT_PAGE = "sessionMgr";
 
-	SortedMap users;
-	UserManager userManager;
+	/**
+	 * The set of users who are currently logged in. This set is shared with the
+	 * user manager. The mapping is Nick => ManagedUser
+	 */
+	private SortedMap users;
+	/** Manages the users. */
+	private UserManager userManager;
+	/** Loads the menu and serves menu requests. */
+	private MenuManager menuManager;
 
 	private static SessionManager instance;
 
@@ -56,6 +66,28 @@ public class SessionManager {
 		users = Collections.synchronizedSortedMap(new TreeMap());
 		userManager = UserManager.createUserManager(users);
 		userManager.manage();
+	}
+
+	/**
+	 * Loads the menu indicated by <code>menuXmlPath</code> and initializes
+	 * the internal MenuManager.
+	 * @param menuXmlPath
+	 *            the path to the <code>menu.xml</code> file, as seen from the
+	 *            server.
+	 * @throws MenuCreateException
+	 *             if the menu could not be created.
+	 */
+	public void loadMenu(URL menuXmlPath) throws MenuCreateException {
+		menuManager = MenuManager.getMenuManager(menuXmlPath);
+	}
+
+	/**
+	 * Shows, if a menu has already been loaded.
+	 * @return <code>false</code> if no menu has been loaded yet;
+	 *         <code>true</code> otherwise.
+	 */
+	public boolean menuLoaded() {
+		return menuManager != null;
 	}
 
 	/**
@@ -203,5 +235,37 @@ public class SessionManager {
 		UserManager.setMaxSecondsIdle(secondsIdle);
 		UserManager.setMaxSecondsWaiting(secondsWaiting);
 		UserManager.setUpdateInterval(updtInterval);
+	}
+
+	/**
+	 * Returns an answer for the user identified by <code>userNick</code>.
+	 * The user has to be logged in and in the correct state to perform the
+	 * requested menu selection or action.
+	 * 
+	 * @param userNick
+	 *            the user's nick name.
+	 * @param menuId
+	 *            the menu id.
+	 * @param selection
+	 *            the selection within the menu.
+	 * @return an answer for the user.
+	 */
+	public String getAnswerFor(String userNick, String menuId, String selection) {
+		// see, if user is online
+		ManagedUser u = (ManagedUser) users.get(userNick);
+		if (u == null) {
+			// user is not online => inform client to log in again
+			return makeMessage("Not logged in.", "The session for " + userNick
+					+ " has expired, or you did not log in correctly."
+					+ " Please try to reconnect to SimME online.");
+		}
+
+		// user is online and seems to be active
+		if (selection != null) {
+			// see if user has selected a menu element
+			return menuManager.getMenu(menuId, Integer.parseInt(selection), u).getXml();
+		}
+
+		return menuManager.getMenu(menuId, u).getXml();
 	}
 }
