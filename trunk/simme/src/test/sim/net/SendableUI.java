@@ -7,23 +7,20 @@ import nanoxml.XMLElement;
 import nanoxml.XMLParseException;
 
 /**
- * This class represents a easily createable and sendable user interface. It
+ * This class represents an easily createable and sendable user interface. It
  * provides two possibilities for creation:
  * <ol>
- *  <li>The <code>SendableUI</code> may be initialized with a xml string, by
+ *  <li>The <code>SendableUI</code> may be initialized with an xml string, by
  *      calling the method {@linkplain #initialize(String)}. See its doc for
- *      further information. </li>
+ *      further information. Alternatively this string may be passed as a
+ *      parameter to the constructor.</li>
  *  <li>The second possibility is provided by means of {@linkplain
- *      #createSimpleForm(String)} and {@linkplain #createSimpleList(Vector)},
- *      which both create the displayable with the information found in the
- *      properties <i>title</i> and <i>id</i>, and the paremeters.</li>
+ *      #setTitle(String)} and {@linkplain #setId(String)} to create a simple
+ *      UI object. The methods {@linkplain #setText(String)} and {@linkplain
+ *      #setListElements(Vector)} are used to fill in contents.
  * </ol>
- * <p>After creating an instance of SendableUI the selected property may be 
- * packet into a request and sent. The request is accessible via {@linkplain
- * #handleCommand(Command, Displayable)}, because usually a certain command
- * has to be executed in order to send a request.</p>
  * <p>The xml string to create a new instance of SendableUI is directly
- * accessible throught {@linkplain #getXmlString()}.</p>
+ * accessible through {@linkplain #getXmlString()}.</p>
  *   
  * @author kariem
  */
@@ -32,11 +29,14 @@ public class SendableUI {
     private String id;
     private String title;
     private boolean list;
+    private boolean xmlInfo;
 
     /** for simple uis: only text */
     private String text;
     /** enumeration of list elements */
     private Vector listElements;
+    /** optional game information */
+    private XMLElement xmlElement;
 
     /** Default Constructor to use as bean. */
     public SendableUI() {
@@ -110,7 +110,7 @@ public class SendableUI {
     public void setTitle(String title) {
         this.title = title;
     }
-    
+
     /**
      * Returns the title. 
      * @return the title.
@@ -160,6 +160,24 @@ public class SendableUI {
     public boolean isList() {
         return list;
     }
+    
+    /**
+     * Returns whether this instance contains additional information as xml.
+     * 
+     * @return <code>true</code>, if this instance contains xml information,
+     *          <code>false</code> otherwise.
+     */
+    public boolean hasXmlInfo() {
+        return xmlInfo;
+    }
+
+    /**    
+     * Returns the xml information.
+     * @return the xml information.
+     */
+    public XMLElement getXmlInfo() {
+        return xmlElement;
+    }
 
     /**
      * Creates a displayable from an xml element.
@@ -188,6 +206,10 @@ public class SendableUI {
                     listElements.addElement(name);
                 }
             }
+        } else if (xml.countChildren() == 1) {
+            // single child ... must be information to create a game
+            xmlElement = (XMLElement) xml.getChildren().get(0);
+            xmlInfo = true;
         } else {
             text = xml.getAttribute("msg", "Warte...");
         }

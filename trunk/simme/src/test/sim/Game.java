@@ -2,6 +2,8 @@ package test.sim;
 
 import java.util.Stack;
 
+import nanoxml.XMLElement;
+
 /**
  * Represents a single game with all its states. Provides methods to start,
  * end, pause a game and uses a <code>Canvas</code> to draw itself to the
@@ -59,6 +61,26 @@ public class Game {
      * @see #start()
      */
     public Game() {
+        this(null);
+    }
+
+    /**
+     * Initializes a new game with the values found in the given xml element.
+     * 
+     * @param gameInfo xml element that holds information about the game.
+     */
+    public Game(XMLElement gameInfo) {
+        if (gameInfo != null) {
+            String p1 = gameInfo.getAttribute("p1", "Player 1");
+            String p2 = gameInfo.getAttribute("p2", "Player 2");
+            String info1 = gameInfo.getAttribute("info1", "AT");
+            String info2 = gameInfo.getAttribute("info2", "AT");
+            
+            setPlayerInfo(p1, p2, info1, info2);
+        } else {
+            // set to some default values
+            setPlayerInfo("Player 1", "Player 2", "AT", "AT");
+        }
         start();
     }
 
@@ -80,13 +102,15 @@ public class Game {
         moveNr = 0; // first move
         gameOver = false;
 
-        // set to some default values - TODO change this.
-        p1Name = "Player 1";
-        p1Info = "AT";
-        p2Name = "Player 2";
-        p2Info = "AT";
-
         undoStack = new Stack();
+    }
+
+    /** Sets the player information */
+    void setPlayerInfo(String p1, String p2, String info1, String info2) {
+        p1Name = p1;
+        p1Info = info1;
+        p2Name = p2;
+        p2Info = info2;
     }
 
     /**

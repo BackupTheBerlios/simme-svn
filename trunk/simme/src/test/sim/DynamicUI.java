@@ -150,6 +150,10 @@ public class DynamicUI implements CommandListener {
                     appendToList((List) d, name, null);
                 }
             }
+        } else if (sui.hasXmlInfo()) {
+            // build game with xml information
+            Game g = new Game(sui.getXmlInfo());
+            d = new Zeichenblatt(false); // TODO Georg start game, create Zeichenblatt, ...
         } else {
             d = new Form(title);
             ((Form) d).append(new StringItem("Status:", sui.getText()));
@@ -161,9 +165,7 @@ public class DynamicUI implements CommandListener {
         (l).append(name, img);
     }
 
-    /**
-     * Establishes a connection and updates the user interface.
-     */
+    /** Establishes a connection and updates the user interface. */
     class ConnectorThread extends Thread {
 
         String url;
