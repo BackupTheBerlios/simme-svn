@@ -28,7 +28,7 @@ public class PrefForm extends List implements CommandListener {
     private static final byte LENGTH_NICK = 10;
     private static final byte LENGTH_INFO = 40;
 
-    private List myself;
+    List myself;
 
     /**
      * Creates a new PrefForm object.

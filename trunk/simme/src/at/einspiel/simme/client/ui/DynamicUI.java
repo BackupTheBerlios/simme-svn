@@ -120,10 +120,9 @@ public class DynamicUI implements CommandListener {
             r.setParam("selected", Integer.toString(selected));
 
             // attach id if possible
-            r.setParam("id", ui.getId());
+            r.setParam("id", Byte.toString(ui.getId()));
 
             return r;
-
         }
         return null;
     }
@@ -155,7 +154,9 @@ public class DynamicUI implements CommandListener {
         } else if (sui.hasXmlInfo()) {
             // build game with xml information
             Game g = new Game(sui.getXmlInfo());
-            d = new Zeichenblatt(false); // TODO Georg start game, create Zeichenblatt, ...
+            // TODO Georg start game, create Zeichenblatt, ...
+            d = new Zeichenblatt(false);
+            g.start();
         } else {
             d = new Form(title);
             ((Form) d).append(new StringItem("Status:", sui.getText()));

@@ -288,11 +288,13 @@ public class Request {
             this.post = post;
         }
 
+        /** @see java.lang.Thread#start() */
         public synchronized void start() {
             started = true;
             super.start();
         }
 
+        /** @see java.lang.Thread#run() */
         public void run() {
             try {
                 sendRequest();

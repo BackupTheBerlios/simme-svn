@@ -1,12 +1,11 @@
 package at.einspiel.simme.client;
 
-import at.einspiel.simme.client.ui.StartForm;
-
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.List;
 import javax.microedition.lcdui.Screen;
 import javax.microedition.midlet.MIDlet;
-import javax.microedition.midlet.MIDletStateChangeException;
+
+import at.einspiel.simme.client.ui.StartForm;
 
 /**
  * Main class
@@ -26,19 +25,20 @@ public class Sim extends MIDlet {
 
   /** @see MIDlet#destroyApp(boolean) */
   public void destroyApp(boolean b) {
+      // TODO release network resources
   }
 
   /** @see MIDlet#pauseApp() */
   protected void pauseApp() {
+      // TODO break current connection
+      // post wait method on server
   }
 
   /**
-   * Starts this application
-   * @throws MIDletStateChangeException is thrown if the MIDlet cannot start
-   *         now but might be able to start at a later time.
-  
+   * Starts the application.
+   * @see javax.microedition.midlet.MIDlet#startApp()
    */
-  protected void startApp() throws MIDletStateChangeException {
+  protected void startApp() {
     Display d = Display.getDisplay(this);
     main = new StartForm(this);
 
@@ -73,6 +73,9 @@ public class Sim extends MIDlet {
 
   /**
    * Returns the MIDlets application property.
+   * 
+   * @param key the key.
+   * @return the application property to the corresponding key.
    * @see MIDlet#getAppProperty(String)
    */
   public static String getProperty(String key) {

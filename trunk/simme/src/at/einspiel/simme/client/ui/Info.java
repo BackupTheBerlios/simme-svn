@@ -36,6 +36,7 @@ public class Info {
   private static final String HOWTO = BUF.toString();
 
   private Info() {
+      // private constructor for utility class
   }
 
   /**

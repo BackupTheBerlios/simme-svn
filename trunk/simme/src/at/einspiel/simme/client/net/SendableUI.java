@@ -27,7 +27,7 @@ import at.einspiel.simme.nanoxml.XMLParseException;
  */
 public class SendableUI {
 
-    private String id;
+    private byte id;
     private String title;
     private boolean list;
     private boolean xmlInfo;
@@ -41,6 +41,7 @@ public class SendableUI {
 
     /** Default Constructor to use as bean. */
     public SendableUI() {
+        // default constructor
     }
 
     /**
@@ -92,7 +93,7 @@ public class SendableUI {
      * Sets the id. This field is optional.
      * @param id the id.
      */
-    public void setId(String id) {
+    public void setId(byte id) {
         this.id = id;
     }
 
@@ -100,7 +101,7 @@ public class SendableUI {
      * Returns the id.
      * @return the id.
      */
-    public String getId() {
+    public byte getId() {
         return id;
     }
 
@@ -191,7 +192,7 @@ public class SendableUI {
         title = xml.getAttribute("title", "Auswahl");
 
         // set id, if available
-        id = xml.getAttribute("id", null);
+        id = (byte) xml.getAttributeInt("id", 0);
 
         // show either list, or simple status message
         if (xml.getAttributeBoolean("list", false)) {
@@ -228,7 +229,7 @@ public class SendableUI {
         XMLElement xml = new XMLElement();
         xml.setName("sendable");
         xml.setAttribute("title", title);
-        xml.setAttribute("id", id);
+        xml.setAttribute("id", Byte.toString(id));
         if ((list) && (listElements != null) && (!listElements.isEmpty())) {
             xml.setAttribute("list", XMLElement.TRUE);
             Enumeration enum = listElements.elements();

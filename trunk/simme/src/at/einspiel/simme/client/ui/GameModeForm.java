@@ -92,10 +92,11 @@ public class GameModeForm extends List implements CommandListener {
         /**
          * Constructs an empty <code>InfoAlert</code> with the given title
          */
-        public ConnectionAlert(String[] data) {
+        ConnectionAlert(String[] data) {
             super("Connecting ...");
             setString("Connection to the server is being established.");
-            setTimeout(LoginMessage.DEFAULT_TIMEOUT - 20); // 20 ms less
+            // Alert will be substituted by result message
+            setTimeout(Alert.FOREVER); 
             loginData = data;
 
             for (int i = 0; i < data.length; i++) {
@@ -110,7 +111,7 @@ public class GameModeForm extends List implements CommandListener {
         /**
          * Initializes the connection and shows its output.
          */
-        public void startConnection(final Display d) {
+        void startConnection(final Display d) {
             // enter new thread, so that the user interface is updated correctly
             Thread t = new Thread() {
                 /** @see java.lang.Thread#run() */
@@ -144,7 +145,7 @@ public class GameModeForm extends List implements CommandListener {
                         // use response to build result
                         LoginResult result = new LoginResult(response);
 
-                        System.out.println("result: " + result);
+                        System.out.println("login result: " + result);
 
                         if (result.isSucceed()) {
                             DynamicUI dUI = new DynamicUI(result.getMessage(), result.getUrl());

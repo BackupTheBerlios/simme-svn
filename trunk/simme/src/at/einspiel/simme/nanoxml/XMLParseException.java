@@ -1,7 +1,7 @@
 /* XMLParseException.java
  *
- * $Revision: 1.2 $
- * $Date: 2003/10/03 18:34:32 $
+ * $Revision: 1.3 $
+ * $Date: 2003/12/27 19:53:12 $
  * $Name:  $
  *
  * This file is part of NanoXML 2 Lite.
@@ -113,6 +113,7 @@ public class XMLParseException extends RuntimeException {
     * Where the error occurred, or <code>NO_LINE</code> if the line number is
     * unknown.
     *
+    * @return the line number.
     * @see XMLParseException#NO_LINE
     */
    public int getLineNr() {

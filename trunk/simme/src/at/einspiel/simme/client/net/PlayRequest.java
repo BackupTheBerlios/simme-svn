@@ -97,7 +97,7 @@ public class PlayRequest {
      * an optional message.
      */
     class MoveSender extends Request {
-        String message;
+        String msg;
 
         MoveSender() {
             super(TIMEOUT_MOVE_SEND);
@@ -127,10 +127,10 @@ public class PlayRequest {
                     return true;
                 }
                 // otherwise save response
-                message = response;
+                msg = response;
             } catch (IOException e) {
                 // error occured - save in message
-                message = "Error: " + e.getMessage();
+                msg = "Error: " + e.getMessage();
             }
             return false;
         }
@@ -138,7 +138,7 @@ public class PlayRequest {
         /** @see Request#reset() */
         public void reset() {
             super.reset();
-            message = null;
+            msg = null;
         }
 
         String getMessage() {
@@ -154,7 +154,7 @@ public class PlayRequest {
         boolean retry;
         boolean interrupted;
         byte retries;
-        String message;
+        String msg;
 
         /**
          * Creates a new instance with the specified number of retries.
@@ -185,7 +185,7 @@ public class PlayRequest {
         public void reset() {
             super.reset();
             interrupted = false;
-            message = null;
+            msg = null;
         }
 
         /**
@@ -235,7 +235,7 @@ public class PlayRequest {
         }
 
         String getMessage() {
-            return message;
+            return msg;
         }
 
         /**
@@ -244,7 +244,7 @@ public class PlayRequest {
          * 
          * @return the received move.
          */
-        private Move receiveMove() {
+        Move receiveMove() {
             sendRequest(path);
             try {
                 Move m = null;
@@ -254,7 +254,7 @@ public class PlayRequest {
                 XMLElement xml = new XMLElement();
                 xml.parseString(s);
                 // set message from response
-                message = (String) xml.getAttribute("msg");
+                msg = (String) xml.getAttribute("msg");
 
                 // create move from response if possible
                 String edge = (String) xml.getAttribute("edge");

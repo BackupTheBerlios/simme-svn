@@ -13,7 +13,7 @@ import at.einspiel.simme.nanoxml.XMLParseException;
  *
  * @author kariem
  */
-public class LoginResult {
+public class LoginResult implements Message {
     /** The element name of the string representation */
     public static final String ELEMENT_NAME = "loginresult";
 
@@ -21,7 +21,7 @@ public class LoginResult {
     private boolean succeed;
 
     /** login message */
-    private String message;
+    private String info;
 
     /** response url */
     private String url;
@@ -38,12 +38,13 @@ public class LoginResult {
 
         try {
             element.parseString(xmlString.trim());
-            setSucceed(element.getAttributeBoolean("succeed"));
-            setMessage((String) element.getAttribute("msg"));
+            byte id = (byte) element.getAttributeInt("succeed", LOGIN_FAILED);
+            setSucceed(id == LOGIN_OK); // set to true, if login was ok
+            setInfo((String) element.getAttribute("info"));
             setUrl((String) element.getAttribute("url"));
         } catch (XMLParseException xex) {
             setSucceed(false);
-            setMessage("Reply had errors.");
+            setInfo("Reply had errors.");
         }
     }
 
@@ -57,13 +58,13 @@ public class LoginResult {
      */
     public LoginResult(boolean succeeded, String msg, String url) {
         setSucceed(succeeded);
-        setMessage(msg);
+        setInfo(msg);
         setUrl(url);
     }
 
     /**
      * @return an XML representation of this result or <code>null</code> if a
-     *         problem occured while generating XML.
+     *          problem occured while generating XML.
      *
      * @see Object#toString()
      */
@@ -71,13 +72,13 @@ public class LoginResult {
         XMLElement element = new XMLElement();
         element.setName(ELEMENT_NAME);
         if (succeed) {
-            element.setAttribute("succeed", "1");
+            element.setAttribute("succeed", Byte.toString(LOGIN_OK));
             // only write URL if succeed == true
             element.setAttribute("url", url);
         } else {
-            element.setAttribute("succeed", "0");
+            element.setAttribute("succeed", Byte.toString(LOGIN_FAILED));
         }
-        element.setAttribute("msg", message);
+        element.setAttribute("info", info);
 
         ByteArrayOutputStream bas = new ByteArrayOutputStream();
         OutputStreamWriter writer = new OutputStreamWriter(bas);
@@ -97,8 +98,8 @@ public class LoginResult {
      *
      * @return the message contained in this <code>LoginResult</code>.
      */
-    public String getMessage() {
-        return message;
+    public String getInfo() {
+        return info;
     }
 
     /**
@@ -121,11 +122,11 @@ public class LoginResult {
     }
 
     /**
-     * Sets the message.
+     * Sets the information string.
      * @param string the message to set.
      */
-    public void setMessage(String string) {
-        message = string;
+    public void setInfo(String string) {
+        info = string;
     }
 
     /**
@@ -143,5 +144,22 @@ public class LoginResult {
      */
     public void setUrl(String string) {
         url = string;
+    }
+
+    //
+    // missing Message implementation
+    //
+
+    /** @see Message#getMessage() */
+    public String getMessage() {
+        return toString();
+    }
+
+    /** @see Message#getId() */
+    public byte getId() {
+        if (succeed) {
+            return LOGIN_OK;
+        }
+        return LOGIN_FAILED;
     }
 }

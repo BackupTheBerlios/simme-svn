@@ -177,6 +177,7 @@ public class Prefs {
    /**
     * Writes the next part of the byte output stream.
     *
+    * @throws PrefsException if an error occured while adding the record. 
     * @see #writeNext(byte[]).
     */
    public void writeNext() throws PrefsException {
@@ -206,8 +207,9 @@ public class Prefs {
    }
 
    /**
-    * Adds the next record by using the output stream.
+    * Adds the current record and resets the data array.
     *
+    * @throws PrefsException if an error occured while adding the record. 
     * @see #addNext(byte[]).
     */
    public void addNext() throws PrefsException {

@@ -1,7 +1,7 @@
 /* XMLElement.java
  *
- * $Revision: 1.2 $
- * $Date: 2003/10/03 18:34:32 $
+ * $Revision: 1.3 $
+ * $Date: 2003/12/27 19:53:12 $
  * $Name:  $
  *
  * This file is part of NanoXML 2 Lite.
@@ -515,7 +515,8 @@ public class XMLElement {
      *
      * @param attrName Name of the attribute.
      *
-     * @return see {@link #getAttributeBoolean(String, boolean)}.
+     * @return the value of the attribute <code>attrName</code> or
+     *          <code>false</code>, if the attribute could not be found.
      */
     public boolean getAttributeBoolean(String attrName) {
         return getAttributeBoolean(attrName, false);
@@ -807,6 +808,9 @@ public class XMLElement {
     /**
      * Writes the XML element to a string.
      *
+     * @return the string representation.
+     * 
+     * @see Object#toString()
      * @see XMLElement#write(java.io.Writer) write(Writer)
      */
     public String toString() {

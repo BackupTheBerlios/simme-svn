@@ -14,9 +14,9 @@ import at.einspiel.simme.nanoxml.XMLElement;
 public class Game {
 
     /** Number of Edges */
-    static final int NB_EDGES = 15;
+    static final byte NB_EDGES = 15;
     /** Number of Nodes */
-    static final byte NB_NODES = 6;
+    public static final byte NB_NODES = 6;
 
     /** No owner */
     public static final byte NEUTRAL = 0;
@@ -79,7 +79,6 @@ public class Game {
             setGameInfo("Player 1", "Player 2", "AT", "AT");
         }
         tmpMove = new Move((byte) 0);
-        start();
     }
 
     /**
@@ -223,6 +222,7 @@ public class Game {
      * in order to perform any computer move.
      */
     void performComputerMove() {
+        // implement this in subclasses
     }
 
     /** Searches for nodes to be disabled and sets them accordingly. */
@@ -257,8 +257,7 @@ public class Game {
      * Ends a turn for this game. Connected edges are searched for a win
      * condition. The other player may make his move.
      *
-     * @param a First node of last edge drawn.
-     * @param b Second node of last edge drawn.
+     * @param m the move.
      */
     void endTurn(Move m) {
         // only the player who just did his move may lose.

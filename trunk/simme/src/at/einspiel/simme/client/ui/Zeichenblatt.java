@@ -15,7 +15,7 @@ import javax.microedition.lcdui.Graphics;
 
 class Zeichenblatt extends Canvas implements CommandListener {
 
-    private static final byte NB_NODES = 6;
+    private static final byte NB_NODES = Game.NB_NODES;
 
     private static int diameter;
     private static byte linewidth;
@@ -89,8 +89,8 @@ class Zeichenblatt extends Canvas implements CommandListener {
         } else {
             game = new Game();
             single = true;
-
         }
+        game.start();
 
         // add cancel command
         addCommand(CMD_CANCEL);
@@ -100,7 +100,6 @@ class Zeichenblatt extends Canvas implements CommandListener {
         height = getHeight();
         System.out.println("pointer events :" + hasPointerEvents());
         setDisplayParameters(false);
-
     }
 
     /** Creates a new screen to play. Two human players. */
