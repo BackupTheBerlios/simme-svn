@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  [Simme-Server]
+    Ant build file: build.xml
+             $Date: 2004/09/15 23:30:48 $
+         $Revision: 1.10 $
+
+	This ant build file is used for the server-side application of SimME (SimME
+	Server).
+	
+ -->
+<project name="SimME Server" basedir="." default="build">
+	<description>Build server-side SimME application.</description>
+
+
+	<property file="ant-build.properties" />
+
+	<path id="project.ant.path">
+		<fileset dir="${lib-ant}" includes="*.jar" />
+	</path>
+
+	<!-- Configure custom Ant tasks for the Manager application -->
+	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask">
+		<classpath refid="project.ant.path" />
+	</taskdef>
+	<taskdef name="remove" classname="org.apache.catalina.ant.RemoveTask">
+		<classpath refid="project.ant.path" />
+	</taskdef>
+	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask">
+		<classpath refid="project.ant.path" />
+	</taskdef>
+	<!-- Configure custom Ant tasks for try-catch (antelope.tigris.org) -->
+	<taskdef name="try" classname="ise.antelope.tasks.TryTask">
+		<classpath refid="project.ant.path" />
+	</taskdef>
+
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+	    Builds the client classes by running the build file in the client
+	    directory.
+         - - - - - - - - - - - - - - - - - -->
+	<target name="buildclient">
+		<ant dir="${client.dir}" inheritAll="false" />
+		<copy file="${lib.client}" todir="${web-inf.lib}" />
+	</target>
+
+	<target name="initbuild" depends="buildclient">
+		<path id="project.class.path">
+			<pathelement path="${lib.junit}" />
+			<pathelement path="${lib.xerces}" />
+			<pathelement path="${lib.servlet}" />
+			<pathelement location="${client.cls}" />
+			<path>
+				<fileset dir="${web-inf.lib}" />
+			</path>
+		</path>
+		<mkdir dir="${cls}" />
+	</target>
+
+	<!-- build simme -->
+	<target name="build"
+	        depends="initbuild"
+	        description="Creates compiled classes in WEB-INF/classes"
+	>
+		<javac srcdir="${src}" debug="${debug}" destdir="${cls}" source="1.3">
+			<classpath refid="project.class.path" />
+		</javac>
+		<copy todir="${web-inf.classes}">
+			<fileset dir="${cls}" />
+		</copy>
+	</target>
+
+	<!-- deployment -->
+
+	<target name="war"
+	        depends="build"
+	        description="Builds the web archive for deployment."
+	>
+		<!-- create war -->
+		<war basedir="${module}"
+		     destfile="${deploy.war}"
+		     webxml="${webxml}"
+		     index="true"
+		>
+			<lib file="${file.lib.password}" />
+		</war>
+	</target>
+
+	<target name="-war.dev">
+		<antcall target="war">
+			<param name="file.lib.password" value="${lib.password}"/>
+		</antcall>
+	</target>
+	
+	<target name="deploy-dir"
+			depends="-war.dev"
+	        description="Creates WAR and copies it to deploy directory."
+	>
+		
+		<copy file="${deploy.war}" todir="${deploy.dir}" overwrite="true" />
+	</target>
+
+	<!-- effective deployment -->
+
+	<target name="-enter-deploy-user" unless="deploy.user">
+		<input message="Please enter user name for ${deploy.url}"
+		       addproperty="deploy.user"
+		/>
+	</target>
+
+	<target name="-enter-deploy-pass"
+	        unless="deploy.pass"
+	        depends="-enter-deploy-user"
+	>
+		<input message="Please enter password for ${deploy.user}@${deploy.url}"
+		       addproperty="deploy.pass"
+		/>
+	</target>
+
+	<target name="undeploy"
+	        depends="-enter-deploy-pass"
+	        description="Undeploys the current application."
+	>
+		<try break="no">
+			<remove path="/${module}"
+			        url="${deploy.url}"
+			        username="${deploy.user}"
+			        password="${deploy.pass}"
+			/>
+			<catch>
+				<echo>/${module} not found .. nothing removed</echo>
+			</catch>
+		</try>
+	</target>
+
+	<target name="deploy"
+	        depends="-war.dev, undeploy"
+	        description="Deploys the application."
+	>
+		<echo>Deploying application to /${module} ...</echo>
+		<deploy path="/${module}"
+		        url="${deploy.url}"
+		        username="${deploy.user}"
+		        password="${deploy.pass}"
+		        war="file:${deploy.war}"
+		/>
+	</target>
+
+
+	<target name="distros"
+	        description="Creates source and binary distros."
+	>
+		<antcall target="war">
+			<param name="file.lib.password" value="${lib.password.empty}"/>
+		</antcall>
+		<ant antfile="release-build.xml" target="packages" />
+	</target>
+
+	<!-- delete created classes -->
+	<target name="clean"
+	        description="Cleans compiler output directories and removes WAR file."
+	>
+		<delete dir="${cls}" />
+		<delete dir="${web-inf.classes}" />
+		<delete file="${deploy.war}" />
+	</target>
+
+</project>
