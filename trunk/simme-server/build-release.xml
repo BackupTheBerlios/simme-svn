@@ -2,8 +2,8 @@
 <!-- 
   [Simme-Server]
     Ant build file: build.xml
-             $Date: 2004/09/21 16:25:24 $
-         $Revision: 1.1 $
+             $Date: 2004/09/22 18:29:19 $
+         $Revision: 1.2 $
 
 	Used in order to facilitate creation of releases and changelogs.
 	
@@ -41,9 +41,7 @@
 			<tarfileset dir=".">
 				<include name="*ant*" />
 				<include name="*.properties" />
-				<include name="build.xml" />
-				<include name="javadoc-build.xml" />
-				<include name="release-build.xml" />
+				<include name="build*.xml" />
 				<includesfile name="releasefiles.txt" />
 			</tarfileset>
 		</tar>

@@ -2,8 +2,8 @@
 <!-- 
   [Simme]
     Ant build file: build.xml
-             $Date: 2004/09/21 16:25:20 $
-         $Revision: 1.1 $
+             $Date: 2004/09/22 18:28:23 $
+         $Revision: 1.2 $
 
 	Used to facilitate the creation of releases and changelogs.
 	
@@ -33,18 +33,16 @@
 		/>
 
 		<tar destfile="${rel.filename.src}.tar">
-			<tarfileset dir="${src}" prefix="/${src}"/>
-			<tarfileset dir="${src.test}" prefix="/${src.test}"/>
-			<tarfileset dir="${doc}" prefix="/${doc}"/>
-			<tarfileset dir="${resources}" prefix="/${resources}"/>
-			<tarfileset file="${jad.debug}"/>
-			<tarfileset file="${jad.run}"/>
+			<tarfileset dir="${src}" prefix="/${src}" />
+			<tarfileset dir="${src.test}" prefix="/${src.test}" />
+			<tarfileset dir="${doc}" prefix="/${doc}" />
+			<tarfileset dir="${resources}" prefix="/${resources}" />
+			<tarfileset file="${jad.debug}" />
+			<tarfileset file="${jad.run}" />
 			<tarfileset dir=".">
 				<include name="*ant*" />
 				<include name="*.properties" />
-				<include name="build.xml" />
-				<include name="javadoc-build.xml" />
-				<include name="release-build.xml" />
+				<include name="build*.xml" />
 				<includesfile name="releasefiles.txt" />
 			</tarfileset>
 		</tar>
@@ -63,10 +61,10 @@
 		/>
 
 		<tar destfile="${rel.filename.bin}.tar">
-			<tarfileset file="${jar.debug}" prefix="/client"/>
-			<tarfileset file="${jad.debug}" prefix="/client"/>
-			<tarfileset file="${jar.run}" prefix="/client"/>
-			<tarfileset file="${jad.run}" prefix="/client"/>
+			<tarfileset file="${jar.debug}" prefix="/client" />
+			<tarfileset file="${jad.debug}" prefix="/client" />
+			<tarfileset file="${jar.run}" prefix="/client" />
+			<tarfileset file="${jad.run}" prefix="/client" />
 			<tarfileset dir=".">
 				<includesfile name="releasefiles.txt" />
 			</tarfileset>
@@ -85,6 +83,15 @@
 	        depends="sources,binaries"
 	        description="Creates all necessary packages"
 	/>
+
+	<target name="clean" description="cleans the created files">
+		<delete failonerror="false">
+			<fileset dir=".">
+				<include name="changes.txt" />
+				<include name="changes.html" />
+			</fileset>
+		</delete>
+	</target>
 
 
 </project>
