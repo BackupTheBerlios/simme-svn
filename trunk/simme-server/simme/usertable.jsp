@@ -1,9 +1,9 @@
-<%@ page import="at.einspiel.simme.server.management.*, java.util.*" %>
+<%@ page import="at.einspiel.simme.server.*, java.util.*" %>
 <!--
    [Simme-Server]
           Java ServerPage: usertable.jsp
-                    $Date: 2003/12/28 18:21:43 $
-                $Revision: 1.2 $
+                    $Date: 2004/09/02 10:23:14 $
+                $Revision: 1.3 $
 -->
 <%
     SessionManager manager = SessionManager.getInstance();
@@ -23,7 +23,7 @@
         out.println("\t<td>" + user.getNick() + "</td>");
         out.println("\t<td>" + user.getClientmodel() + "</td>");
         out.println("\t<td>" + user.secondsSinceLastUpdate() + "</td>");
-        out.println("\t<td>" + user.getStateAsString() + "</td>");
+        out.println("\t<td>" + user.getState().toString() + "</td>");
 
         out.println(" </tr>");
     }

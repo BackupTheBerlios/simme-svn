@@ -5,7 +5,7 @@
             use="true" notree="false" nonavbar="false" noindex="false"
             splitindex="true" author="true" version="true"
             nodeprecatedlist="true" nodeprecated="true"
-            packagenames="at.einspiel.simme.*"
+            packagenames="at.einspiel.*"
             sourcepath="src"
             classpath="cls;../lib/junit.jar;../lib/simme-client.jar"
             doctitle="SimME Server API Documentation">
