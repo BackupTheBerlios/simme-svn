@@ -1,4 +1,4 @@
-package at.einspiel.simme.server.tests;
+package at.einspiel.simme.server;
 
 import at.einspiel.simme.server.base.User;
 import at.einspiel.simme.server.base.UserException;

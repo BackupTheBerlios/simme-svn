@@ -1,4 +1,4 @@
-package at.einspiel.simme.server.tests;
+package at.einspiel.simme.server;
 
 import at.einspiel.simme.server.base.User;
 import at.einspiel.simme.server.base.UserException;
@@ -16,10 +16,6 @@ public class DatabaseTest extends TestCase {
 
    private String[] nicks = { "one", "two", "three", "four", "five", "six" };
    private String[] pwds = { "pwd1", "pwd2", "pwd3", "pwd4", "pwd5", "pwd6" };
-
-   /** @see TestCase#setUp() */
-   protected void setUp() {
-   }
 
    /**
     * Tests adding and removal.
