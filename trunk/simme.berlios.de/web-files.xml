@@ -8,7 +8,7 @@
 <body>
 	<section><title>SimME - Files and Releases</title>
 
-    <p>Here are links to all the files released by SimME. The links lead to the
+    <p>Here are links to the files released by SimME. The links lead to the
     <a
     href="http://developer.berlios.de/project/showfiles.php?group_id=730">project's
     files</a> at berlios.</p>
@@ -18,8 +18,8 @@
       <p>If you want to have a look at the sources, choose one of these files</p>
 
       <ul>
-        <li>SimME (MIDlet) -&gt; <a href="http://download.berlios.de/simme/simmeclient-src-0.0.5.tar.gz">version 0.0.5</a></li>
-        <li>SimME Server -&gt; <a href="http://download.berlios.de/simme/simmeserver-src-0.0.5.tar.gz">version 0.0.5</a></li>
+        <li>SimME (MIDlet) -&gt; <a href="http://download.berlios.de/simme/simmeclient-src-0.0.6.tar.gz">version 0.0.6</a></li>
+        <li>SimME Server -&gt; <a href="http://download.berlios.de/simme/simmeserver-src-0.0.6.tar.gz">version 0.0.6</a></li>
       </ul>
 
     </section>
@@ -30,8 +30,8 @@
       around a little bit.</p>
 
       <ul>
-        <li>SimME (MIDlet) -&gt; <a href="http://download.berlios.de/simme/simmeclient-bin-0.0.5.tar.gz">version 0.0.5</a></li>
-        <li>SimME Server -&gt; <a href="http://download.berlios.de/simme/simmeserver-bin-0.0.5.tar.gz">version 0.0.5</a></li>
+        <li>SimME (MIDlet) -&gt; <a href="http://download.berlios.de/simme/simmeclient-bin-0.0.6.tar.gz">version 0.0.6</a></li>
+        <li>SimME Server -&gt; <a href="http://download.berlios.de/simme/simmeserver-bin-0.0.6.tar.gz">version 0.0.6</a></li>
       </ul>
 
     </section>

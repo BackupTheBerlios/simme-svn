@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<!--
   [simme.berlios.de]
     Ant build file: build.xml
-             $Date: 2004/09/20 20:30:16 $
-         $Revision: 1.1 $
-	
+             $Date: 2004/09/22 19:29:50 $
+         $Revision: 1.2 $
+
 	Used to create the HTML files for http://simme.berlios.de from a set of XML
 	files.
-	
+
  -->
 <project name="simme@berlios" basedir="." default="webpage">
 
 	<property name="dir.page" value="webpage"/>
-	
-    <!-- ================================= 
-          target: webpage              
+
+    <!-- =================================
+          target: webpage
          ================================= -->
     <target name="webpage" description="creates the webpage in ${dir.page}">
     	<mkdir dir="${dir.page}"/>
-    	
+
     	<!-- transform web pages -->
     	<xslt basedir="." destdir="${dir.page}" style="website.xsl">
     		<mapper type="glob" from="web-*.xml" to="*.html"/>
     	</xslt>
-    	
+
     	<!-- copy styles and pics -->
     	<copy todir="${dir.page}">
     		<fileset dir=".">
@@ -32,8 +32,8 @@
     		</fileset>
     	</copy>
     </target>
-	
-	
+
+
 	<target name="clean" description="cleans the output directory">
 		<delete dir="${dir.page}"/>
 	</target>

@@ -100,6 +100,7 @@
     </xsl:copy>
   </xsl:template>
 
+	<!-- external links open in _blank
   <xsl:template match="a">
     <xsl:copy>
       <xsl:if test="starts-with(@href, 'http://')">
@@ -110,6 +111,7 @@
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
+	 -->
 
 
   <xsl:template name="menu">
