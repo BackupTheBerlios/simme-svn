@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: GameSinglePlayer.java
-//                  $Date: 2004/06/07 09:27:25 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/08/13 13:58:23 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client;
 
@@ -73,11 +73,11 @@ public abstract class GameOnePlayer extends Game {
     protected final void doMove(byte edgeIndex) {
         super.doMove(edgeIndex);
         // send move to opponent
-        setMoveMessage("Sending move to opponent");
+        setMoveMessage("Sende Zug an Gegner");
         informOtherPlayer(edgeIndex);
         if (!gameOver) {
             // receive move from opponent
-            setMoveMessage("Waiting for opponent to move");
+            setMoveMessage("Warte auf Gegner");
             doOtherPlayersMove();
         }
     }
