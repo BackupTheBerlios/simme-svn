@@ -1,3 +1,9 @@
+//----------------------------------------------------------------------------
+//[Simme]
+//    Java Source File: Request.java
+//               $Date: 2004/06/07 09:27:25 $
+//           $Revision: 1.3 $
+//----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
 import java.io.IOException;
@@ -10,24 +16,32 @@ import java.util.Hashtable;
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
 
+import at.einspiel.simme.client.Sim;
+
 /**
  * Represents a request sent to the server.
  *
  * @author kariem
  */
 public class Request {
-   
-   /** String to answer with ok. */
-   public static String ANSWER_OK = "OK";
-   /** String to answer with error. */
-   public static String ANSWER_ERR = "ERR";
-   
-   /** This request's default timeout in milliseconds */
+
+    /** String to answer with ok. */
+    public static String ANSWER_OK = "OK";
+    /** String to answer with error. */
+    public static String ANSWER_ERR = "ERR";
+
+    /** This request's default timeout in milliseconds */
     public static final int DEFAULT_TIMEOUT = 5000;
 
-    /** The base url where <code>Request</code>s are sent to. */
-    //public static final String URL_BASE = Sim.getProperty("server.base");
-    public static final String URL_BASE = "http://localhost:8080/simme/";
+    /**
+     * The base url where <code>Request</code>s are sent to. 
+     * This should be one of
+     * <ul>
+     *  <li>http://localhost:8080/simme/ (debug)</li>
+     *  <li>http://www.einspiel.at/simme/ </li>
+     * </ul>
+     */
+    public static final String URL_BASE = Sim.getProperty("server.base");
     private static final int RESPONSE_INITIAL_SIZE = 1024;
     private static final int RESPONSE_GROWTH_FACTOR = 512;
 
@@ -55,7 +69,7 @@ public class Request {
         init(parameters);
         this.timeout = timeout;
     }
-    
+
     private void init(Hashtable parameters) {
         this.params = parameters;
 
@@ -63,7 +77,7 @@ public class Request {
             params = new Hashtable();
         }
     }
-    
+
     /** Resets this requests parameters */
     public void reset() {
         init(null);
@@ -202,7 +216,7 @@ public class Request {
         }
         return null;
     }
-    
+
     /**
      * Sets the response of this request
      *
@@ -308,7 +322,7 @@ public class Request {
                 setOccurredException(e);
             }
         }
-        
+
         /** 
          * This method tries to cancel the current thread by closing the input
          * stream.
@@ -333,9 +347,8 @@ public class Request {
                 c.setRequestProperty("User-Agent", "Profile/MIDP-1.0 Configuration/CLDC-1.0");
 
                 // set encoding to device encoding
-                c.setRequestProperty(
-                    "Content-Language",
-                    System.getProperty("microedition.encoding"));
+                c.setRequestProperty("Content-Language", System
+                        .getProperty("microedition.encoding"));
 
                 if (post) {
                     c.setRequestMethod(HttpConnection.POST);
@@ -383,7 +396,7 @@ public class Request {
                     localResponse[pos] = current;
                     pos++;
                 }
-                
+
                 // fit response to correct size
                 byte[] responseCopy = new byte[pos];
                 System.arraycopy(localResponse, 0, responseCopy, 0, pos);

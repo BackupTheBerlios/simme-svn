@@ -1,3 +1,9 @@
+//----------------------------------------------------------------------------
+//[Simme]
+//    Java Source File: Info.java
+//               $Date: 2004/06/07 09:27:25 $
+//           $Revision: 1.3 $
+//----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
 import javax.microedition.lcdui.Alert;
@@ -29,7 +35,8 @@ public class Info {
     BUF.append("Sollte man sich nach der Wahl des ersten Knotens anders ");
     BUF.append("entschieden haben, kann man durch nochmaliges Klicken auf ");
     BUF.append("dieselbe Taste den Knoten wieder deaktivieren.\n\n");
-    BUF.append("Mit der Taste 0 ist jederzeit ein Undo möglich!\n\n");
+    BUF.append("Mit der Taste 0 ist beim 2-Spieler-Spiel jederzeit ein Undo ");
+    BUF.append("möglich!\n\n");
     BUF.append("Viel Spass!");
   }
 

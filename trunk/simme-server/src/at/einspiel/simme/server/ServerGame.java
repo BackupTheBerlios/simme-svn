@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: ServerGame.java
-//                  $Date: 2003/12/29 07:24:27 $
-//              $Revision: 1.3 $
+//                  $Date: 2004/06/07 09:25:22 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
@@ -55,16 +55,16 @@ public class ServerGame implements IGame {
      * @param p1 first player
      * @param p2 second player
      *
-     * @throws RuntimeException if rules are broken.
+     * @throws IllegalArgumentException if rules are broken (e.g. same players).
      */
-    public ServerGame(User p1, User p2) throws RuntimeException {
+    public ServerGame(User p1, User p2) throws IllegalArgumentException {
         String nick1 = p1.getNick();
         String nick2 = p2.getNick();
         if (nick1.equals(nick2)) {
-            throw new RuntimeException("Users have same nick names.");
+            throw new IllegalArgumentException("Users have same nick names.");
         }
 
-        game = new Game();
+        game = new Game() {/* subclassed abstract class */ };
         if (Math.random() > 0.5) {
             setPlayers(p1, p2);
         } else {
@@ -294,17 +294,17 @@ public class ServerGame implements IGame {
     boolean isOnTurn(User u, byte playersTurn) {
         if (playersTurn == Game.NEUTRAL) {
             return false; // do nothing
-        } else {
-            if (u != null) {
-                String nick = u.getNick();
-                if (playersTurn == Game.PLAYER1) {
-                    if (!nick.equals(player1.getNick())) {
-                        return false;
-                    }
-                } else if (playersTurn == Game.PLAYER2) {
-                    if (!nick.equals(player2.getNick())) {
-                        return false;
-                    }
+        } 
+        
+        if (u != null) {
+            String nick = u.getNick();
+            if (playersTurn == Game.PLAYER1) {
+                if (!nick.equals(player1.getNick())) {
+                    return false;
+                }
+            } else if (playersTurn == Game.PLAYER2) {
+                if (!nick.equals(player2.getNick())) {
+                    return false;
                 }
             }
         }

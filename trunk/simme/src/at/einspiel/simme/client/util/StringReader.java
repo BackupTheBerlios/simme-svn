@@ -24,7 +24,10 @@ public class StringReader extends Reader {
         this.length = s.length();
     }
 
-    /** Check to make sure that the stream has not been closed */
+    /**
+     * Check to make sure that the stream has not been closed 
+     * @throws IOException if the stream is closed.
+     */
     private void ensureOpen() throws IOException {
         if (str == null) {
             throw new IOException("Stream closed");

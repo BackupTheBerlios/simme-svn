@@ -1,6 +1,12 @@
+//----------------------------------------------------------------------------
+//[Simme]
+//    Java Source File: Game.java
+//               $Date: 2004/06/07 09:27:25 $
+//           $Revision: 1.8 $
+//----------------------------------------------------------------------------
 package at.einspiel.simme.client;
 
-import java.util.Stack;
+import java.util.Random;
 
 import at.einspiel.simme.nanoxml.XMLElement;
 
@@ -11,44 +17,44 @@ import at.einspiel.simme.nanoxml.XMLElement;
  *
  * @author kariem
  */
-public class Game {
+public abstract class Game {
 
-    /** Number of Edges */
+    private static final Random RANDOM = new Random();
+    
+    /** Amount of edges. */
     static final byte NB_EDGES = 15;
-    /** Number of Nodes */
+    /** Amount of nodes. */
     public static final byte NB_NODES = 6;
 
-    /** No owner */
+    /** Identification for neutral (not player 1 and not player 2).*/
     public static final byte NEUTRAL = 0;
-    /** Player 1 is owner */
+    /** Identification for player 1. */
     public static final byte PLAYER1 = 1;
-    /** Player 2 is owner */
+    /** Identification for player 2.*/
     public static final byte PLAYER2 = 2;
 
     /** nodes */
     private Node[] nodes;
     /** edges between nodes */
     private byte[] edges;
-    /** for undoing edge operations*/
-    private Stack undoStack;
 
     /** Indicates the currently active node */
     byte activeNode;
-    /** Indicates the currently active player p1=true, p2=false */
+    /** Indicates the currently active player true=p1, false=p2 */
     private boolean currentPlayer;
-    /** the move number */
-    private byte moveNr;
+    /** The move number */
+    byte moveNr;
+    /** The game id */
+    private String id;
 
     /** Indicates if the game is over */
     protected boolean gameOver;
 
-    // meta information
-    private String p1Name;
-    private String p2Name;
-    private String p1Info;
-    private String p2Info;
+    // game meta information
+    private GameInfo gameInfo;
     /** the move message */
     private String moveMessage;
+
 
     /**
      * Initializes a new game. The game has to be started manually.
@@ -63,25 +69,40 @@ public class Game {
      * Initializes a new game with the values found in the given xml element. 
      * The game has to be started manually.
      * 
-     * @param gameInfo xml element that holds information about the game.
+     * @param gameInfoXML xml element that holds information about the game.
      * @see #start()
      */
-    public Game(XMLElement gameInfo) {
-        if (gameInfo != null) {
-            String p1 = gameInfo.getAttribute("p1", "Player 1");
-            String p2 = gameInfo.getAttribute("p2", "Player 2");
-            String info1 = gameInfo.getAttribute("info1", "AT");
-            String info2 = gameInfo.getAttribute("info2", "AT");
-
-            setGameInfo(p1, p2, info1, info2);
-        } else {
-            // set to some default values
-            setGameInfo("Player 1", "Player 2", "AT", "AT");
-        }
+    public Game(XMLElement gameInfoXML) {
+        setGameInfo(gameInfoXML == null ? new GameInfo(): new GameInfo(gameInfoXML));
     }
 
-    /** May be used to start/restart the game. */
+    /** 
+     * May be used to start/restart the game. Player 1 will be the first player.
+     * 
+     * @see #start(boolean)
+     */
     public void start() {
+        start(true);
+    }
+    
+    /** 
+     * May be used to start/restart the game. Either player one or player two
+     * will be the first to make a move, the probability is the same.
+     * 
+     * @see #start(boolean)
+     */
+    public void startRandom() {
+        start(RANDOM.nextInt() % 2 == 0);
+    }
+    
+    /**
+     * Is used to start the game and determine the first player.
+     * 
+     * @param playerOneFirst set this to <code>true</code> in order to start
+     *        with player one. If set to <code>false</code> player two will be
+     *        the first player.
+     */
+    public void start(boolean playerOneFirst) {
         nodes = new Node[NB_NODES];
 
         for (byte i = 0; i < NB_NODES; i++) {
@@ -91,19 +112,18 @@ public class Game {
         edges = new byte[NB_EDGES];
 
         activeNode = -1; // value, if there is no active node
-        currentPlayer = true; // p1 is currentPlayer
+        currentPlayer = playerOneFirst; // p1 is currentPlayer
         moveNr = 0; // first move
         gameOver = false;
 
-        undoStack = new Stack();
+        showCurrentPlayer();
     }
 
-    /** Sets the player information */
-    void setGameInfo(String p1, String p2, String info1, String info2) {
-        p1Name = p1;
-        p1Info = info1;
-        p2Name = p2;
-        p2Info = info2;
+    /**
+     * Updates the move message to show the current player's turn.
+     */
+    private void showCurrentPlayer() {
+        moveMessage = currentPlayer ? "Red's turn" : "Green's turn";
     }
 
     /**
@@ -126,9 +146,7 @@ public class Game {
             return false;
         }
 
-        if (index == -1) {
-            return undo();
-        } else if ((index < 0) || (index >= NB_NODES)) {
+        if ((index < 0) || (index >= NB_NODES)) {
             moveMessage = "Enter 0-5!";
             return false;
         }
@@ -141,15 +159,16 @@ public class Game {
             return false;
         }
 
-        if (activeNode == -1) {
-            // no node is currently activated
+        // check state of active node
+        
+        if (activeNode == -1) { // no node is currently activated
             activeNode = index;
             nodeAtIndex.activated = true;
 
             moveMessage = null;
 
             return true;
-        } else if (activeNode == index) {
+        } else if (activeNode == index) { // active node is same as index
             // e.g. edge from Node 1 to Node 1
             // set node to inactive
             nodeAtIndex.activated = false;
@@ -157,10 +176,10 @@ public class Game {
             // set active node to nothing, and exit
             activeNode = -1;
 
-            moveMessage = (index + 1) + " already chosen!";
+            moveMessage = "Node " + (index + 1) + " already chosen!";
 
             return false;
-        } else {
+        } else { // active node is different from selected index
             // select the second node
             return edgeTo(index);
         }
@@ -187,7 +206,7 @@ public class Game {
                 moveMessage = "You won this game!";
             }
         } else { // reset move message
-            moveMessage = null;
+            showCurrentPlayer();
         }
 
         return true;
@@ -252,7 +271,7 @@ public class Game {
      *
      * @param m the move.
      */
-    final void endTurn(Move m) {
+    protected final void endTurn(Move m) {
         // disable nodes to be disabled
         disableNodes();
         
@@ -273,46 +292,14 @@ public class Game {
             }
         }
 
-        currentPlayer = !currentPlayer;
-    }
-
-    private boolean undo() {
-        // undo
-        if (gameOver) {
-            currentPlayer = !currentPlayer;
-            gameOver = false;
-        }
-
-        if (undoTurn()) {
-            moveMessage = "Undo successful!";
-
-            return true;
-        } else {
-            moveMessage = "Undo not possible!";
-
-            return false;
-        }
+        switchPlayers();
     }
 
     /**
-     * Undos last edge operation.
-     * @return whether undo has been performed.
+     * Switches from player 1 to player 2 and vice versa.
      */
-    private boolean undoTurn() {
-        byte edgeIdx = -1;
-
-        if (!undoStack.empty()) {
-            moveNr--;
-
-            edgeIdx = ((Byte) undoStack.pop()).byteValue();
-            edges[edgeIdx] = NEUTRAL;
-
-            currentPlayer = !currentPlayer;
-
-            return true;
-        } else {
-            return false;
-        }
+    protected final void switchPlayers() {
+        currentPlayer = !currentPlayer;
     }
 
     /**
@@ -323,9 +310,9 @@ public class Game {
     public byte getPlayersTurn() {
         if (!gameOver) {
             return currentPlayer ? PLAYER1 : PLAYER2;
-        } else {
-            return NEUTRAL;
-        }
+        } 
+        
+        return NEUTRAL;
     }
 
     /**
@@ -398,9 +385,22 @@ public class Game {
      * @throws ArrayIndexOutOfBoundsException if the index is out of range
      *         (0-14).
      */
-    void setEdgeOwner(byte index) throws ArrayIndexOutOfBoundsException {
-        edges[index] = currentPlayer ? PLAYER1 : PLAYER2;
-        undoStack.push(new Byte(index));
+    protected void setEdgeOwner(byte index) throws ArrayIndexOutOfBoundsException {
+        setEdgeOwner(index, currentPlayer ? PLAYER1 : PLAYER2);
+    }
+    
+    /**
+     * Sets the owner for the edge at the specified index to the byte value.
+     * 
+     * @param index the edge index.
+     * @param color one of {@linkplain #NEUTRAL}, {@linkplain #PLAYER1}, 
+     *        {@linkplain #PLAYER2}.
+     * 
+     * @throws ArrayIndexOutOfBoundsException if the index is out of range
+     *         (0-14).
+     */
+    protected void setEdgeOwner(byte index, byte color) throws ArrayIndexOutOfBoundsException {
+        edges[index] = color;
     }
 
     /**
@@ -439,6 +439,39 @@ public class Game {
     }
 
     /**
+     * Enables the nodes at the given edge index.
+     * @param edgeIdx the edge index.
+     * @param enable whether to enable the nodes
+     */
+    protected void enableEdge(byte edgeIdx, boolean enable) {
+        byte[] edgeNodes = Move.getNodeIndices(edgeIdx);
+        nodes[edgeNodes[0]].disabled = !enable;
+        nodes[edgeNodes[1]].disabled = !enable;
+    }
+
+    /**
+     * @return Returns the id.
+     */
+    public String getId() {
+        return id;
+    }
+    /**
+     * @param id The id to set.
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
+    
+    /**
+     * Sets the game information.
+     * @param info the game information.
+     */
+    private void setGameInfo(GameInfo info) {
+        this.gameInfo = info;
+        setId(this.gameInfo.getId());
+    }
+
+    /**
      * Returns the number of moves that were executed since the start of the
      * game.
      *
@@ -449,42 +482,6 @@ public class Game {
     }
 
     /**
-     * Shows information on player1.
-     *
-     * @return a String showing information on player1.
-     */
-    public String getP1Info() {
-        return p1Info;
-    }
-
-    /**
-     * Shows the name of player1.
-     *
-     * @return a String showing the name of player1.
-     */
-    public String getP1Name() {
-        return p1Name;
-    }
-
-    /**
-     * Shows information on player2.
-     *
-     * @return a String showing information on player2.
-     */
-    public String getP2Info() {
-        return p2Info;
-    }
-
-    /**
-     * Shows the name of player2.
-     *
-     * @return a String showing the name of player2.
-     */
-    public String getP2Name() {
-        return p2Name;
-    }
-
-    /**
      * Returns the move message
      * @return the move message.
      */
@@ -492,6 +489,18 @@ public class Game {
         return moveMessage;
     }
 
+    /**
+     * Sets the move information.
+     * @param msg the new information.
+     */
+    protected void setMoveMessage(String msg) {
+        this.moveMessage = msg;
+    }
+
+    //
+    // overridden java.lang.Object methods
+    //
+    
     /** @see Object#toString() */
     public String toString() {
         StringBuffer buf = new StringBuffer("Game:\n");
@@ -504,6 +513,10 @@ public class Game {
         return buf.toString();
     }
 
+    //
+    // internal classes
+    //
+    
     class Node {
         boolean activated = false;
         boolean disabled = false;
@@ -513,4 +526,5 @@ public class Game {
             return "Node[act=" + activated + ", dis=" + disabled + "]";
         }
     }
+
 }

@@ -1,28 +1,21 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: DynamicUI.java
-//                  $Date: 2004/02/21 23:05:11 $
-//              $Revision: 1.5 $
+//                  $Date: 2004/06/07 09:27:25 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
+
+import java.io.IOException;
+import java.util.Enumeration;
+
+import javax.microedition.lcdui.*;
 
 import at.einspiel.messaging.Request;
 import at.einspiel.messaging.SendableUI;
 import at.einspiel.simme.client.Game;
 import at.einspiel.simme.client.Sim;
-
-import java.io.IOException;
-
-import java.util.Enumeration;
-
-import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.CommandListener;
-import javax.microedition.lcdui.Display;
-import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.Form;
-import javax.microedition.lcdui.Image;
-import javax.microedition.lcdui.List;
-import javax.microedition.lcdui.StringItem;
+import at.einspiel.simme.client.net.NetworkGame;
 
 /**
  * This class is intended to create dynamically a user interface from the
@@ -161,7 +154,7 @@ public class DynamicUI implements CommandListener {
          updateNecessary = false;
       } else if (sui.hasXmlInfo()) {
          // build game with xml information
-         Game g = new Game(sui.getXmlInfo());
+         Game g = new NetworkGame(sui.getXmlInfo(), Sim.getNick(), url);
          // TODO Georg start game, create Zeichenblatt, ...
          d = new Zeichenblatt(false);
          ((Zeichenblatt) d).setGame(g);

@@ -1,3 +1,9 @@
+//----------------------------------------------------------------------------
+//[Simme]
+//  Java Source File: GameTest.java
+//             $Date: 2004/06/07 09:27:25 $
+//         $Revision: 1.3 $
+//----------------------------------------------------------------------------
 package at.einspiel.simme.client;
 
 import junit.framework.TestCase;
@@ -26,7 +32,7 @@ public class GameTest extends TestCase {
      * @see TestCase#setUp()
      */
     protected void setUp() {
-        g = new Game();
+        g = new Game() { /* subclassed abstract class */ };
         g.start();
     }
 

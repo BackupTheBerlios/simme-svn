@@ -1,7 +1,7 @@
 /* XMLElement.java
  *
- * $Revision: 1.5 $
- * $Date: 2004/04/06 22:28:26 $
+ * $Revision: 1.6 $
+ * $Date: 2004/06/07 09:27:25 $
  * $Name:  $
  *
  * This file is part of NanoXML 2 Lite.
@@ -401,7 +401,7 @@ public class XMLElement {
      * @return the attribute identified by <code>name</code>.
      *
      */
-    public Object getAttribute(String attrName) {
+    public String getAttribute(String attrName) {
         return this.getAttribute(attrName, null);
     }
 
@@ -414,7 +414,7 @@ public class XMLElement {
      *
      * @return the attribute.
      */
-    public String getAttribute(String attrName, Object defaultValue) {
+    public String getAttribute(String attrName, String defaultValue) {
         Object value = this.attributes.get(attrName);
 
         if (value == null) {
@@ -453,12 +453,12 @@ public class XMLElement {
 
         if (value == null) {
             return defaultValue;
-        } else {
-            try {
-                return Integer.parseInt(value);
-            } catch (NumberFormatException e) {
-                throw this.invalidValue(attrName, value);
-            }
+        }
+        
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            throw this.invalidValue(attrName, value);
         }
     }
 
@@ -1340,18 +1340,17 @@ public class XMLElement {
             this.charReadTooMuch = '\0';
 
             return ch;
+        }
+        int i = this.reader.read();
+        
+        if (i < 0) {
+            throw this.unexpectedEndOfData();
+        } else if (i == 10) {
+            this.parserLineNr += 1;
+            
+            return '\n';
         } else {
-            int i = this.reader.read();
-
-            if (i < 0) {
-                throw this.unexpectedEndOfData();
-            } else if (i == 10) {
-                this.parserLineNr += 1;
-
-                return '\n';
-            } else {
-                return (char) i;
-            }
+            return (char) i;
         }
     }
 
@@ -1419,15 +1418,14 @@ public class XMLElement {
                         this.scanPCData(buf);
 
                         break;
-                    } else {
-                        ch = this.scanWhitespace(buf);
+                    } 
+                    ch = this.scanWhitespace(buf);
 
-                        if (ch != '<') {
-                            this.unreadChar(ch);
-                            this.scanPCData(buf);
+                    if (ch != '<') {
+                        this.unreadChar(ch);
+                        this.scanPCData(buf);
 
-                            break;
-                        }
+                        break;
                     }
                 } else {
                     buf.setLength(0);

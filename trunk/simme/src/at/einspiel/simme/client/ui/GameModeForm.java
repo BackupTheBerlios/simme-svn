@@ -1,27 +1,32 @@
 package at.einspiel.simme.client.ui;
 
-import at.einspiel.messaging.LoginRequest;
+import java.io.IOException;
+
+import javax.microedition.lcdui.*;
+
 import at.einspiel.messaging.LoginMessage;
+import at.einspiel.messaging.LoginRequest;
 import at.einspiel.simme.client.Sim;
 import at.einspiel.simme.client.util.PersonalPrefs;
 import at.einspiel.simme.client.util.PrefsException;
 
-import java.io.IOException;
-
-import javax.microedition.lcdui.Alert;
-import javax.microedition.lcdui.AlertType;
-import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.CommandListener;
-import javax.microedition.lcdui.Display;
-import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.List;
-
 /**
+ * <p>Used to choose the game mode. The following choices are presented to the
+ * user:
+ * <ul>
+ *  <li>Internet Game</li>
+ *  <li>Human vs Human (playing on a single device)</li>
+ *  <li>Human vs Computer</li>
+ * </ul></p>
+ * 
+ * <p>In order to play over the internet, the client has to be configured with
+ * a user defined nick name and password. This only has to be done once.</p>
+ * 
  * @author Jorge
  */
 public class GameModeForm extends List implements CommandListener {
 
-    private static final String[] CHOICES = { "Internet Spiel", "vs Human", "vs Computer" };
+    private static final String[] CHOICES = {"Internet Spiel", "vs Human", "vs Computer"};
 
     /**
      * Creates a new Form where the user can choose between several types of
@@ -42,7 +47,8 @@ public class GameModeForm extends List implements CommandListener {
             d.setCurrent(Sim.getMainScreen());
         } else {
             switch (getSelectedIndex()) {
-                case 0 : // Internet Spiel
+                case 0 :
+                    // Internet Spiel
                     // get preferences
                     PersonalPrefs prefs = PersonalPrefs.getInstance();
 
@@ -53,17 +59,16 @@ public class GameModeForm extends List implements CommandListener {
                         if (prefs.currentSize() == 0) {
                             // empty prefs => error message
                             StringBuffer buf = new StringBuffer();
-                            buf.append(
-                                "Nick name and password have to be entered. Please set ");
-                            buf.append("your options in \"Settings | Internet\" in the main ");
-                            buf.append("menu.");
+                            buf.append("Nick name and password have to be entered. Please ");
+                            buf.append("set your options in \"Settings | Internet\" in the ");
+                            buf.append("main menu.");
                             throw new PrefsException(buf.toString());
                         }
 
                         prefs.load();
                     } catch (PrefsException pex) {
-                        Alert error =
-                            new Alert("Fehler", pex.getMessage(), null, AlertType.ERROR);
+                        Alert error = new Alert("Fehler", pex.getMessage(), null,
+                                AlertType.ERROR);
                         error.setTimeout(Alert.FOREVER);
                         d.setCurrent(error, this);
                         return;
@@ -74,11 +79,13 @@ public class GameModeForm extends List implements CommandListener {
                     infoAlert.startConnection(d);
                     break;
 
-                case 1 : // Lokales Spiel (2 Spieler)
+                case 1 :
+                    // Lokales Spiel (2 Spieler)
                     d.setCurrent(new Zeichenblatt());
                     break;
 
-                case 2 : // Lokales Spiel (gg. Computer)
+                case 2 :
+                    // Lokales Spiel (gg. Computer)
                     d.setCurrent(new Zeichenblatt(true));
                     break;
 
@@ -91,25 +98,27 @@ public class GameModeForm extends List implements CommandListener {
 
         /**
          * Constructs an empty <code>InfoAlert</code> with the given title
+         * @param data the data for the alert.
          */
         ConnectionAlert(String[] data) {
             super("Connecting ...");
             setString("Connection to the server is being established.");
             // Alert will be substituted by result message
-            setTimeout(Alert.FOREVER); 
+            setTimeout(Alert.FOREVER);
             loginData = data;
 
+            // TODO remove debug output
             for (int i = 0; i < data.length; i++) {
                 if (data[i] != null) {
                     System.out.println(i + ":" + data[i]);
                 }
             }
-
             System.out.println("connectionalert created");
         }
 
         /**
          * Initializes the connection and shows its output.
+         * @param d the display which is used to show the output.
          */
         void startConnection(final Display d) {
             // enter new thread, so that the user interface is updated correctly
@@ -126,12 +135,8 @@ public class GameModeForm extends List implements CommandListener {
                         LoginRequest loginMsg = null;
 
                         try {
-                            loginMsg =
-                                new LoginRequest(
-                                    loginData[0],
-                                    loginData[1],
-                                    loginData[3],
-                                    version);
+                            loginMsg = new LoginRequest(loginData[0], loginData[1],
+                                    loginData[3], version);
                         } catch (NullPointerException npe) {
                             npe.printStackTrace();
                         }
@@ -148,18 +153,21 @@ public class GameModeForm extends List implements CommandListener {
                         System.out.println("login result: " + result);
 
                         if (result.isSucceed()) {
-                            DynamicUI dUI = new DynamicUI("SimME online", result.getMessage(), result.getUrl());
+                            final String url = result.getUrl();
+                            // save nickname and url somewhere in order to be easily accessible
+                            Sim.setNick(loginData[0]);
+
+                            DynamicUI dUI = new DynamicUI("SimME online", result.getMessage(),
+                                    url);
                             d.setCurrent(dUI.getDisplayable());
+
                         } else {
                             // no success => show cause
-                            AlertType type =
-                                result.isSucceed() ? AlertType.INFO : AlertType.ERROR;
-                            Alert loginAlert =
-                                new Alert(
-                                    "Error while logging in",
-                                    result.getMessage(),
-                                    null,
-                                    type);
+                            AlertType type = result.isSucceed()
+                                    ? AlertType.INFO
+                                    : AlertType.ERROR;
+                            Alert loginAlert = new Alert("Error while logging in", result
+                                    .getMessage(), null, type);
                             loginAlert.setTimeout(FOREVER);
                             System.out.println("login error");
                             d.setCurrent(loginAlert);

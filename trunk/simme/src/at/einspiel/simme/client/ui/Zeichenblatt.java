@@ -1,7 +1,14 @@
+//----------------------------------------------------------------------------
+//[Simme]
+//    Java Source File: Zeichenblatt.java
+//               $Date: 2004/06/07 09:27:25 $
+//           $Revision: 1.7 $
+//----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
 import javax.microedition.lcdui.*;
 
+import at.einspiel.simme.client.*;
 import at.einspiel.simme.client.Game;
 import at.einspiel.simme.client.GameRandomAI;
 import at.einspiel.simme.client.Sim;
@@ -18,7 +25,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
 
     private static int diameter;
     private static byte linewidth;
-    private static final Command CMD_CANCEL = new Command("Abbruch", Command.CANCEL, 1);
+    private static final Command CMD_CANCEL = new Command("Spiel Beenden", Command.BACK, 1);
     private static final Command CMD_NEWGAME = new Command("Neu", Command.OK, 1);
 
     /** Inner and outer colors of player1's lines */
@@ -85,7 +92,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
         if (singlePlayer) {
             setGame(new GameRandomAI());
         } else {
-            setGame(new Game());
+            setGame(new GameUndoable()); // two player game
         }
 
         // add cancel command
@@ -250,7 +257,12 @@ class Zeichenblatt extends Canvas implements CommandListener {
         }
     }
 
-    /** Looks at current width and height and sets drawing parameters accordingly. */
+    /** 
+     * Looks at current width and height and sets drawing parameters
+     * accordingly.
+     * @param portrait whether to use portrait. If set to <code>false</code>,
+     *         landscape layout is used.
+     */
     private void setDisplayParameters(boolean portrait) {
         diameter = height / 10;
         int size =

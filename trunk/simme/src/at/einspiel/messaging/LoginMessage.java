@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: LoginMessage.java
-//                  $Date: 2004/02/21 23:06:00 $
-//              $Revision: 1.3 $
+//                  $Date: 2004/06/07 09:27:25 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
@@ -51,8 +51,8 @@ public class LoginMessage implements Message {
             element.parseString(xmlString.trim());
             byte id = (byte) element.getAttributeInt("succeed", LOGIN_FAILED);
             setSucceed(id == LOGIN_OK); // set to true, if login was ok
-            setInfo((String) element.getAttribute("info"));
-            setUrl((String) element.getAttribute("url"));
+            setInfo(element.getAttribute("info"));
+            setUrl(element.getAttribute("url"));
         } catch (XMLParseException xex) {
             setSucceed(false);
             setInfo("Reply had errors.");

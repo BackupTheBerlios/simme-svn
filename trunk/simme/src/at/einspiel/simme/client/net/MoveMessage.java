@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: MoveMessage.java
-//                  $Date: 2004/04/15 10:00:55 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/06/07 09:27:25 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client.net;
 
@@ -60,13 +60,13 @@ public class MoveMessage implements Message {
         System.out.println("xmlString=" + xmlString);
         xml.parseString(xmlString);
         // set info from response
-        info = (String) xml.getAttribute(ATTR_INFO);
+        info = xml.getAttribute(ATTR_INFO);
 
         // create move from response if possible
-        move = Byte.parseByte((String) xml.getAttribute(ATTR_MOVE));
+        move = Byte.parseByte(xml.getAttribute(ATTR_MOVE));
 
         // create id from response if possible
-        String idString = (String) xml.getAttribute(ID);
+        String idString = xml.getAttribute(ID);
         if (idString != null) {
             id = Byte.parseByte(idString);
         }

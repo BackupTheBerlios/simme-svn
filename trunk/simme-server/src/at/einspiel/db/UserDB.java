@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: UserDB.java
-//                  $Date: 2004/02/23 09:10:36 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/06/07 09:25:22 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.db;
 
@@ -48,12 +48,11 @@ public class UserDB {
 
          if (u.getPwd().equals(password)) {
             return u;
-         } else {
-            StringBuffer buf = new StringBuffer();
-            buf.append("Ein User mit dem angegebenen Nick existiert bereits. ");
-            buf.append("Das angegebene Passwort ist falsch.");
-            throw new WrongUserException(buf.toString());
-         }
+         } 
+         StringBuffer buf = new StringBuffer();
+         buf.append("Ein User mit dem angegebenen Nick existiert bereits. ");
+         buf.append("Das angegebene Passwort ist falsch.");
+         throw new WrongUserException(buf.toString());
       } catch (NoSuchUserException e) {
          u = new User(nick, password);
          try {
