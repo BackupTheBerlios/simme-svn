@@ -1,11 +1,12 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: IMenu.java
-//                  $Date: 2004/09/13 15:11:53 $
-//              $Revision: 1.7 $
+//                  $Date: 2004/09/21 16:18:54 $
+//              $Revision: 1.8 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
+import at.einspiel.messaging.ISimpleInfo;
 import at.einspiel.simme.server.ManagedUser;
 
 /**
@@ -16,8 +17,11 @@ import at.einspiel.simme.server.ManagedUser;
  */
 public interface IMenu extends Cloneable {
 
-	/** The default id for menus. The current value is <code>0</code>. */
-	String DEFAULT_ID = "0";
+	/**
+	 * The default id for menus. The current value is the string representation
+	 * of {@linkplain ISimpleInfo#DEFAULT_ID}.
+	 */
+	String DEFAULT_ID = Byte.toString(ISimpleInfo.DEFAULT_ID);
 
 	/**
 	 * The type attribute, which may be used for different instances of the same

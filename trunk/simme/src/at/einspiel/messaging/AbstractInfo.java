@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: AbstractInfo.java
-//                  $Date: 2004/09/07 13:23:06 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/09/21 16:18:52 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
@@ -64,6 +64,11 @@ public abstract class AbstractInfo implements ISimpleInfo {
 		return id;
 	}
 
+	/** @see at.einspiel.messaging.ISimpleInfo#setDefaultId() */
+	public void setDefaultId() {
+		id = ISimpleInfo.DEFAULT_ID;
+	}
+	
 	/** @see at.einspiel.messaging.ISimpleInfo#getXmlString() */
 	public String getXmlString() {
 		XMLElement xml = new XMLElement();

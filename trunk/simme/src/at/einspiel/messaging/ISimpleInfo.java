@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: ISimpleInfo.java
-//                  $Date: 2004/09/07 13:23:06 $
-//              $Revision: 1.3 $
+//                  $Date: 2004/09/21 16:18:52 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
@@ -40,6 +40,11 @@ public interface ISimpleInfo {
 	 * different from the URL prior to the request.
 	 */
 	String ATTR_UPDATE_PATH = "updateURL";
+
+	/**
+	 * The default id. The value is currently <code>0</code>.
+	 */
+	byte DEFAULT_ID = 0;
 
 	/**
 	 * Returns the title.
@@ -99,4 +104,10 @@ public interface ISimpleInfo {
 	 * @return a string representing this info object.
 	 */
 	String getXmlString();
+
+	/**
+	 * Sets the info object's id to the default id. This is used to update the
+	 * user interface with the main menu. 
+	 */
+	void setDefaultId();
 }
