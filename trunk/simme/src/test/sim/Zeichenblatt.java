@@ -8,53 +8,80 @@ import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
-class Zeichenblatt extends Canvas implements CommandListener {
 
+class Zeichenblatt extends Canvas implements CommandListener
+{
   private static int diameter;
   private static byte linewidth;
   private static byte linewidththick;
-
-  private static final Command CMD_CANCEL = new Command("Cancel", Command.CANCEL, 1);
-  private static final Command CMD_NEWGAME = new Command("New Game", Command.OK, 1);
+  private static final Command CMD_CANCEL = new Command("Cancel",
+      Command.CANCEL, 1);
+  private static final Command CMD_NEWGAME = new Command("New Game",
+      Command.OK, 1);
 
   /** Inner and outer colors of player1's lines */
-  private static int p1c1, p1c2;
+  private static int p1c1;
+
+  /** Inner and outer colors of player1's lines */
+  private static int p1c2;
+
   /** Inner and outer colors of player2's lines */
-  private static int p2c1, p2c2;
+  private static int p2c1;
+
+  /** Inner and outer colors of player2's lines */
+  private static int p2c2;
+
   /** Inner and outer colors of neutral lines */
-  private static int nc1, nc2;
+  private static int nc1;
+
+  /** Inner and outer colors of neutral lines */
+  private static int nc2;
 
   /** Inner and outer colors of a normal node */
-  private static int nnc1, nnc2;
+  private static int nnc1;
+
+  /** Inner and outer colors of a normal node */
+  private static int nnc2;
+
   /** Inner and outer colors of a selected node */
-  private static int nsc1, nsc2;
+  private static int nsc1;
+
+  /** Inner and outer colors of a selected node */
+  private static int nsc2;
+
   /** Inner and outer colors of a disabled node */
-  private static int ndc1, ndc2;
+  private static int ndc1;
+
+  /** Inner and outer colors of a disabled node */
+  private static int ndc2;
 
   /** background */
   private static int bg;
 
   /** game */
   private Game game;
-
-  private String moveMessage;
-
   private Zeichenblatt zeichenblatt;
-
-  int node[][] = new int[6][2];
-  String nodeNumber[] = new String[6];
-
-  private int xPInfo1, xPInfo2, xPInfo3, xPInfo4, xPInfo5, xPInfo6;
-  private int yPInfo1, yPInfo1middle, yPInfo2, yPInfo2middle;
-
-  private int width, height;
-
+  int[][] node = new int[6][2];
+  String[] nodeNumber = new String[6];
+  private int xPInfo1;
+  private int xPInfo2;
+  private int xPInfo3;
+  private int xPInfo4;
+  private int xPInfo5;
+  private int xPInfo6;
+  private int yPInfo1;
+  private int yPInfo1middle;
+  private int yPInfo2;
+  private int yPInfo2middle;
+  private int width;
+  private int height;
   private Font fntNodeLabel;
   private int heightFntNodeLabel;
   private Font fntPlayerInfo;
   private int heightFntPlayerInfo;
 
-  Zeichenblatt() {
+  Zeichenblatt()
+  {
     ColorMgmt.setDisplay(Sim.getDisplay());
 
     p1c1 = ColorMgmt.p1c1;
@@ -82,32 +109,34 @@ class Zeichenblatt extends Canvas implements CommandListener {
     height = getHeight();
     System.out.println("pointer events :" + hasPointerEvents());
     setDisplayParameters();
-
   }
 
   /**
    * @see Canvas#keyPressed(int)
    */
-  public void keyPressed(int keyCode) {
-    if ((keyCode >= KEY_NUM1) && (keyCode <= KEY_NUM6) ||
-        (keyCode == KEY_NUM0))
+  public void keyPressed(int keyCode)
+  {
+    if (((keyCode >= KEY_NUM1) && (keyCode <= KEY_NUM6)) ||
+          (keyCode == KEY_NUM0))
     {
       int key = keyCode - 49;
 
       //System.out.println(key);
-      moveMessage = game.selectNode((byte) key);
+      game.selectNode((byte) key);
     }
   }
 
   /**
    * @see Canvas#keyReleased(int)
    */
-  public void keyReleased(int keyCode) {
+  public void keyReleased(int keyCode)
+  {
     repaint();
   }
 
   /** @see Canvas#paint(Graphics) */
-  protected void paint(Graphics g) {
+  protected void paint(Graphics g)
+  {
     byte i = 0; // byte < int  (byte [127-128])
     byte j = 0; // byte < int  (byte [127-128])
 
@@ -115,67 +144,79 @@ class Zeichenblatt extends Canvas implements CommandListener {
     g.setColor(bg);
     g.fillRect(0, 0, width, height);
 
-    if (game.getWinner() != 0) {
+    if (game.getWinner() != 0)
+    {
       addCommand(CMD_NEWGAME);
     }
 
     // Kanten zeichnen
-    int c1 = nc1, c2 = nc2;
-     
-    while (i < 6) {
-      for (j = 0; j < 5; j++) {
+    int c1 = nc1;
+
+    // Kanten zeichnen
+    int c2 = nc2;
+
+    while (i < 6)
+    {
+      for (j = 0; j < 5; j++)
+      {
         boolean dotted = false;
-        switch (game.getEdgeOwner(i, j)) {
-        case Game.NEUTRAL :
+
+        switch (game.getEdgeOwner(i, j))
+        {
+        case Game.NEUTRAL:
           c1 = nc1;
           c2 = nc2;
+
           break;
 
-        case Game.PLAYER1 :
+        case Game.PLAYER1:
           c1 = p1c1;
           c2 = p1c2;
+
           break;
 
-        case Game.PLAYER2 :
+        case Game.PLAYER2:
           c1 = p2c1;
           c2 = p2c2;
           dotted = true;
+
           break;
         }
 
-        DrawUtils.drawLineWithBorder(g, node[i][0], node[i][1], node[j][0], node[j][1], linewidth, c1, c2,dotted);
+        DrawUtils.drawLineWithBorder(g, node[i][0], node[i][1], node[j][0],
+          node[j][1], linewidth, c1, c2, dotted);
       }
 
       i++;
     }
 
     g.setFont(fntNodeLabel);
+
     // Punkte zeichnen
-    for (i = 0; i < 6; i++) {
-      if (game.isDisabled(i)) {
+    for (i = 0; i < 6; i++)
+    {
+      if (game.isDisabled(i))
+      {
         c1 = ndc1;
         c2 = ndc2;
-      } else if (game.isActivated(i)) {
+      }
+      else if (game.isActivated(i))
+      {
         c1 = nsc1;
         c2 = nsc2;
-      } else {
+      }
+      else
+      {
         c1 = nnc1;
         c2 = nnc2;
       }
 
-      DrawUtils.fillArcWithBorder(
-        g,
-        node[i][0] - (diameter / 2),
-        node[i][1] - (diameter / 2),
-        diameter,
-        diameter,
-        0,
-        360,
-        c1,
-        c2);
+      DrawUtils.fillArcWithBorder(g, node[i][0] - (diameter / 2),
+        node[i][1] - (diameter / 2), diameter, diameter, 0, 360, c1, c2);
 
       g.setColor(0);
-      g.drawString(nodeNumber[i], node[i][0] - diameter / 6, node[i][1] - heightFntNodeLabel / 2, 0);
+      g.drawString(nodeNumber[i], node[i][0] - (diameter / 6),
+        node[i][1] - (heightFntNodeLabel / 2), 0);
     }
 
     g.setFont(fntPlayerInfo);
@@ -220,22 +261,21 @@ class Zeichenblatt extends Canvas implements CommandListener {
     if (game.isGameOver()) {
     drawWinner(g);
     } */
-
-    if (moveMessage != null && moveMessage != "")
+    if ((game.moveMessage != null) && (game.moveMessage != ""))
     {
-      g.drawString(moveMessage, width / 3, height - height / 6, 0);
+      g.drawString(game.moveMessage, width / 3, height - (height / 6), 0);
+
       return;
     }
 
     if (game.getWinner() == Game.PLAYER1)
     {
-      g.drawString("Red wins", width / 3, height - height / 6, 0);
-    } 
+      g.drawString("Red wins", width / 3, height - (height / 6), 0);
+    }
     else if (game.getWinner() == Game.PLAYER2)
     {
-      g.drawString("Green wins", width / 3, height - height / 6, 0);
+      g.drawString("Green wins", width / 3, height - (height / 6), 0);
     }
-    
   }
 
   /**
@@ -255,13 +295,13 @@ class Zeichenblatt extends Canvas implements CommandListener {
   /**
    * Looks at current width and height and sets drawing parameters accordingly.
    */
-
-  private void setDisplayParameters() {
+  private void setDisplayParameters()
+  {
     // portrait configuration
     diameter = height / 10;
-    diameter += diameter % 2;
+    diameter += (diameter % 2);
     linewidth = new Integer(diameter / 4).byteValue();
-    linewidth += linewidth % 3;
+    linewidth += (linewidth % 3);
     linewidththick = new Integer(linewidth * 3).byteValue();
 
     int col1 = width / 6;
@@ -270,8 +310,8 @@ class Zeichenblatt extends Canvas implements CommandListener {
     int col4 = col3 + col1;
 
     int row2 = height / 2;
-    int row1 = row2 - (height / 4 - diameter / 2);
-    int row3 = row2 + row2 - row1;
+    int row1 = row2 - ((height / 4) - (diameter / 2));
+    int row3 = (row2 + row2) - row1;
 
     node[0] = new int[] { col2, row1 };
     node[1] = new int[] { col3, row1 };
@@ -287,38 +327,44 @@ class Zeichenblatt extends Canvas implements CommandListener {
     nodeNumber[4] = new String("5");
     nodeNumber[5] = new String("6");
 
-    xPInfo1 = col1 - diameter / 2;
-    xPInfo2 = col2 + diameter / 2;
+    xPInfo1 = col1 - (diameter / 2);
+    xPInfo2 = col2 + (diameter / 2);
     xPInfo3 = xPInfo2 + 5;
     xPInfo4 = col3;
     xPInfo5 = xPInfo4 + 5;
     xPInfo6 = col4;
 
     yPInfo1 = height - (height / 3) + 3;
-    yPInfo2 = yPInfo1 + (height / 6) - 3;
+    yPInfo2 = (yPInfo1 + (height / 6)) - 3;
 
     yPInfo1middle = yPInfo1 + (linewidththick);
     yPInfo2middle = yPInfo2 + (linewidththick);
 
     System.out.println("Diameter: " + diameter);
 
-    int size = diameter < 16 ? Font.SIZE_SMALL : diameter < 22 ? Font.SIZE_MEDIUM : Font.SIZE_LARGE;
+    int size = (diameter < 16) ? Font.SIZE_SMALL
+                               : ((diameter < 22) ? Font.SIZE_MEDIUM
+                                                  : Font.SIZE_LARGE);
 
     fntNodeLabel = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, size);
     heightFntNodeLabel = fntNodeLabel.getHeight();
     fntPlayerInfo = Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, size);
     heightFntPlayerInfo = fntPlayerInfo.getHeight();
-
   }
 
   /**
    * @see CommandListener#commandAction(Command, Displayable)
    */
-  public void commandAction(Command c, Displayable d) {
+  public void commandAction(Command c, Displayable d)
+  {
     Display display = Sim.getDisplay();
-    if (c == CMD_CANCEL) {
+
+    if (c == CMD_CANCEL)
+    {
       display.setCurrent(Sim.getMainScreen());
-    } else if (c == CMD_NEWGAME) {
+    }
+    else if (c == CMD_NEWGAME)
+    {
       zeichenblatt = new Zeichenblatt();
       display.setCurrent(zeichenblatt);
     }

@@ -2,6 +2,7 @@ package test.sim;
 
 import javax.microedition.lcdui.Display;
 
+
 /**
  * This class allows for easy color definitions and should contain methods to
  * efficiently display the game using a rich color set suitable for all
@@ -9,109 +10,129 @@ import javax.microedition.lcdui.Display;
  *
  * @author kariem
  */
-public class ColorMgmt {
+public class ColorMgmt
+{
+  /** p1, p2, nc, nnc, nsc, ndc */
+  private static final int[] COLORS_FULL = 
+  {
+    0x00DD0000, 0x00FF0000, 0x0000DD00, 0x0000FF00, // p1, p2 
+    0x00888888, 0, // neutral line
+    0x00888888, 0, // neutral node
+    0x00888888, 0x000000FF, // selected node
+    0x00888888, 0x00777777, // deactivated node 
+    0xA0AFFF // background
+  };
 
-   /** p1, p2, nc, nnc, nsc, ndc */
-   private static final int[] COLORS_FULL = { 0x00DD0000, 0x00FF0000, 0x0000DD00, 0x0000FF00, // p1, p2 
-      0x00888888, 0, // neutral line
-      0x00888888, 0, // neutral node
-      0x00888888, 0x000000FF, // selected node
-      0x00888888, 0x00777777, // deactivated node 
-      0xA0AFFF // background
-   };
+  /** p1, p2, nc, nnc, nsc, ndc  - */
+  private static final int[] COLORS_GREY16 = 
+  {
+    0x00FFFFFF, 0x00111111, 0x00111111, 0x00222222, // p1, p2 
+    0x00888888, 0, // neutral line
+    0x00888888, 0, // neutral node
+    0x00888888, 0x00AAAAAA, // selected node
+    0x00888888, 0x00777777, // deactivated node 
+    0xDDDDDD // background
+  };
 
-   /** p1, p2, nc, nnc, nsc, ndc  - */
-   private static final int[] COLORS_GREY16 = { 0x00FFFFFF, 0x00111111, 0x00111111, 0x00222222, // p1, p2 
-      0x00888888, 0, // neutral line
-      0x00888888, 0, // neutral node
-      0x00888888, 0x00AAAAAA, // selected node
-      0x00888888, 0x00777777, // deactivated node 
-      0xDDDDDD // background
-   };
+  /** p1, p2, nc, nnc, nsc, ndc  - */
+  private static final int[] COLORS_GREY8 = 
+  {
+    0x00FFFFFF, 0, 0x00111111, 0, 0x00888888, 0, 0x00888888, 0, 0x00AAAAAA, 0,
+    0x00444444, 0x00888888, 0xDDDDDD
+  };
 
-   /** p1, p2, nc, nnc, nsc, ndc  - */
-   private static final int[] COLORS_GREY8 =
-      { 0x00FFFFFF, 0, 0x00111111, 0, 0x00888888, 0, 0x00888888, 0, 0x00AAAAAA, 0, 0x00444444, 0x00888888, 0xDDDDDD };
+  /** Inner and outer colors of player1's lines */
+  protected static int p1c1;
 
-   /** Inner and outer colors of player1's lines */
-   protected static int p1c1;
-   /** Inner and outer colors of player1's lines */
-   protected static int p1c2;
+  /** Inner and outer colors of player1's lines */
+  protected static int p1c2;
 
-   /** Inner and outer colors of player2's lines */
-   protected static int p2c1;
-   /** Inner and outer colors of player2's lines */
-   protected static int p2c2;
+  /** Inner and outer colors of player2's lines */
+  protected static int p2c1;
 
-   /** Inner and outer colors of neutral lines */
-   protected static int nc1;
-   /** Inner and outer colors of neutral lines */
-   protected static int nc2;
+  /** Inner and outer colors of player2's lines */
+  protected static int p2c2;
 
-   /** Inner and outer colors of a normal node */
-   protected static int nnc1;
-   /** Inner and outer colors of a normal node */
-   protected static int nnc2;
+  /** Inner and outer colors of neutral lines */
+  protected static int nc1;
 
-   /** Inner and outer colors of a selected node */
-   protected static int nsc1;
-   /** Inner and outer colors of a selected node */
-   protected static int nsc2;
+  /** Inner and outer colors of neutral lines */
+  protected static int nc2;
 
-   /** Inner and outer colors of a disabled node */
-   protected static int ndc1;
-   /** Inner and outer colors of a disabled node */
-   protected static int ndc2;
+  /** Inner and outer colors of a normal node */
+  protected static int nnc1;
 
-   /** background */
-   protected static int bg;
+  /** Inner and outer colors of a normal node */
+  protected static int nnc2;
 
-   /**
-    * Sets the color values according to properties of the given
-    * <code>Display</code>
-    *
-    * @param d the display for which the colors are to be set.
-    */
-   public static void setDisplay(Display d) {
-      if (d.isColor()) {
-         if (d.numColors() >= 16) {
-            setColors(COLORS_FULL);
-            System.out.println("running with full colors");
+  /** Inner and outer colors of a selected node */
+  protected static int nsc1;
 
-            return;
-         }
-      } else {
-         if (d.numColors() >= 16) {
-            setColors(COLORS_GREY16);
-            System.out.println("running with grey16");
+  /** Inner and outer colors of a selected node */
+  protected static int nsc2;
 
-            return;
-         }
+  /** Inner and outer colors of a disabled node */
+  protected static int ndc1;
+
+  /** Inner and outer colors of a disabled node */
+  protected static int ndc2;
+
+  /** background */
+  protected static int bg;
+
+  /**
+   * Sets the color values according to properties of the given
+   * <code>Display</code>
+   *
+   * @param d the display for which the colors are to be set.
+   */
+  public static void setDisplay(Display d)
+  {
+    if (d.isColor())
+    {
+      if (d.numColors() >= 16)
+      {
+        setColors(COLORS_FULL);
+        System.out.println("running with full colors");
+
+        return;
       }
+    }
+    else
+    {
+      if (d.numColors() >= 16)
+      {
+        setColors(COLORS_GREY16);
+        System.out.println("running with grey16");
 
-      setColors(COLORS_GREY8);
-      System.out.println("running with grey8");
-   }
+        return;
+      }
+    }
 
-   private static void setColors(int[] a) {
-      p1c1 = a[0];
-      p1c2 = a[1];
+    setColors(COLORS_GREY8);
+    System.out.println("running with grey8");
+  }
 
-      p2c1 = a[2];
-      p2c2 = a[3];
+  private static void setColors(int[] a)
+  {
+    p1c1 = a[0];
+    p1c2 = a[1];
 
-      nc1 = a[4];
-      nc2 = a[5];
+    p2c1 = a[2];
+    p2c2 = a[3];
 
-      nnc1 = a[6];
-      nnc2 = a[7];
+    nc1 = a[4];
+    nc2 = a[5];
 
-      nsc1 = a[8];
-      nsc2 = a[9];
+    nnc1 = a[6];
+    nnc2 = a[7];
 
-      ndc1 = a[10];
-      ndc2 = a[11];
+    nsc1 = a[8];
+    nsc2 = a[9];
 
-      bg = a[12];
-   }
+    ndc1 = a[10];
+    ndc2 = a[11];
+
+    bg = a[12];
+  }
 }

@@ -2,59 +2,74 @@ package test.sim;
 
 import javax.microedition.lcdui.*;
 
+
 /**
  * A Form that shows some options - main menu of the game.
  *
  * @author Jorge
  */
-public class StartForm extends List implements CommandListener {
+public class StartForm extends List implements CommandListener
+{
+  private static final String[] CHOICES = 
+  {
+    "Spielen", "Einstellungen", "Info", "About"
+  };
+  private Sim sim;
+  private GameModeForm gamemode;
 
-   private static final String[] CHOICES = { "Spielen", "Einstellungen", "Info", "About" };
+  /**
+   * Creates a new StartForm object.
+   *
+   * @param sim The main MIDlet
+   */
+  public StartForm(Sim sim)
+  {
+    super("SimME", List.IMPLICIT, CHOICES, null);
+    this.sim = sim;
+    addCommand(new Command("Exit", Command.EXIT, 0));
+    setCommandListener(this);
+  }
 
-   private Sim sim;
-   private GameModeForm gamemode;
+  /** @see CommandListener#commandAction(Command, Displayable) */
+  public void commandAction(Command cmd, Displayable disp)
+  {
+    if (cmd.getCommandType() == Command.EXIT)
+    {
+      sim.destroyApp(false);
+      sim.notifyDestroyed();
+    }
+    else
+    {
+      Display d = Sim.getDisplay();
 
-   /**
-    * Creates a new StartForm object.
-    *
-    * @param sim The main MIDlet
-    */
-   public StartForm(Sim sim) {
-      super("SimME", List.IMPLICIT, CHOICES, null);
-      this.sim = sim;
-      addCommand(new Command("Exit", Command.EXIT, 0));
-      setCommandListener(this);
-   }
+      switch (getSelectedIndex())
+      {
+      case 0: // Neues Spiel
+        gamemode = new GameModeForm();
+        d.setCurrent(gamemode);
 
-   /** @see CommandListener#commandAction(Command, Displayable) */
-   public void commandAction(Command cmd, Displayable disp) {
-      if (cmd.getCommandType() == Command.EXIT) {
-         sim.destroyApp(false);
-         sim.notifyDestroyed();
-      } else {
-         Display d = Sim.getDisplay();
+        break;
 
-         switch (getSelectedIndex()) {
-            case 0 : // Neues Spiel
-               gamemode = new GameModeForm();
-               d.setCurrent(gamemode);
-               break;
+      case 1: // Einstellungen
+        d.setCurrent(new PrefForm());
 
-            case 1 : // Einstellungen
-               d.setCurrent(new PrefForm());
-               break;
+        break;
 
-            case 2 : // Info
-               Info.showInfo(d);
-               break;
+      case 2: // Info
+        Info.showInfo(d);
 
-            case 3 : // About
-               Alert alert2 =
-                  new Alert("About", "SimME\n by SPIESSEIN\n based on HEXI\n by Prof. Slany\n", null, AlertType.INFO);
-               alert2.setTimeout(5000);
-               d.setCurrent(alert2, this);
-               break;
-         }
+        break;
+
+      case 3: // About
+
+        Alert alert2 = new Alert("About",
+            "SimME\n by SPIESSEIN\n based on HEXI\n by Prof. Slany\n", null,
+            AlertType.INFO);
+        alert2.setTimeout(5000);
+        d.setCurrent(alert2, this);
+
+        break;
       }
-   }
+    }
+  }
 }

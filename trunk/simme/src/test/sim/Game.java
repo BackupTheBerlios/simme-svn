@@ -2,6 +2,7 @@ package test.sim;
 
 import java.util.Stack;
 
+
 /**
  * Represents a single game with all its states. Provides methods to start,
  * end, pause a game and uses a <code>Canvas</code> to draw itself to the
@@ -9,8 +10,8 @@ import java.util.Stack;
  *
  * @author kariem
  */
-public class Game {
-
+public class Game
+{
   /** No owner */
   public static final byte NEUTRAL = 0;
 
@@ -19,6 +20,7 @@ public class Game {
 
   /** Player 2 is owner */
   public static final byte PLAYER2 = 2;
+  public String moveMessage = "";
 
   /** nodes */
   private Node[] nodes;
@@ -48,17 +50,20 @@ public class Game {
    *
    * @see #start()
    */
-  public Game() {
+  public Game()
+  {
     start();
   }
 
   /**
    * May be used to start/restart the game.
    */
-  public void start() {
+  public void start()
+  {
     nodes = new Node[6];
 
-    for (byte i = 0; i < 6; i++) {
+    for (byte i = 0; i < 6; i++)
+    {
       nodes[i] = new Node();
     }
 
@@ -90,13 +95,14 @@ public class Game {
    *         activated/deactivated, edge was coloured). <code>false</code>,
    *         if no changes have been made to the current game state.
    */
-  public String selectNode(byte index) {
+  public boolean selectNode(byte index)
+  {
+    moveMessage = "";
 
-    String result="";
-
+    //  boolean result = false;
     if (index == -1) // key 0
     {
-      if(gameOver)
+      if (gameOver)
       {
         currentPlayer = !currentPlayer;
         gameOver = false;
@@ -104,20 +110,30 @@ public class Game {
 
       if (undoTurn())
       {
-        return "Undo successful!";
+        moveMessage = "Undo successful!";
+
+        return true;
       }
       else
       {
-        return "Undo not possible!";
+        moveMessage = "Undo not possible!";
+
+        return false;
       }
     }
 
-    if ((index < 0) || (index > 5)) {
-      return "Enter 0-5!";
+    if ((index < 0) || (index > 5))
+    {
+      moveMessage = "Enter 0-5!";
+
+      return false;
     }
 
-    if (gameOver) {
-      return "Start new game!";
+    if (gameOver)
+    {
+      moveMessage = "Start new game!";
+
+      return false;
     }
 
     Node nodeAtIndex = nodes[index];
@@ -127,70 +143,82 @@ public class Game {
 
       if (nodeAtIndex.disabled)
       {
-        return "Node closed!";
+        moveMessage = "Node closed!";
+
+        return false;
       }
 
       activeNode = index;
       nodeAtIndex.activated = true;
 
-      return "";
+      moveMessage = "";
+
+      return true;
+    }
+    else if (activeNode == index)
+    { // edge with length 0; e.g. Node 1 to Node 1
+      // set node to inactive
+      nodeAtIndex.activated = false;
+
+      // set active node to nothing, and exit
+      activeNode = -1;
+
+      moveMessage = (index + 1) + " already chosen!";
+
+      return false;
     }
     else
+    { // a second node is activated
+      // test if edge still not owner by P1 nor P2
 
-      if (activeNode == index)
-      { // edge with length 0; e.g. Node 1 to Node 1
+      if (getEdgeOwner(activeNode, index) == NEUTRAL)
+      {
+        setEdgeOwner(activeNode, index, currentPlayer);
 
-        // set node to inactive
-        nodeAtIndex.activated = false;
+        // switch players and see if someone has won
+        endTurn(activeNode, index);
 
-        // set active node to nothing, and exit
+        // deselect active node
+        nodes[activeNode].activated = false;
         activeNode = -1;
 
-        return (index+1) + " already chosen!";
+        // disable node to be disabled
+        disableNodes();
+        moveMessage = "";
+
+        return true;
       }
       else
-      { // a second node is activated
+      {
+        moveMessage = "Edge allr selected!";
 
-        // test if edge still not owner by P1 nor P2
-        if (getEdgeOwner(activeNode, index) == NEUTRAL)
-        {
-          setEdgeOwner(activeNode, index, currentPlayer);
-
-          // switch players and see if someone has won
-          endTurn(activeNode, index);
-
-          // deselect active node
-          nodes[activeNode].activated = false;
-          activeNode = -1;
-
-          // disable node to be disabled
-          disableNodes();
-
-          return "";
-        }
-        else
-        {
-          return "Edge allr selected!";
-        }
+        return false;
       }
+    }
   }
 
   /**
    * Searches for nodes to be disabled and sets them accordingly.
    */
-  private void disableNodes() {
+  private void disableNodes()
+  {
     Node n;
 
-    for (byte i = 0; i < 6; i++) {
+    for (byte i = 0; i < 6; i++)
+    {
       n = nodes[i];
 
       // look for not yet disabled nodes
-      if (!n.disabled) {
+      if (!n.disabled)
+      {
         boolean possibleConnection = false;
 
-        for (byte j = 0; j < 6; j++) {
-          if (i != j) {
-            if (getEdgeOwner(i, j) == NEUTRAL) {
+        for (byte j = 0; j < 6; j++)
+        {
+          if (i != j)
+          {
+            if (getEdgeOwner(i, j) == NEUTRAL)
+            {
               possibleConnection = true;
 
               break;
@@ -198,7 +226,8 @@ public class Game {
           }
         }
 
-        if (!possibleConnection) {
+        if (!possibleConnection)
+        {
           n.disabled = true;
         }
       }
@@ -212,17 +241,21 @@ public class Game {
    * @param a First node of last edge drawn.
    * @param b Second node of last edge drawn.
    */
-  private void endTurn(byte a, byte b) {
+  private void endTurn(byte a, byte b)
+  {
     // only the player who just did his move may lose.
     byte player = currentPlayer ? PLAYER1 : PLAYER2;
 
     moveNr++;
 
     // if someone has lost, last edge drawn was deciding
-    for (byte c = 0; c < 6; c++) {
-      if ((c != a) && (c != b)) {
+    for (byte c = 0; c < 6; c++)
+    {
+      if ((c != a) && (c != b))
+      {
         // find triangle
-        if ((getEdgeOwner(a, c) == player) && (getEdgeOwner(b, c) == player)) {
+        if ((getEdgeOwner(a, c) == player) && (getEdgeOwner(b, c) == player))
+        {
           gameOver = true;
 
           return;
@@ -233,20 +266,19 @@ public class Game {
     currentPlayer = !currentPlayer;
   }
 
-
   /**
    * Undos last edge operation.
-   * 
+   *
    */
   private boolean undoTurn()
   {
     byte edge_index = -1;
 
-    if(!undo_stack_.empty())
-    { 
+    if (!undo_stack_.empty())
+    {
       moveNr--;
-      
-      edge_index = ((Byte)undo_stack_.pop()).byteValue();
+
+      edge_index = ((Byte) undo_stack_.pop()).byteValue();
       edges[edge_index] = NEUTRAL;
 
       currentPlayer = !currentPlayer;
@@ -258,16 +290,15 @@ public class Game {
       // System.out.println("Undo not possible!\n");
       return false;
     }
-    
   }
-
 
   /**
    * Returns the current player.
    *
    * @return the current player.
    */
-  public byte getPlayersTurn() {
+  public byte getPlayersTurn()
+  {
     return currentPlayer ? PLAYER1 : PLAYER2;
   }
 
@@ -281,8 +312,10 @@ public class Game {
    *         is not activated or an invalid index (index&lt;0 or index&gt;5)
    *         was supplied.
    */
-  public boolean isActivated(byte index) {
-    if ((index < 0) || (index > 5)) {
+  public boolean isActivated(byte index)
+  {
+    if ((index < 0) || (index > 5))
+    {
       return false;
     }
 
@@ -299,8 +332,10 @@ public class Game {
    *         is not disabled or an invalid index (index&lt;0 or index&gt;5)
    *         was supplied.
    */
-  public boolean isDisabled(byte index) {
-    if ((index < 0) || (index > 5)) {
+  public boolean isDisabled(byte index)
+  {
+    if ((index < 0) || (index > 5))
+    {
       return false;
     }
 
@@ -313,7 +348,8 @@ public class Game {
    * @return <code>true</code> if this game is over, <code>false</code>
    *         otherwise.
    */
-  public boolean isGameOver() {
+  public boolean isGameOver()
+  {
     return gameOver;
   }
 
@@ -324,8 +360,10 @@ public class Game {
    *         {@link #PLAYER2}, if the second player has won this game, and
    *         {@link #NEUTRAL}, if the game is not over yet.
    */
-  public byte getWinner() {
-    if (!gameOver) {
+  public byte getWinner()
+  {
+    if (!gameOver)
+    {
       return NEUTRAL;
     }
 
@@ -334,10 +372,11 @@ public class Game {
 
   private void setEdgeOwner(byte nodeA, byte nodeB, boolean player)
   {
-    byte index = (nodeA < nodeB) ? getIndex(nodeA, nodeB) : getIndex(nodeB, nodeA);
+    byte index = (nodeA < nodeB) ? getIndex(nodeA, nodeB) : getIndex(nodeB,
+        nodeA);
     edges[index] = player ? PLAYER1 : PLAYER2;
 
-    undo_stack_.push((Object)(new Byte(index)));
+    undo_stack_.push((Object) (new Byte(index)));
   }
 
   /**
@@ -351,12 +390,15 @@ public class Game {
    *         <code>nodeB</code> indicated by {@link #NEUTRAL}, {@link
    *         #PLAYER1}, or {@link #PLAYER2}.
    */
-  public byte getEdgeOwner(byte nodeA, byte nodeB) {
-    if (nodeA == nodeB) {
+  public byte getEdgeOwner(byte nodeA, byte nodeB)
+  {
+    if (nodeA == nodeB)
+    {
       return NEUTRAL;
     }
 
-    byte owner = (nodeA < nodeB) ? edges[getIndex(nodeA, nodeB)] : edges[getIndex(nodeB, nodeA)];
+    byte owner = (nodeA < nodeB) ? edges[getIndex(nodeA, nodeB)]
+                                 : edges[getIndex(nodeB, nodeA)];
 
     return owner;
   }
@@ -371,26 +413,28 @@ public class Game {
    * @return The index of the edge within the edge list containing the edge
    *         between <code>smaller</code> and <code>bigger</code>.
    */
-  private byte getIndex(byte smaller, byte bigger) {
+  private byte getIndex(byte smaller, byte bigger)
+  {
     byte add = 0;
 
-    switch (smaller) {
-    case 1 :
+    switch (smaller)
+    {
+    case 1:
       add = 5;
 
       break;
 
-    case 2 :
+    case 2:
       add = 9;
 
       break;
 
-    case 3 :
+    case 3:
       add = 12;
 
       break;
 
-    case 4 :
+    case 4:
       add = 14;
 
       break;
@@ -405,7 +449,8 @@ public class Game {
    *
    * @return The number of moves.
    */
-  public byte getMoveNr() {
+  public byte getMoveNr()
+  {
     return moveNr;
   }
 
@@ -414,7 +459,8 @@ public class Game {
    *
    * @return a String showing information on player1.
    */
-  public String getP1Info() {
+  public String getP1Info()
+  {
     return p1Info;
   }
 
@@ -423,7 +469,8 @@ public class Game {
    *
    * @return a String showing the name of player1.
    */
-  public String getP1Name() {
+  public String getP1Name()
+  {
     return p1Name;
   }
 
@@ -432,7 +479,8 @@ public class Game {
    *
    * @return a String showing information on player2.
    */
-  public String getP2Info() {
+  public String getP2Info()
+  {
     return p2Info;
   }
 
@@ -441,11 +489,13 @@ public class Game {
    *
    * @return a String showing the name of player2.
    */
-  public String getP2Name() {
+  public String getP2Name()
+  {
     return p2Name;
   }
 
-  class Node {
+  class Node
+  {
     boolean activated;
     boolean disabled;
   }
