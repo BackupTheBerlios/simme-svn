@@ -2,22 +2,21 @@
 <!-- 
   [Simme]
     Ant build file: build.xml
-             $Date: 2004/09/13 15:18:08 $
-         $Revision: 1.18 $
+             $Date: 2004/09/16 08:24:37 $
+         $Revision: 1.19 $
 
 	This ant build file is used to build the sources for SimME. The Targets
 	include means to compile the sources and build the package with optional 
 	obfuscation and preverification.
   
-	The following libraries are needed in from the ${lib} directory:
+	The following libraries are needed in from the ${lib.dir} directory:
   
-		- Antenna: http://antenna.sourceforge.net/
+		- antenna.jar: http://antenna.sourceforge.net/
   	
 	For obfuscation the Proguard library (http://proguard.sourceforge.net/) has
 	to be put in the directory ${wkt.home}/bin, as antenna looks in this
 	directory for the obfuscation libraries. Alternatively Retroguard can be
 	used.
-	
 	
  -->
 <project name="SimME" default="build">
@@ -25,12 +24,12 @@
 	<property file="ant-build.properties" />
 	<taskdef resource="antenna.properties" classpath="${lib.antenna}" />
 
-	<!-- build simme-client.jar to include in server -->
+	<!-- build simme-client.jar to include in server (includes debug info) -->
 	<target name="build"
 	        depends="dist"
 	        description="Creates simme-client.jar in order to be included in Webapp"
 	>
-		<copy file="${build}/bin/SimME.jar" tofile="../lib/simme-client.jar" />
+		<copy file="${jar.debug}" tofile="${lib.dir}/simme-client.jar" />
 	</target>
 
 
@@ -42,21 +41,38 @@
 		          destdir="${cls-client}"
 		          preverify="${var.preverify}"
 		/>
-		<property name="backup.jar" value="${build}/SimME-${DSTAMP}.jar" />
 	</target>
 
-	<target name="dist" depends="compile-client">
-		<mkdir dir="${build}/bin" />
-		<wtkpackage jarfile="${build}/bin/SimME.jar"
-		            jadfile="${debug.jad}"
-		            obfuscate="${var.obfuscate}"
+	<target name="-make-package" depends="compile-client">
+		<wtkpackage jarfile="${param.jar}"
+		            jadfile="${param.jad}"
+		            obfuscate="${param.obfuscate}"
 		>
 			<fileset dir="${resources}" />
 			<fileset dir="${cls-client}" />
 			<preserve class="at.einspiel.simme.client.Sim" />
 		</wtkpackage>
+	</target>
+
+	<target name="dist">
+		<antcall target="-make-package">
+			<param name="param.jar" value="${jar.debug}" />
+			<param name="param.jad" value="${jad.debug}" />
+			<param name="param.obfuscate" value="${var.obfuscate}" />
+		</antcall>
+
 		<!-- make backup copy with timestamp -->
-		<copy file="${build}/bin/SimME.jar" tofile="${backup.jar}" />
+		<copy file="${jar.debug}" tofile="${build}/SimME-${DSTAMP}.jar" />
+	</target>
+
+	<target name="dist-nodebug">
+		<mkdir dir="${build}/bin" />
+
+		<antcall target="-make-package">
+			<param name="param.jar" value="${jar.run}" />
+			<param name="param.jad" value="${jad.run}" />
+			<param name="param.obfuscate" value="false" />
+		</antcall>
 	</target>
 
 
@@ -70,18 +86,27 @@
 		<delete failonerror="false" dir="${cls}" />
 		<delete failonerror="false" dir="${cls-client}" />
 	</target>
-	
-    <!-- deployment -->
-    <target name="deploy" description="Deploys the sources to the wtk-home directory">
-    	
-      <copy todir="${dir.deploy}">
-        <fileset dir="${src}">
-          <include name="${client-package}/**/*.java"/>
-          <exclude name="**/*Test*,**/tests/*"/>
-        </fileset>
-      </copy>
-      <copy tofile="${dir.deploy}/bin/SimME.jad" file="${debug.jad}"/>	
-    </target>
+
+	<!-- deployment -->
+	<target name="deploy"
+	        description="Deploys the sources to the wtk-home directory"
+	>
+
+		<copy todir="${dir.deploy}">
+			<fileset dir="${src}">
+				<include name="${client-package}/**/*.java" />
+				<exclude name="**/*Test*,**/tests/*" />
+			</fileset>
+		</copy>
+		<copy tofile="${dir.deploy}/bin/SimME.jad" file="${jad.debug}" />
+	</target>
+
+	<target name="distros"
+	        description="Creates source and binary distros."
+	        depends="dist,dist-nodebug"
+	>
+		<ant antfile="release-build.xml" target="packages" />
+	</target>
+
 
 </project>
-
