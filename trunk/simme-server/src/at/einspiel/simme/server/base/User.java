@@ -1,20 +1,22 @@
 package at.einspiel.simme.server.base;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.io.Serializable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import at.einspiel.simme.server.db.Database;
 
 /**
- * Represents a Simme user.
+ * Represents a Simme user. Serializable to be used in JSPs.
  * 
  * @author  kariem
  */
-public class User implements Comparable {
+public class User implements Comparable, Serializable {
 
    private static final String TABLE_USER = "\"User\"";
 
@@ -38,6 +40,12 @@ public class User implements Comparable {
    private String clientmodel;
 
    private static Database db = new Database();
+
+   /** Creates an empty user which should be filled up */
+   public User() {
+       System.out.println("creating empty user");
+      ;
+   }
 
    /**
     * Creates a new <code>User</code> with the given properties.
@@ -157,13 +165,6 @@ public class User implements Comparable {
       u.setLocation(rs.getString("Location"));
       u.setClientmodel(rs.getString("Client"));
       return u;
-   }
-
-   /**
-    * Creates an empty user which should be filled up
-    */
-   private User() {
-      ;
    }
 
    /**

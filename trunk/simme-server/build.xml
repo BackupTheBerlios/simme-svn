@@ -4,48 +4,49 @@
     <!-- main -->
     <property name="src" value="src"/>
     <property name="cls" value="cls"/>
-    
-    <!-- client -->
-    <property name="client.dir" value="../simme"/>
-    <property name="client.cls" value="${client.dir}/cls"/>
 
     <!-- web-inf -->
-    <property name="web-inf" value="WEB-INF" />
-    <property name="web-inf.classes" value="${web-inf}/classes" />
-    <property name="web-inf.lib" value="${web-inf}/lib" />
-    <property name="webxml" value="${web-inf}/web.xml" />
-    
+    <property name="module" value="simme"/>
+    <property name="web-inf" value="${module}/WEB-INF"/>
+    <property name="web-inf.classes" value="${web-inf}/classes"/>
+    <property name="web-inf.lib" value="${web-inf}/lib"/>
+    <property name="webxml" value="${web-inf}/web.xml"/>
+
     <!-- deployment -->
     <property name="deploy.war" value="simme-server.war"/>
     
     <!-- misc libraries for building -->
     <property name="lib.junit" value="../lib/junit.jar"/>
     <property name="lib.xerces" value="../lib/xercesImpl.jar"/>
-    
+
+    <!-- client -->
+    <property name="client.dir" value="../simme"/>
+    <property name="client.cls" value="${client.dir}/cls"/>
+
     <target name="buildclient">
         <description>
             Builds the client classes by running the build file in the client
             directory.
         </description>
-        <ant dir="${client.dir}"/>
+        <ant dir="${client.dir}" inheritAll="false"/>
     </target>
-    
+
     <target name="clientlibs" depends="buildclient">
         <description>
             Includes the libraries of the client to the lib directory.
         </description>
         <jar destfile="${web-inf.lib}/simme-client.jar" index="true" update="true">
-             <fileset dir="${client.cls}">
+            <fileset dir="${client.cls}">
                 <!-- omitting test classes -->
                 <patternset id="non.test.classes">
                     <include name="**/*.class"/>
                     <exclude name="**/*Test*"/>
                     <exclude name="**/tests/*"/>
                 </patternset>
-             </fileset>
+            </fileset>
         </jar>
     </target>
-    
+
     <target name="initbuild" depends="buildclient">
         <path id="project.class.path">
             <pathelement path="${lib.junit}"/>
@@ -57,11 +58,16 @@
     
     <!-- build simme -->
     <target name="build" depends="initbuild">
+    	<description>
+    	    Compiles the sources and copies the classes to the web module's
+    	    WEB-INF/classes directory.
+    	</description>
         <javac srcdir="${src}" destdir="${cls}" source="1.4">
             <classpath refid="project.class.path"/>
         </javac>
+        <copydir src="${cls}" dest="${web-inf.classes}"/>
     </target>
-    
+
     <target name="war" depends="clientlibs, build">
         <description>Builds the web archive for deployment.</description>
         <war destfile="${deploy.war}" webxml="${webxml}" update="true" index="true">
@@ -76,7 +82,7 @@
                 <include name="simme/**"/>
                 <!-- remove hidden files -->
                 <exclude name="**/.*"/>
-            </fileset>            
+            </fileset>
         </war>
     </target>
     
@@ -84,5 +90,5 @@
     <target name="clean">
         <delete dir="${cls}"/>
         <delete file="${deploy.war}"/>
-    </target>    
+    </target>
 </project>
