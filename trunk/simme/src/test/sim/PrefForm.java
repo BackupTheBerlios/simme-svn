@@ -16,6 +16,7 @@ import test.sim.util.PersonalPrefs;
 import test.sim.util.PrefsException;
 
 /**
+ * A List that gives the user choices to customize this application.
  * @author kariem
  */
 public class PrefForm extends List implements CommandListener {
@@ -64,7 +65,7 @@ public class PrefForm extends List implements CommandListener {
    }
 
    private Screen makePersPrefs() {
-      Form frmPrefs = new Form("Personal Preferences");
+      final Form frmPrefs = new Form("Personal Preferences");
       final PersonalPrefs prefs = PersonalPrefs.getInstance();
       String[] data = new String[7];
       final boolean newRecord;
@@ -95,7 +96,6 @@ public class PrefForm extends List implements CommandListener {
 
       // set for this Form accordingly
 
-      System.out.println("here");
       final TextField tfNick = new TextField("Nick", data[0], 8, TextField.ANY | TextField.NON_PREDICTIVE);
       final TextField tfPass =
          new TextField("Pass", data[1], 8, TextField.ANY | TextField.SENSITIVE | TextField.NON_PREDICTIVE);
@@ -157,6 +157,7 @@ public class PrefForm extends List implements CommandListener {
                      prefs.save();
                   else
                      prefs.update();
+
                } catch (PrefsException e) {
                }
             }
