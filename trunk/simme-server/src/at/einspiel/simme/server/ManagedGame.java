@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: ManagedGame.java
-//                  $Date: 2004/09/14 22:27:54 $
-//              $Revision: 1.8 $
+//                  $Date: 2004/09/15 23:38:20 $
+//              $Revision: 1.9 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
@@ -71,6 +71,7 @@ public class ManagedGame extends ServerGame implements IStateListener {
 	/** @see at.einspiel.simme.server.ServerGame#stopGame() */
 	public void stopGame() {
 		super.stopGame();
+		System.out.println("Game " + getNiceId() + " has ended.");
 		// remove listener from players
 		getPlayer1().removeStateListener(this);
 		getPlayer2().removeStateListener(this);
