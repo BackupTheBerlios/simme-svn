@@ -1,3 +1,9 @@
+//----------------------------------------------------------------------------
+//[Simme]
+//    Java Source File: GameModeForm.java
+//               $Date: 2004/09/07 13:26:55 $
+//           $Revision: 1.12 $
+//----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
 import java.io.IOException;
@@ -10,6 +16,7 @@ import at.einspiel.messaging.LoginRequest;
 import at.einspiel.simme.client.Sim;
 import at.einspiel.simme.client.util.PersonalPrefs;
 import at.einspiel.simme.client.util.PrefsException;
+import at.einspiel.simme.client.util.UIUtils;
 
 /**
  * <p>
@@ -39,8 +46,8 @@ public class GameModeForm extends List implements CommandListener {
 	 */
 	public GameModeForm() {
 		super("Game Mode", List.IMPLICIT, CHOICES, null);
-		addCommand(new Command("Zurück", Command.BACK, 0));
-		addCommand(new Command("Auswahl", Command.OK, 1));
+		addCommand(UIUtils.CMD_BACK);
+		addCommand(UIUtils.CMD_CHOOSE);
 		setCommandListener(this);
 	}
 
@@ -95,19 +102,17 @@ public class GameModeForm extends List implements CommandListener {
 		 *            the data for the alert.
 		 */
 		ConnectionAlert(String[] data) {
-			super("Connecting ...");
-			setString("Connection to the server is being established.");
+			super("Verbinde ...");
+			setString("Verbindung zum Server wird hergestellt.");
 			// Alert will be substituted by result message
 			setTimeout(Alert.FOREVER);
 			loginData = data;
 
-			// TODO remove debug output
-			for (int i = 0; i < data.length; i++) {
-				if (data[i] != null) {
-					Logger.debug(i + ":" + data[i]);
-				}
-			}
-			Logger.debug("connectionalert created");
+			/*
+			 * debug output for (int i = 0; i < data.length; i++) { if (data[i] !=
+			 * null) { Logger.debug(i + ":" + data[i]); } }
+			 * Logger.debug("connectionalert created");
+			 */
 		}
 
 		/**
@@ -122,11 +127,9 @@ public class GameModeForm extends List implements CommandListener {
 				/** @see java.lang.Thread#run() */
 				public void run() {
 					try {
-						Logger.debug("constructing message");
-
 						// construct login message
 						String version = Sim.getProperty("MIDlet-Version");
-						Logger.debug("version: " + version);
+						Logger.debug(getClass(), "constructing message (ver. " + version + ")");
 
 						LoginRequest loginMsg = null;
 
@@ -140,12 +143,15 @@ public class GameModeForm extends List implements CommandListener {
 						loginMsg.sendRequest(Sim.getProperty("simme.page.login"));
 
 						// get response
+						Logger.debug(getClass(), "retrieving response");
 						String response = new String(loginMsg.getResponse());
 
 						// use response to build result
+						Logger.debug(getClass(), "building login message with response: "
+								+ response);
 						LoginMessage result = new LoginMessage(response);
 
-						Logger.debug("login result: " + result);
+						Logger.debug(getClass(), "login result: " + result);
 
 						if (result.isSuccess()) {
 							final String url = result.getUrl();
@@ -155,7 +161,8 @@ public class GameModeForm extends List implements CommandListener {
 
 							DynamicUI dUI = new DynamicUI("SimME online", result.getMessage(),
 									url);
-							d.setCurrent(dUI.getDisplayable());
+
+							dUI.updateDisplay();
 
 						} else {
 							// no success => show cause
@@ -163,8 +170,8 @@ public class GameModeForm extends List implements CommandListener {
 									? AlertType.INFO
 									: AlertType.ERROR;
 							final String errorMessage = result.getMessage();
-							Alert loginAlert = new Alert("Error while logging in",
-									errorMessage, null, type);
+							Alert loginAlert = new Alert("Fehler beim Einloggen", errorMessage,
+									null, type);
 							loginAlert.setTimeout(FOREVER);
 							Logger.info("login error: " + errorMessage);
 							d.setCurrent(loginAlert);

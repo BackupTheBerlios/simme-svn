@@ -1,6 +1,13 @@
+//----------------------------------------------------------------------------
+//[Simme]
+//  Java Source File: StartForm.java
+//             $Date: 2004/09/07 13:26:55 $
+//         $Revision: 1.3 $
+//----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
 import at.einspiel.simme.client.Sim;
+import at.einspiel.simme.client.util.UIUtils;
 
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.AlertType;
@@ -28,8 +35,8 @@ public class StartForm extends List implements CommandListener {
   public StartForm(Sim s) {
     super("SimME", List.IMPLICIT, CHOICES, null);
     this.sim = s;
-    addCommand(new Command("Beenden", Command.EXIT, 0));
-    addCommand(new Command("Auswahl", Command.OK, 0));
+    addCommand(UIUtils.CMD_QUIT);
+    addCommand(UIUtils.CMD_CHOOSE);
     setCommandListener(this);
   }
 
