@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: DynamicUI.java
-//                  $Date: 2004/08/13 13:58:23 $
-//              $Revision: 1.7 $
+//                  $Date: 2004/08/25 15:36:00 $
+//              $Revision: 1.8 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -11,6 +11,7 @@ import java.util.Enumeration;
 
 import javax.microedition.lcdui.*;
 
+import at.einspiel.messaging.ISimpleInfo;
 import at.einspiel.messaging.Request;
 import at.einspiel.messaging.SendableUI;
 import at.einspiel.simme.client.Game;
@@ -61,9 +62,7 @@ public class DynamicUI implements CommandListener {
 	 */
 	public DynamicUI(String title, String message, String url) {
 		System.out.println("message=" + message);
-		ui = new SendableUI();
-		ui.setTitle(title);
-		ui.setText(message);
+		ui = new SendableUI(title, message);
 
 		this.url = url;
 		getDisplayable();
@@ -145,36 +144,42 @@ public class DynamicUI implements CommandListener {
 
 	Displayable makeDisplayable(SendableUI sui) {
 		Displayable d;
-		String title = sui.getTitle();
-		if (sui.isList()) {
-			d = new List(title, List.IMPLICIT);
-
-			Enumeration enum = sui.getListElements().elements();
-			while (enum.hasMoreElements()) {
-				String name = (String) enum.nextElement();
-
-				if (name != null) {
-					appendToList((List) d, name, null);
-				}
-			}
+		ISimpleInfo infoObject = sui.getInfoObject();
+		String title = infoObject.getTitle();
+		if (infoObject.isList()) {
+			d = makeList(infoObject);
 			updateNecessary = false;
-		} else if (sui.hasXmlInfo()) {
+		} else if (infoObject.isXml()) {
 			// build game with xml information
-			Game g = new NetworkGame(sui.getXmlInfo(), Sim.getNick(), url);
+			Game g = new NetworkGame(infoObject.getXmlInfo(), Sim.getNick(), url);
 			// TODO Georg start game, create Zeichenblatt, ...
 			d = new Zeichenblatt(false);
 			((Zeichenblatt) d).setGame(g);
 			updateNecessary = false;
 		} else {
 			d = new Form(title);
-			((Form) d).append(new StringItem("Status:", sui.getText()));
+			((Form) d).append(new StringItem("Status:", infoObject.getText()));
 			updateNecessary = true;
 		}
 		return d;
 	}
 
+	private Displayable makeList(ISimpleInfo infoObject) {
+		List l = new List(infoObject.getTitle(), List.IMPLICIT);
+
+		Enumeration enum = infoObject.getListElements().elements();
+		while (enum.hasMoreElements()) {
+			String name = (String) enum.nextElement();
+
+			if (name != null) {
+				appendToList(l, name, null);
+			}
+		}
+		return l;
+	}
+
 	private void appendToList(List l, String name, Image img) {
-		(l).append(name, img);
+		l.append(name, img);
 	}
 
 	/** Establishes a connection and updates the user interface. */
