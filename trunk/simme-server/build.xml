@@ -1,30 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="SimME server" basedir="." default="build">
 
-    <!-- main -->
-    <property name="src" value="src"/>
-    <property name="cls" value="cls"/>
-
-    <!-- web-inf -->
-    <property name="module" value="simme"/>
-    <property name="web-inf" value="${module}/WEB-INF"/>
-    <property name="web-inf.classes" value="${web-inf}/classes"/>
-    <property name="web-inf.lib" value="${web-inf}/lib"/>
-    <property name="webxml" value="${web-inf}/web.xml"/>
-
-    <!-- deployment -->
-    <property name="deploy.war" value="simme.war"/>
-    <property name="deploy.dir" value="D:\Devel\Server\Tomcat-4.1\webapps" />
-    
-    <!-- misc libraries for building -->
-    <property name="lib.dir" value="../lib" />
-    <property name="lib.client" value="${lib.dir}/simme-client.jar"/>
-    <property name="lib.junit" value="${lib.dir}/junit.jar"/>
-    <property name="lib.xerces" value="${lib.dir}/xercesImpl.jar"/>
-
-    <!-- client -->
-    <property name="client.dir" value="../simme"/>
-    <property name="client.cls" value="${client.dir}/cls"/>
+    <property file="ant-build.properties"/>
 
     <target name="buildclient">
         <description>

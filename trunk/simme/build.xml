@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="build" name="SimME">
 
-    <property file="build-xml.properties"/>
+    <property file="ant-build.properties"/>
 
     <!-- build all simme sources -->
     <target name="compile">
