@@ -2,16 +2,13 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry sourcepath="D:/Devel/JUnit/src.jar" kind="lib" path="E:/Uni/Hexi/lib/junit.jar"/>
 	<classpathentry kind="lib" path="simme/WEB-INF/lib/jstl.jar"/>
 	<classpathentry kind="lib" path="simme/WEB-INF/lib/standard.jar"/>
-	<classpathentry kind="lib" path="simme/WEB-INF/lib/pg73jdbc3.jar"/>
 	<classpathentry kind="src" path="testsrc"/>
-	<classpathentry kind="src" path="/Simme"/>
-	<classpathentry sourcepath="D:/Devel/xmlunit/src" kind="lib" path="E:/Uni/Hexi/lib/xmlunit1.0.jar"/>
-	<classpathentry kind="src" path="j2src"/>
-	<classpathentry kind="var" path="JDK_TOOLS"/>
-	<classpathentry kind="var" path="TOMCAT411/common/lib/servlet.jar"/>
-	<classpathentry kind="var" path="TOMCAT411/bin/bootstrap.jar"/>
+	<classpathentry exported="true" kind="src" path="/Simme"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Postgre JDBC3"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Servlet"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/XMLUnit"/>
+	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.0.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
 	<classpathentry kind="output" path="cls"/>
 </classpath>
