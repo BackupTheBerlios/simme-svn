@@ -11,15 +11,27 @@ import javax.microedition.lcdui.Display;
 public class ColorMgmt {
 
    /** p1, p2, nc, nnc, nsc, ndc */
-   private static final int[] COLORS_FULL =
-      { 0x00FF0000, 0, 0x0000FF00, 0, 0x00888888, 0, 0x00888888, 0, 0x0000FF00, 0, 0x00444444, 0x00888888, 0xA0AFFF };
+   private static final int[] COLORS_FULL = { //
+      0x00DD0000, 0x00FF0000, 0x0000DD00, 0x0000FF00, // p1, p2 
+      0x00888888, 0, // neutral line
+      0x00888888, 0, // neutral node
+      0x00888888, 0x000000FF, // selected node
+      0x00888888, 0x00777777, // deactivated node 
+      0xA0AFFF // background
+   };
+
+   /** p1, p2, nc, nnc, nsc, ndc  - */
+   private static final int[] COLORS_GREY16 = { //
+      0x00FFFFFF, 0x00111111, 0x00111111, 0x00222222, // p1, p2 
+      0x00888888, 0, // neutral line
+      0x00888888, 0, // neutral node
+      0x00888888, 0x00AAAAAA, // selected node
+      0x00888888, 0x00777777, // deactivated node 
+      0xDDDDDD // background
+   };
 
    /** p1, p2, nc, nnc, nsc, ndc  - */
    private static final int[] COLORS_GREY8 =
-      { 0x00FFFFFF, 0, 0x00111111, 0, 0x00888888, 0, 0x00888888, 0, 0x00AAAAAA, 0, 0x00444444, 0x00888888, 0xDDDDDD };
-
-   /** p1, p2, nc, nnc, nsc, ndc  - */
-   private static final int[] COLORS_GREY4 =
       { 0x00FFFFFF, 0, 0x00111111, 0, 0x00888888, 0, 0x00888888, 0, 0x00AAAAAA, 0, 0x00444444, 0x00888888, 0xDDDDDD };
 
    /** Inner and outer colors of player1's lines */
@@ -46,19 +58,20 @@ public class ColorMgmt {
     */
    public static void setDisplay(Display d) {
       if (d.isColor()) {
-         if (d.numColors() >= 8) {
+         if (d.numColors() >= 16) {
             setColors(COLORS_FULL);
             System.out.println("running with full colors");
+            return;
          }
       } else {
-         if (d.numColors() >= 8) {
-            setColors(COLORS_GREY8);
-            System.out.println("running with grey8");
-         } else {
-            setColors(COLORS_GREY4);
-            System.out.println("running with grey4");
+         if (d.numColors() >= 16) {
+            setColors(COLORS_GREY16);
+            System.out.println("running with grey16");
+            return;
          }
       }
+      setColors(COLORS_GREY8);
+      System.out.println("running with grey8");
    }
 
    private static void setColors(int[] a) {
