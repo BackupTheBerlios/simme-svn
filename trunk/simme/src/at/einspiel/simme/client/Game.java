@@ -1,13 +1,14 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: Game.java
-//               $Date: 2004/09/13 15:22:33 $
-//           $Revision: 1.10 $
+//               $Date: 2004/09/16 08:29:35 $
+//           $Revision: 1.11 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client;
 
 import java.util.Random;
 
+import at.einspiel.simme.client.ui.IDynamicUI;
 import at.einspiel.simme.nanoxml.XMLElement;
 
 /**
@@ -55,6 +56,8 @@ public abstract class Game {
 	// information for the user
 	/** the move message */
 	private String moveMessage;
+
+	private IDynamicUI ui;
 
 	/**
 	 * Initializes a new game. The game has to be started manually.
@@ -342,6 +345,7 @@ public abstract class Game {
 
 		switchPlayers();
 		showCurrentPlayer();
+		updateUI();
 	}
 
 	/**
@@ -533,6 +537,21 @@ public abstract class Game {
 		this.gameInfo.setId(id);
 	}
 
+	/**
+	 * Sets the dynamic UI.
+	 * @param ui the dynamic user interface to set.
+	 */
+	public void setDynamicUI(IDynamicUI ui) {
+		this.ui = ui;
+	}
+
+	/** Updates the user interface, if it is available. */
+	private void updateUI() {
+		if (ui != null) {
+			ui.updateDisplay();
+		}
+	}
+	
 	/**
 	 * Returns the number of moves that were executed since the start of the
 	 * game.

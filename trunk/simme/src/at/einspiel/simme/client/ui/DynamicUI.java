@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: DynamicUI.java
-//                  $Date: 2004/09/13 15:23:57 $
-//              $Revision: 1.11 $
+//                  $Date: 2004/09/16 08:29:35 $
+//              $Revision: 1.12 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -113,7 +113,7 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 	public void updateDisplay() {
 		Displayable d = makeDisplayable(sui.getInfoObject());
 
-		if (d instanceof Zeichenblatt) {
+		if (d instanceof GameBoard) {
 			// TODO add reference to this ui
 		} else {
 			// add command listeners
@@ -148,9 +148,10 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 			// build game with xml information
 			final Game g = new NetworkGame(infoObject.getXmlInfo(), Sim.getNick(), sui
 					.getCommPath());
-			newDisp = new Zeichenblatt(false);
+			newDisp = new GameBoard(false);
+			g.setDynamicUI((IDynamicUI) newDisp);
 			// start game in own thread, UI will be updated correctly
-			Thread t = new StartGameThread((Zeichenblatt) newDisp, g);
+			Thread t = new StartGameThread((GameBoard) newDisp, g);
 			t.start();
 
 			updateNecessary = false;
@@ -199,7 +200,7 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 
 	class StartGameThread extends Thread {
 
-		private final Zeichenblatt zeichenblatt;
+		private final GameBoard zeichenblatt;
 		private final Game g;
 
 		/**
@@ -207,7 +208,7 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 		 * @param zeichenblatt
 		 * @param g
 		 */
-		public StartGameThread(Zeichenblatt zeichenblatt, Game g) {
+		public StartGameThread(GameBoard zeichenblatt, Game g) {
 			this.zeichenblatt = zeichenblatt;
 			this.g = g;
 		}

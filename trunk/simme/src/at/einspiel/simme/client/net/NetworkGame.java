@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: NetworkGame.java
-//                  $Date: 2004/09/14 22:30:38 $
-//              $Revision: 1.4 $
+//                  $Date: 2004/09/16 08:29:35 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client.net;
 
@@ -51,19 +51,24 @@ public class NetworkGame extends GameOnePlayer {
 	protected void doOtherPlayersMove() {
 		Logger.debug(getClass(), "waiting for other player's move");
 
-		// receive the next move
-		remoteMove = null;
-		do {
-			remoteMove = pr.receiveMove();
-		} while (!isAlreadySelected(remoteMove));
+		Runnable r = new Runnable() {
+			public void run() {
+				// receive the next move
+				remoteMove = null;
+				do {
+					remoteMove = pr.receiveMove();
+				} while (!isAlreadySelected(remoteMove));
 
-		// if move == null, an error has occured
-		if (remoteMove == null) {
-			setMoveMessage(pr.getMessage());
-			return;
-		}
-		setEdgeOwner(remoteMove.getEdge());
-		endTurn(remoteMove);
+				// if move == null, an error has occured
+				if (remoteMove == null) {
+					setMoveMessage(pr.getMessage());
+					return;
+				}
+				setEdgeOwner(remoteMove.getEdge());
+				endTurn(remoteMove);
+			}
+		};
+		new Thread(r).start();
 	}
 
 	/**
