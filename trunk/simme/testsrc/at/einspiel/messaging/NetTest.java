@@ -3,7 +3,6 @@ package at.einspiel.messaging;
 import java.io.IOException;
 
 import junit.framework.TestCase;
-import at.einspiel.messaging.Request;
 
 /**
  * Class used to Test class network methods.
@@ -12,7 +11,7 @@ import at.einspiel.messaging.Request;
  */
 public class NetTest extends TestCase {
 	private static final String LOGIN_PAGE = "doLogin";
-	
+
 	private static final String SERVER = "http://localhost:8080/simme/";
 	//private static final String SERVER =
 	// "http://128.131.111.157:8080/simme/";
@@ -45,22 +44,24 @@ public class NetTest extends TestCase {
 
 	/** Tests sending via GET */
 	public void testGetSubmission() {
-		req.setParam("user", "username");
-		assertEquals("?user=username", req.getParamString(false));
+		req.setParam(IConstants.PARAM_USER, "username");
+		assertEquals("?" + IConstants.PARAM_USER + "=username", req.getParamString(false));
 
-		req.setParam("pwd", "password");
-		assertEquals("?user=username&pwd=password", req.getParamString(false));
+		req.setParam(IConstants.PARAM_PASS, "password");
+		assertEquals("?" + IConstants.PARAM_USER + "=username&" + IConstants.PARAM_PASS
+				+ "=password", req.getParamString(false));
 
 		req.sendRequest(SERVER, LOGIN_PAGE, false);
 	}
 
 	/** Tests sending via POST */
 	public void testPostSubmission() {
-		req.setParam("user", "username2");
-		assertEquals("user=username2", req.getParamString(true));
+		req.setParam(IConstants.PARAM_USER, "username2");
+		assertEquals(IConstants.PARAM_USER + "=username2", req.getParamString(true));
 
-		req.setParam("pwd", "password");
-		assertEquals("user=username2&pwd=password", req.getParamString(true));
+		req.setParam(IConstants.PARAM_PASS, "password");
+		assertEquals(IConstants.PARAM_USER + "=username2&" + IConstants.PARAM_PASS
+				+ "=password", req.getParamString(true));
 
 		req.sendRequest(SERVER, LOGIN_PAGE);
 	}

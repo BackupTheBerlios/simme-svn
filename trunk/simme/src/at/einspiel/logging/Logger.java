@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: Logger.java
-//                  $Date: 2004/08/12 21:56:08 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/09/02 10:17:05 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.logging;
 
@@ -47,7 +47,10 @@ public class Logger {
 	 * @param lvl
 	 *            the log level.
 	 */
-	static void log(String message, int lvl) {
+	static void log(Class c, String message, int lvl) {
+		if (c != null) {
+			message = addClassInfo(message, c);
+		}
 		message = addLevelInfo(message, lvl);
 		if (lvl >= verboseLevel) {
 			// log to stdout or stderr accordingly
@@ -58,6 +61,10 @@ public class Logger {
 			}
 		}
 		appendToLog(message);
+	}
+
+	static void log(String message, int lvl) {
+		log(null, message, lvl);
 	}
 
 	/**
@@ -77,6 +84,21 @@ public class Logger {
 	 */
 	public static String getContent() {
 		return log.getContent();
+	}
+
+	/**
+	 * Prepends the class information to the message
+	 * 
+	 * @param message
+	 *            the message
+	 * @param c
+	 *            the class
+	 * @return the message with the class information.
+	 */
+	private static String addClassInfo(String message, Class c) {
+		String name = c.getName();
+		int dotPos = name.lastIndexOf('.');
+		return "#" + name.substring(dotPos + 1) + "# " + message;
 	}
 
 	/**
@@ -104,13 +126,25 @@ public class Logger {
 	}
 
 	/**
-	 * Reporst a debug message to the logger.
+	 * Reports a debug message to the logger.
 	 * 
 	 * @param message
 	 *            the debug message.
 	 */
 	public static void debug(String message) {
-		log(message, LVL_DEBUG);
+		debug(null, message);
+	}
+
+	/**
+	 * Reports a debug message to the logger including the generating class.
+	 * 
+	 * @param c
+	 *            the class.
+	 * @param message
+	 *            the debug message.
+	 */
+	public static void debug(Class c, String message) {
+		log(c, message, LVL_DEBUG);
 	}
 
 	/**

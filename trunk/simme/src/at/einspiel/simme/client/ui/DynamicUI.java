@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: DynamicUI.java
-//                  $Date: 2004/08/25 15:36:00 $
-//              $Revision: 1.8 $
+//                  $Date: 2004/09/02 10:17:05 $
+//              $Revision: 1.9 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -11,6 +11,8 @@ import java.util.Enumeration;
 
 import javax.microedition.lcdui.*;
 
+import at.einspiel.logging.Logger;
+import at.einspiel.messaging.*;
 import at.einspiel.messaging.ISimpleInfo;
 import at.einspiel.messaging.Request;
 import at.einspiel.messaging.SendableUI;
@@ -51,27 +53,33 @@ public class DynamicUI implements CommandListener {
 	}
 
 	/**
-	 * Creates a new dynamic user interface.
+	 * Creates a new dynamic user interface. A subsequent call to
+	 * {@linkplain #getDisplayable()}is necessary.
 	 * 
 	 * @param title
 	 *            the title.
 	 * @param message
 	 *            the message to display.
 	 * @param url
-	 *            the address to connect to.
+	 *            the address to connect to after displaying the message.
 	 */
 	public DynamicUI(String title, String message, String url) {
-		System.out.println("message=" + message);
+		Logger.debug(getClass(), "message=" + message);
 		ui = new SendableUI(title, message);
 
 		this.url = url;
-		getDisplayable();
 
 		disp.addCommand(new Command("Abort", Command.CANCEL, 0));
 		disp.setCommandListener(this);
 	}
 
-	private void connect() {
+	/**
+	 * Connects to <code>url</code> if an update is necessary. An update
+	 * usually is set to be necessary, if the current displayable only shows a
+	 * text message, and there is no possible navigation.
+	 */
+	private synchronized void connect() {
+		Logger.debug(getClass(), "called connect()");
 		if (updateNecessary) {
 			ConnectorThread connector = new ConnectorThread();
 			connector.start();
@@ -89,6 +97,7 @@ public class DynamicUI implements CommandListener {
 			if (r == null) {
 				return;
 			}
+			r.addUserData();
 			r.sendRequest(COMM_PATH);
 
 			String response = null;
@@ -119,10 +128,10 @@ public class DynamicUI implements CommandListener {
 
 			// send index to server
 			Request r = new Request();
-			r.setParam("selected", Integer.toString(selected));
+			r.setParam(IConstants.PARAM_SEL, Integer.toString(selected));
 
-			// attach id if possible
-			r.setParam("id", Integer.toString(ui.getId()));
+			// attach id of menu if possible
+			r.setParam(IConstants.PARAM_MENUID, Integer.toString(ui.getId()));
 
 			return r;
 		}
@@ -189,6 +198,7 @@ public class DynamicUI implements CommandListener {
 		public void run() {
 			// send the request
 			Request r = new Request();
+			r.addUserData();
 			r.sendRequest(url);
 
 			try {

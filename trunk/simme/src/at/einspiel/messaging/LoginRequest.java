@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: LoginRequest.java
-//                  $Date: 2004/06/07 09:27:25 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/09/02 10:17:45 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
@@ -23,8 +23,8 @@ public class LoginRequest extends Request {
     */
    public LoginRequest(String nick, String pwd, String clientmodel, String version) {
       super();
-      setParam("user", nick);
-      setParam("pwd", pwd);
+      setParam(IConstants.PARAM_USER, nick);
+      setParam(IConstants.PARAM_PASS, pwd);
       setParam("model", clientmodel);
       setParam("version", version);
    }
