@@ -95,7 +95,9 @@ public class XmlParser {
          parser.setFeature("http://xml.org/sax/features/validation", true);
          parser.setFeature("http://xml.org/sax/features/namespaces", true);
          parser.setFeature("http://apache.org/xml/features/validation/schema", true);
-         parser.setFeature("http://apache.org/xml/features/dom/include-ignorable-whitespace", false);
+         parser.setFeature(
+            "http://apache.org/xml/features/dom/include-ignorable-whitespace",
+            false);
       }
       parser.setErrorHandler(new CustomizedErrorHandler());
 
@@ -130,7 +132,7 @@ public class XmlParser {
       throws ParserConfigurationException, SAXException, IOException {
       return getReusableBuilder().parse(new File(filename));
    }
-   
+
    /**
     * Loads the document from a specified input stream. This method does not
     * validate the contents of the xml file.
@@ -146,7 +148,8 @@ public class XmlParser {
     * @throws IOException if the file cannot be found, is not accessible or
     *         cannot be read.
     */
-   public static Document loadDocument(InputStream is) throws SAXException, IOException, ParserConfigurationException {
+   public static Document loadDocument(InputStream is)
+      throws SAXException, IOException, ParserConfigurationException {
       return getReusableBuilder().parse(is);
    }
 
@@ -190,7 +193,8 @@ public class XmlParser {
       }
       /** @see DefaultHandler#fatalError(SAXParseException) */
       public void fatalError(SAXParseException ex) {
-         System.err.println("Fatal Error: (line " + ex.getLineNumber() + ") " + ex.getMessage());
+         System.err.println(
+            "Fatal Error: (line " + ex.getLineNumber() + ") " + ex.getMessage());
       }
    }
 
@@ -218,7 +222,7 @@ public class XmlParser {
          File f = new File(filename);
          System.out.println("Saving to: " + f.getAbsolutePath());
          transformer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
-         transformer.setOutputProperty(OutputKeys.INDENT, "yes");         
+         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
          transformer.transform(new DOMSource(root), new StreamResult(new File(filename)));
       } catch (TransformerException e) {
          throw new IOException(e.getMessage());

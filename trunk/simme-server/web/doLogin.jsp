@@ -1,10 +1,9 @@
-<%@ page language="java" %> 
-<%@ page contentType="text/xml; charset=iso-8859-1" %> 
-<%@ page import="at.einspiel.simme.server.base.*" %>
-<%@ page import="at.einspiel.simme.server.management.*" %>
-<%@ page import="at.einspiel.simme.server.messaging.*" %>
-<%@ page import="java.util.Enumeration" %>
+<%@ page language="java" %>
+<%@ page contentType="text/xml; charset=iso-8859-1" %>
+<%@ page import="at.einspiel.simme.server.base.*, at.einspiel.simme.server.management.*, at.einspiel.simme.server.messaging.*" %>
 <%@ page import="test.sim.net.*" %>
+<%@ page import="java.util.Enumeration" %>
+<%@ page errorPage="error.jsp" %>
 <%
 
 String nick="", pass="", model="", version="";
@@ -40,22 +39,11 @@ if ((nick == null) || (pass == null)) {
    }
 }
 
-
 if ((nick != null) && (pass != null)) {
-   
-   
-   // test if a user with this combination exists
-   
-   
    User u = new User(nick, pass, null, (byte)0, null, null, model);
-
    String address = "<address>"+request.getRemoteAddr() + "</address>";
    String host = "<host>"+request.getRemoteHost() + "</host>";
-
-   String content = "<user nick=\"" + u.getNick() +"\" pass=\"" + u.getPassword() + "\">" + address + host + "</user>";
-
    SessionManager sMgr = SessionManager.getInstance();
-
    out.println(sMgr.addUser(u).toString());
 }
 

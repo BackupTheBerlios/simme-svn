@@ -57,7 +57,7 @@ public class DoLoginServlet extends HttpServlet {
                model = po.getAttribute("model");
 
             } catch (Exception e) {
-               ; // ??
+               e.printStackTrace();
             }
          }
       }
@@ -71,11 +71,10 @@ public class DoLoginServlet extends HttpServlet {
             err.printStackTrace(out);
             return;
          }
-         String address = "<address>" + request.getRemoteAddr() + "</address>";
-         String host = "<host>" + request.getRemoteHost() + "</host>";
+         //String address = "<address>" + request.getRemoteAddr() + "</address>";
+         //String host = "<host>" + request.getRemoteHost() + "</host>";
          SessionManager sMgr = SessionManager.getInstance();
-         out.println(sMgr.addUser(u).toString());
+         out.println(sMgr.addUser(u, version).toString());
       }
-
    }
 }

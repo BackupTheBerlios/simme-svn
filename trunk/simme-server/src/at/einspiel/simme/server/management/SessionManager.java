@@ -1,10 +1,15 @@
 package at.einspiel.simme.server.management;
 
-import java.util.*;
-
-import test.sim.net.LoginResult;
 import at.einspiel.simme.server.base.User;
 import at.einspiel.simme.server.base.UserException;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+import test.sim.net.LoginResult;
 
 /**
  * This class is intended to be used for User management. Each user who
@@ -19,8 +24,8 @@ import at.einspiel.simme.server.base.UserException;
  */
 public class SessionManager {
 
-   private static int updateInterval = 30000; // 30 seconds
-   private static int maxSecondsIdle = 300; // 5 minutes
+   private static int updateInterval = 30000;  // 30 seconds
+   private static int maxSecondsIdle = 300;    // 5 minutes
    private static int maxSecondsWaiting = 600; // 10 minutes
 
    SortedMap users;
@@ -56,11 +61,12 @@ public class SessionManager {
    /**
     * Adds a user to the list of managed users.
     * 
-    * @param u the user
+    * @param u the user.
+    * @param version the user's version.
     * 
     * @return a login result
     */
-   public LoginResult addUser(User u) {
+   public LoginResult addUser(User u, String version) {
       String response = null;
       boolean success = false;
       try {
@@ -69,7 +75,7 @@ public class SessionManager {
             u.saveToDB();
          }
          addUser(new ManagedUser(u));
-         response = "Benutzer angemeldet";
+         response = "User signed on";
          success = true;
       } catch (UserException e) {
          success = false;
@@ -92,7 +98,7 @@ public class SessionManager {
       boolean success = false;
       try {
          addUser(ManagedUser.getManagedUser(nick, pwd));
-         response = "Benutzer angemeldet";
+         response = "User signed on";
          success = true;
       } catch (UserException e) {
          success = false;
@@ -108,8 +114,7 @@ public class SessionManager {
     * @param user The user which is added.
     */
    public void addUser(ManagedUser user) {
-      System.out.println(
-         "[" + System.currentTimeMillis() + "] adding " + user.getNick());
+      System.out.println("[" + System.currentTimeMillis() + "] adding " + user.getNick());
       synchronized (users) {
          users.put(user.getNick(), user);
       }
@@ -124,8 +129,7 @@ public class SessionManager {
     *         <code>false</code> otherwise.
     */
    public boolean removeUser(String nick) {
-      System.out.println(
-         "[" + System.currentTimeMillis() + "] removing " + nick);
+      System.out.println("[" + System.currentTimeMillis() + "] removing " + nick);
       synchronized (users) {
          return users.remove(nick) != null;
       }
@@ -158,10 +162,10 @@ public class SessionManager {
        * Creates a new <code>UserUpdater</code> that updates the given users
        * regularly.
        * 
-       * @param users list of users.
+       * @param userCollection list of users.
        */
-      public UserUpdater(Collection users) {
-         this.users = users;
+      public UserUpdater(Collection userCollection) {
+         this.users = userCollection;
          running = true;
       }
 
@@ -187,21 +191,21 @@ public class SessionManager {
                   ManagedUser mu = (ManagedUser) i.next();
                   switch (mu.getStateCategory()) {
                      case UserState.STATE_IDLE :
-                        if (mu.secondsSinceLastUpdate()
-                           > getMaxSecondsIdle()) {
+                        if (mu.secondsSinceLastUpdate() > getMaxSecondsIdle()) {
                            i.remove();
                         }
                         break;
 
                      case UserState.STATE_WAITING :
-                        if (mu.secondsSinceLastUpdate()
-                           > getMaxSecondsWaiting()) {
+                        if (mu.secondsSinceLastUpdate() > getMaxSecondsWaiting()) {
                            i.remove();
                         }
                         break;
 
                      case UserState.STATE_PLAYING :
                         break;
+                     default :
+                        assert false : "No such state defined";
                   }
                }
             }

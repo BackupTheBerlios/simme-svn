@@ -86,16 +86,18 @@ public class ParsedObject {
     * the information conained in the XML element. An attribute with the name
     * <code>id</code> will not be added to the list of attributes. Instead the
     * field id will be set with the adequate information.
-    * @param parent sets a parent that may differ from the DOM Element's parent
+    * 
+    * @param parentObject sets a parent that may differ from the DOM Element's
+    *         parent
     * @param element the element that holds the data for this ParsedObject
     */
-   public ParsedObject(ParsedObject parent, Element element) {
+   public ParsedObject(ParsedObject parentObject, Element element) {
       document = element.getOwnerDocument();
       //xmlElement = element;
       // set name of this Object to the tagname of the element
       name = element.getNodeName();
       //initialize
-      init(parent);
+      init(parentObject);
       // read attributes and map them and their values accordingly
       NamedNodeMap nodeMap = element.getAttributes();
       if (nodeMap.getLength() > 0) {
@@ -142,38 +144,42 @@ public class ParsedObject {
    /**
     * Builds a new <code>ParsedObject</code> with the given name. Now new
     * document is being created for this instance, which saves some resources.
-    * @param name The name of the new <code>ParsedObject</code>.
+    * @param objectName The name of the new <code>ParsedObject</code>.
     * @throws ParserConfigurationException If there is a problem in the XML
     * configuration
     * @see ParsedObject#ParsedObject(String, boolean)
     */
-   public ParsedObject(String name) throws ParserConfigurationException {
-      this(name, true);
+   public ParsedObject(String objectName) throws ParserConfigurationException {
+      this(objectName, true);
    }
 
    /**
     * Builds a new <code>ParsedObject</code> with the given name.
-    * @param name The name of the new <code>ParsedObject</code>.
+    * @param objectName The name of the new <code>ParsedObject</code>.
     * @param reuseOldDocument Indicates if a new <code>Document</code> should
     * be created or not.
     * @throws ParserConfigurationException If there is a problem in the XML
     * configuration
     */
-   public ParsedObject(String name, boolean reuseOldDocument) throws ParserConfigurationException {
-      this(null, reuseOldDocument ? XmlParser.getReuseDocument() : XmlParser.newDocument(), name);
+   public ParsedObject(String objectName, boolean reuseOldDocument)
+      throws ParserConfigurationException {
+      this(
+         null,
+         reuseOldDocument ? XmlParser.getReuseDocument() : XmlParser.newDocument(),
+         objectName);
    }
 
    /**
     * Builds a new <code>ParsedObject</code> with the given name, parent and
     * owner document.
-    * @param parent The parent of this instance.
+    * @param parentObject The parent of this instance.
     * @param ownerDocument The document in which this instance is included
-    * @param name The name of this object.
+    * @param objectName The name of this object.
     */
-   private ParsedObject(ParsedObject parent, Document ownerDocument, String name) {
-      init(parent);
+   private ParsedObject(ParsedObject parentObject, Document ownerDocument, String objectName) {
+      init(parentObject);
       document = ownerDocument;
-      this.name = name;
+      this.name = objectName;
    }
 
    /**
@@ -199,10 +205,10 @@ public class ParsedObject {
 
    /**
     * Initialization code for <code>ParsedObject</code>.
-    * @param parent Parent of this <code>ParsedObject</code>
+    * @param parentObject Parent of this <code>ParsedObject</code>
     */
-   private void init(ParsedObject parent) {
-      this.parent = parent;
+   private void init(ParsedObject parentObject) {
+      this.parent = parentObject;
       // intialize attributes
       attributes = new HashMap();
       // initialize children
@@ -227,7 +233,8 @@ public class ParsedObject {
    public static ParsedObject createNewInstance(String filename, boolean validation)
       throws SAXException, ParserConfigurationException, IOException {
 
-      return new ParsedObject(XmlParser.loadDocument(filename, validation).getDocumentElement());
+      return new ParsedObject(
+         XmlParser.loadDocument(filename, validation).getDocumentElement());
    }
 
    /**
@@ -246,7 +253,8 @@ public class ParsedObject {
     * 
     * @see #parse(InputStream)
     */
-   public static ParsedObject parse(String string) throws SAXException, IOException, ParserConfigurationException {
+   public static ParsedObject parse(String string)
+      throws SAXException, IOException, ParserConfigurationException {
       InputStream is = new ByteArrayInputStream(string.getBytes());
       return parse(is);
    }
@@ -265,7 +273,8 @@ public class ParsedObject {
     *         and/or configuration throws errors.
     * @throws IOException If the file does not exist or is not readable.
     */
-   public static ParsedObject parse(InputStream is) throws SAXException, IOException, ParserConfigurationException {
+   public static ParsedObject parse(InputStream is)
+      throws SAXException, IOException, ParserConfigurationException {
       return new ParsedObject(XmlParser.loadDocument(is).getDocumentElement());
    }
 
@@ -301,22 +310,22 @@ public class ParsedObject {
 
    /**
     * Returns the value of an attribute identified by its <code>name</code>.
-    * @param name The name of the attribute.
+    * @param attrName The name of the attribute.
     * @return A String containing the value of the attribute identified by
-    * <code>name</code>. Returns <code>null</code> if no attribute by this
+    * <code>attrName</code>. Returns <code>null</code> if no attribute by this
     * name can be found.
     */
-   public String getAttribute(String name) {
-      return attributes == null ? null : (String) attributes.get(name);
+   public String getAttribute(String attrName) {
+      return attributes == null ? null : (String) attributes.get(attrName);
    }
 
    /**
     * Adds an attribute to this instance of <code>ParsedObject</code>.
-    * @param name The name of the newly created attribute.
+    * @param attrName The name of the newly created attribute.
     * @param value The value of the attribute.
     */
-   public void addAttribute(String name, String value) {
-      attributes.put(name, value);
+   public void addAttribute(String attrName, String value) {
+      attributes.put(attrName, value);
    }
 
    /**
@@ -413,12 +422,12 @@ public class ParsedObject {
 
    /**
     * Creates an empty child of this <code>ParsedObject</code>.
-    * @param name The name of the newly created child.
+    * @param childName The name of the newly created child.
     * @return A new child of this <code>ParsedObject</code> with the given
     * name.
     */
-   public ParsedObject getEmptyChild(String name) {
-      return new ParsedObject(this, document, name);
+   public ParsedObject getEmptyChild(String childName) {
+      return new ParsedObject(this, document, childName);
    }
 
    /**

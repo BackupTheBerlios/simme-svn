@@ -71,10 +71,10 @@ public class User implements Comparable {
     * set to default.
     * 
     * @param nick Nickname of user.
-    * @param password Password of user.
+    * @param pwd Password of user.
     */
-   public User(String nick, String password) {
-      this(nick, password, null, LANG_DE, null, LOCATION_DEFAULT, null);
+   public User(String nick, String pwd) {
+      this(nick, pwd, null, LANG_DE, null, LOCATION_DEFAULT, null);
    }
 
    /**

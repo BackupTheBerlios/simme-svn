@@ -26,18 +26,18 @@ public class ServerGame {
    /**
     * Creates a new ServerGame object.
     *
-    * @param player1 first player
-    * @param player2 second player
+    * @param p1 first player
+    * @param p2 second player
     *
     * @throws Exception if rules are broken.
     */
-   public ServerGame(User player1, User player2) throws Exception {
-      if (player1.compareTo(player2) == 0) {
+   public ServerGame(User p1, User p2) throws Exception {
+      if (p1.compareTo(p2) == 0) {
          throw new Exception("Users have same nick names.");
       }
 
-      this.player1 = player1;
-      this.player2 = player2;
+      this.player1 = p1;
+      this.player2 = p2;
       game = new Game();
       running = false;
       gameover = false;

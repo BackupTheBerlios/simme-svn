@@ -4,17 +4,10 @@
 <web-app>
 
   <servlet>
-    <servlet-name>testServlet</servlet-name>
-    <servlet-class>dynamic.MyFirstServlet</servlet-class>
-  </servlet>
-  <servlet>
     <servlet-name>doLogin</servlet-name>
     <servlet-class>at.einspiel.simme.server.servlets.DoLoginServlet</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>testServlet</servlet-name>
-    <url-pattern>/testServlet</url-pattern>
-  </servlet-mapping>
+
   <servlet-mapping>
     <servlet-name>doLogin</servlet-name>
     <url-pattern>/doLogin</url-pattern>

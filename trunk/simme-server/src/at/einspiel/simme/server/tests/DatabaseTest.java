@@ -1,11 +1,11 @@
 package at.einspiel.simme.server.tests;
 
+import at.einspiel.simme.server.base.User;
+import at.einspiel.simme.server.base.UserException;
+
 import java.sql.SQLException;
 
 import junit.framework.TestCase;
-import at.einspiel.simme.server.base.NoSuchUserException;
-import at.einspiel.simme.server.base.User;
-import at.einspiel.simme.server.base.UserException;
 
 /**
  * Class to test database methods.
@@ -45,28 +45,21 @@ public class DatabaseTest extends TestCase {
          assertEquals(User.LOCATION_DEFAULT, u.getLocation());
       }
       long millis2 = System.currentTimeMillis();
-      System.out.println(
-         "adding 6 new users in " + (millis2 - millis1) + "ms.");
+      System.out.println("adding 6 new users in " + (millis2 - millis1) + "ms.");
       for (int i = 0; i < nicks.length; i++) {
          User u = User.getUser(nicks[i], pwds[1]);
          assertEquals(1, u.delete());
       }
       long millis3 = System.currentTimeMillis();
       System.out.println("removing 6 users in " + (millis3 - millis2) + "ms.");
-      System.out.println(
-         "adding and removing 6 users in " + (millis3 - millis1) + "ms.");
+      System.out.println("adding and removing 6 users in " + (millis3 - millis1) + "ms.");
    }
 
    /** @see junit.framework.TestCase#tearDown() */
    protected void tearDown() throws Exception {
       for (int i = 0; i < nicks.length; i++) {
-         User u;
-         try {
-            u = User.getUserByNick(nicks[i]);
-            u.delete();
-         } catch (NoSuchUserException e) {
-            ; // no user do nothing
-         }
+         User u = User.getUserByNick(nicks[i]);
+         u.delete();
       }
 
    }
