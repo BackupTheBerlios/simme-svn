@@ -52,7 +52,6 @@ public class Prefs {
       } catch (RecordStoreException e) {
          throw new PrefsException(e.getMessage());
       }
-      System.out.println("------------ opened ------------");
    }
 
    public void close() throws PrefsException {
@@ -65,7 +64,6 @@ public class Prefs {
             throw new PrefsException(e1.getMessage());
          }
       }
-		System.out.println("------------ closed ------------");
    }
 
    public boolean hasNext() {
@@ -136,7 +134,6 @@ public class Prefs {
       try {
          // go through recordset and change information
          int id = enum.nextRecordId();
-         System.out.println("writing next (id=" + id + ")");
          rs.setRecord(id, b, 0, b.length);
       } catch (RecordStoreNotOpenException e) {
          throw new PrefsException(e.getMessage());
@@ -156,7 +153,7 @@ public class Prefs {
    
 	public void addNext(byte[] b) throws PrefsException {
 		try {
-			System.out.println("adding next (id=" + rs.addRecord(b, 0, b.length) + ")");
+			rs.addRecord(b, 0, b.length);
 		} catch (RecordStoreNotOpenException e) {
 			throw new PrefsException(e.getMessage());
 		} catch (InvalidRecordIDException e) {
@@ -194,13 +191,11 @@ public class Prefs {
 		} catch (IOException e) {
 			throw new PrefsException(e.getMessage());
 		}
-		System.out.println("Writing \"" + s + "\"");
 	}
 
 
 
    void resetEnum() {
-      System.out.println("resetting enum");
       enum.rebuild();
       enum.reset();
    }

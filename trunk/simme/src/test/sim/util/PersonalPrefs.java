@@ -5,6 +5,8 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 /**
+ * Provides methods for accessing the <code>RecordStore<code> responsible for
+ * saving data for personal information. 
  * @author kariem
  */
 public class PersonalPrefs extends Prefs {
@@ -16,6 +18,11 @@ public class PersonalPrefs extends Prefs {
 
    static private PersonalPrefs _instance = null;
 
+	/**
+	 * Creates a new instance of <code>PersonalPrefs</code>. If this constructor
+	 * has already been called a reference to the same instance will be returned.
+	 * @return A new instance.
+	 */
    static public PersonalPrefs getInstance() {
       if (_instance == null) {
          _instance = new PersonalPrefs();
@@ -37,34 +44,21 @@ public class PersonalPrefs extends Prefs {
     * Writes personal preferences from <code>savedData</code>
     * @throws PrefsException If not opened before calling this method.
     */
-   /*
-   public void update() throws PrefsException {
-   	System.out.println("updating");
-   	resetEnum();
-   	for (int i = 0; i < savedData.length; i++) {
-   		writeNext(savedData[i]);
-   	}
-   }*/
-
    public void update() throws PrefsException {
       resetEnum();
-         System.out.println("updating");
-         for (int i = 0; i < savedData.length; i++) {
-				writeToBuffer(savedData[i]);
-         }
-         writeNext();
+      System.out.println("updating");
+      for (int i = 0; i < savedData.length; i++) {
+         writeToBuffer(savedData[i]);
+      }
+      writeNext();
    }
 
-   /*
-   public void save() throws PrefsException {
-   	System.out.println("saving");
-   	resetEnum();
-   	for (int i = 0; i < savedData.length; i++) {
-   		addNext(savedData[i]);
-   	}
-   }
-   */
 
+	/**
+	 * Saves personal preferences. This method is used, if the
+	 * <code>RecordSet</code> does not have any data yet.
+	 * @throws PrefsException If errors occur.
+	 */
    public void save() throws PrefsException {
       resetEnum();
       System.out.println("saving");
@@ -78,17 +72,6 @@ public class PersonalPrefs extends Prefs {
     * Loads personal preferences into <code>savedData</code>.
     * @throws PrefsException If not opened before calling this method.
     */
-   /*
-   public void load() throws PrefsException {
-   	resetEnum();
-   	System.out.println("loading");
-   	// muss in umgekehrter Reihenfolge ausgeführt werden. warum? keine Ahnung
-      for (int i = savedData.length-1; i >= 0; i--) {
-         savedData[i] = readNextString();
-      }
-   }
-   */
-
    public void load() throws PrefsException {
       try {
          System.out.println("loading");
@@ -101,24 +84,20 @@ public class PersonalPrefs extends Prefs {
       } catch (IOException e) {
          throw new PrefsException(e.getMessage());
       }
-
    }
 
-   /*
-   public void setSavedData(String s, int pos) throws PrefsException {
-   	savedData[pos] = s;		
-   }
-   
-   
-   public String getSavedData(int pos) {
-   	return savedData[pos];
-   }
-   */
-
+	/**
+	 * Returns the data saved for the preferences.
+	 * @return The data.
+	 */
    public String[] getSavedData() {
       return savedData;
    }
 
+	/**
+	 * Returns the data saved for the preferences.
+	 * @return The data.
+	 */
    public void setSavedData(String[] savedData) {
       this.savedData = savedData;
    }
