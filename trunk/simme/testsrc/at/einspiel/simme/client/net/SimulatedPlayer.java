@@ -1,15 +1,21 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: SimulatedPlayer.java
-//                  $Date: 2004/09/13 15:22:00 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/09/13 23:41:11 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client.net;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import at.einspiel.logging.Logger;
 import at.einspiel.messaging.*;
+import at.einspiel.simme.client.Game;
+import at.einspiel.simme.client.GameInfo;
+import at.einspiel.simme.client.Move;
 import at.einspiel.simme.client.ui.IDynamicUI;
 
 /**
@@ -134,6 +140,75 @@ public class SimulatedPlayer implements IDynamicUI {
 	}
 
 	/**
+	 * Plays a game, if a game is currently available for this player. If there
+	 * is no game available, an exception is thrown.
+	 * @throws Exception
+	 *             if no game is available.
+	 * @see #startGame()
+	 */
+	public void play() throws Exception {
+		if (game == null) {
+			throw new Exception("No game available to play. Start game first.");
+		}
+		synchronized (game) {
+			// start the game as it is done on the client
+			// if the player is not the first to make a move, the network game
+			// will automatically try to connect to the server.
+			game.start();
+
+			GameInfo info = game.getGameInfo();
+			String p1Nick = info.getP1Name();
+			byte localPlayer = nick.equals(p1Nick) ? Game.PLAYER1 : Game.PLAYER2;
+
+			assert nick.equals(game.getPlayerName(localPlayer)) : "Problem with player names: p1="
+					+ info.getP1Name() + ", p2=" + info.getP2Name() + ", player=" + nick;
+
+			while (!game.isGameOver()) {
+				makeMoveOrWait(localPlayer);
+			}
+
+			game.notifyAll();
+		}
+	}
+
+	// either makes a move or waits for the opponent's next move
+	private void makeMoveOrWait(byte localPlayer) {
+		if (game.getPlayersTurn() != localPlayer) {
+			// wait for the next move
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			return;
+		}
+
+		// get a view of all edges
+		byte[] edges = new byte[Move.MAX_EDGE_INDEX];
+		for (byte i = 0; i < edges.length; i++) {
+			edges[i] = game.getEdgeOwner(i);
+		}
+		// filter those which are available
+		List available = new ArrayList();
+		for (byte i = 0; i < edges.length; i++) {
+			if (edges[i] == Game.NEUTRAL) {
+				available.add(new Byte(i));
+			}
+		}
+
+		// according to Ramsey theory there must be at least one remaining
+		// element
+		assert !available.isEmpty() : "No moves available";
+
+		// shuffle available
+		Collections.shuffle(available);
+		// select first element
+		byte selectedEdge = ((Byte) available.get(0)).byteValue();
+		// make the move
+		game.selectEdge(selectedEdge);
+	}
+
+	/**
 	 * Returns the game.
 	 * @return the game, if a game has been created. Otherwise this method
 	 *         return <code>null</code>.
@@ -152,12 +227,23 @@ public class SimulatedPlayer implements IDynamicUI {
 	}
 
 	/**
-	 * Returns a runnable that calls {@linkplain #startGame()}from within the
-	 * {@linkplain Thread#run()}method.
-	 * @return
+	 * Returns a runnable that calls {@linkplain #startGame()}. The method is
+	 * called from a from within {@linkplain Thread#run()}.
+	 * @return a runnable object, that can start a game for this player.
+	 * @see #startGame()
 	 */
 	public Runnable getStartRunnable() {
 		return new StartRunner();
+	}
+
+	/**
+	 * Returns a runnable that calls {@linkplain #play()}. The method is called
+	 * from a from within {@linkplain Thread#run()}.
+	 * 
+	 * @return a runnable object that can simulate playing a game.
+	 */
+	public Runnable getPlayRunnable() {
+		return new PlayRunner();
 	}
 
 	class StartRunner implements Runnable {
@@ -167,6 +253,17 @@ public class SimulatedPlayer implements IDynamicUI {
 			try {
 				SimulatedPlayer.this.startGame();
 			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	class PlayRunner implements Runnable {
+		/** @see java.lang.Runnable#run() */
+		public void run() {
+			try {
+				SimulatedPlayer.this.play();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
