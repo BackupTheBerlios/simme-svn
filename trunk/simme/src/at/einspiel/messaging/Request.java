@@ -1,15 +1,14 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: Request.java
-//               $Date: 2004/09/07 13:23:06 $
-//           $Revision: 1.6 $
+//               $Date: 2004/09/13 15:26:35 $
+//           $Revision: 1.7 $
 //----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -332,10 +331,12 @@ public class Request {
 		/** @see java.lang.Thread#run() */
 		public void run() {
 			try {
-				Logger.debug(getClass(), "sending message: " + url.toString());
+				//Logger.debug(getClass(), "sending message: " + url.toString());
 				sendRequest();
 			} catch (IOException e) {
 				setOccurredException(e);
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 		}
 
@@ -348,7 +349,7 @@ public class Request {
 
 				// set encoding to device encoding
 				c.setRequestProperty("Content-Language", System
-						.getProperty("microedition.encoding"));
+						.getProperty("microedition.locale"));
 
 				if (post) {
 					c.setRequestMethod(HttpConnection.POST);
@@ -401,7 +402,7 @@ public class Request {
 				// fit response to correct size
 				byte[] responseCopy = new byte[pos];
 				System.arraycopy(localResponse, 0, responseCopy, 0, pos);
-				setResponse(localResponse);
+				setResponse(responseCopy);
 			} finally {
 				if (is != null) {
 					is.close();
