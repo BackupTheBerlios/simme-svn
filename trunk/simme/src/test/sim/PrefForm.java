@@ -162,7 +162,7 @@ public class PrefForm extends List implements CommandListener {
                      cLang.getString(cLang.getSelectedIndex()),
                      tfInfo.getString(),
                      cLoc.getString(cLoc.getSelectedIndex()),
-							siPlatform.getText()};
+                     siPlatform.getText()};
                prefs.setSavedData(newData);
 
                try {
