@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------------
+// [Simme-Server]
+//       Java Source File: SimmeServerTestSuite.java
+//                  $Date: 2003/12/30 10:18:25 $
+//              $Revision: 1.2 $
+// ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
 import at.einspiel.db.*;

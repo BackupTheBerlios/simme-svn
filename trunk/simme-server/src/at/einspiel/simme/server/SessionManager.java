@@ -22,7 +22,7 @@ public class SessionManager {
     private static final String MGMT_PAGE = "sessionMgr.jsp";
 
     SortedMap users;
-    UserManager stMgr;
+    UserManager userManager;
 
     private static SessionManager instance;
 
@@ -47,8 +47,8 @@ public class SessionManager {
     /** Initializes this object. */
     private void init() {
         users = Collections.synchronizedSortedMap(new TreeMap());
-        stMgr = new UserManager(users);
-        stMgr.manage();
+        userManager = UserManager.createUserManager(users);
+        userManager.manage();
     }
 
     /**
@@ -131,7 +131,7 @@ public class SessionManager {
      */
     private void addManagedUser(ManagedUser user) {
         System.out.println("[" + System.currentTimeMillis() + "] adding " + user.getNick());
-        stMgr.addUser(user); // adding to state manager
+        userManager.addUser(user); // adding to user manager
     }
 
     /**
@@ -144,7 +144,7 @@ public class SessionManager {
      */
     public boolean removeUser(String nick) {
         System.out.println("[" + System.currentTimeMillis() + "] removing " + nick);
-        return stMgr.removeUser(nick);
+        return userManager.removeUser(nick);
     }
 
     /**

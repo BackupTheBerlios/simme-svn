@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------------
+// [Simme-Server]
+//       Java Source File: ManagedGameTest.java
+//                  $Date: 2003/12/30 10:18:25 $
+//              $Revision: 1.5 $
+// ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
 import java.util.*;
@@ -9,7 +15,7 @@ import junit.framework.TestCase;
 import at.einspiel.simme.client.Move;
 
 /**
- * Class to test Managed Game.
+ * Class to test a managed game.
  * 
  * @author kariem
  */
@@ -52,6 +58,30 @@ public class ManagedGameTest extends TestCase {
       assertNull(game);
 
       initGame();
+   }
+
+   /** Tests starting a game on user state change. */
+   public void testStartWithStateChange() {
+      // create players
+      player1 = new ManagedUser();
+      player1.setNick("player1");
+      player2 = new ManagedUser();
+      player2.setNick("player2");
+
+      // create game
+      game = new ManagedGame(player1, player2);
+      assertNotNull(game);
+      assertFalse(game.isRunning());
+      
+      // set player1 to playing
+      player1.getUserState().setStateCategory(UserState.STATE_PLAYING);
+      assertFalse(game.isRunning());
+      
+      // set player2 to playing
+      player2.getUserState().setStateCategory(UserState.STATE_PLAYING);
+      
+      // both users are ready to play => game should be started
+      assertTrue(game.isRunning());
    }
 
    /** Tests playing a simple game. */
@@ -151,6 +181,7 @@ public class ManagedGameTest extends TestCase {
       }
    }
 
+   
    private void initMoves() {
       Move[] moveArray = new Move[Move.MAX_EDGE_INDEX + 1];
       for (byte i = 0; i <= Move.MAX_EDGE_INDEX; i++) {
