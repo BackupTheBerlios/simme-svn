@@ -104,8 +104,9 @@ public class XmlMessage {
     * Return the response
     * 
     * @return response of the request.
+    * @throws IOException if an error has occurred while getting the response.
     */
-   public byte[] getResponse() {
+   public byte[] getResponse() throws IOException {
       return request.getResponse();
    }
 }

@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import java.net.URL;
 
-import java.util.Hashtable;
-
 import javax.microedition.io.HttpConnection;
 
 import test.sim.net.Request;
@@ -17,11 +15,6 @@ import test.sim.net.Request;
  * @author kariem
  */
 public class TestRequest extends Request {
-
-   /** @see Request#Request(Hashtable) */
-   public TestRequest(Hashtable parameters) {
-      super(parameters);
-   }
 
    /** @see Request#Request() */
    public TestRequest() {

@@ -1,6 +1,7 @@
 package test.tests;
 
 import java.io.IOException;
+
 import java.net.URL;
 
 import javax.microedition.io.HttpConnection;

@@ -11,6 +11,9 @@ import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.List;
 
 import test.sim.net.LoginMessage;
+import test.sim.net.LoginResult;
+import test.sim.util.PersonalPrefs;
+import test.sim.util.PrefsException;
 
 /**
  * @author jorge
@@ -41,19 +44,9 @@ public class GameModeForm extends List implements CommandListener {
 
          switch (getSelectedIndex()) {
             case 0 : // Internet Spiel
-               //d.setCurrent(sim.getMainScreen());
-               try {
-                  LoginMessage loginMsg = new LoginMessage("firstplayer", "pass", "j2me", "1.0");
-                  loginMsg.sendRequest("http://localhost:8080/simme/", "doLogin.jsp");
-               } catch (IOException e) {
-                  String errorMsg = e.getMessage();
-                  if ((errorMsg == null) || (errorMsg.length() == 0)) {
-                     errorMsg = "Es konnte keine Verbindung hergestellt werden";
-                  }
-                  Alert errorAlert = new Alert("Fehler", errorMsg, null, AlertType.ERROR);
-                  errorAlert.setTimeout(Alert.FOREVER);
-                  d.setCurrent(errorAlert);
-               }
+               ConnectionAlert infoAlert = new ConnectionAlert("Verbinde");
+               d.setCurrent(infoAlert);
+               infoAlert.startConnection(d);
 
                break;
 
@@ -65,4 +58,84 @@ public class GameModeForm extends List implements CommandListener {
          }
       }
    }
+
+   private class ConnectionAlert extends Alert {
+      /**
+       * Constructs an empty <code>InfoAlert</code> with the given title
+       */
+      public ConnectionAlert(String title) {
+         super(title);
+         setTimeout(LoginMessage.DEFAULT_TIMEOUT - 20); // 20 ms less
+      }
+
+      /**
+       * Initializes the connection and shows its output.
+       */
+      public void startConnection(final Display d) {
+         setString("Verbindung zum Server wird aufgebaut");
+
+         // enter new thread, so that the user interface is updated correctly
+         Thread t = new Thread() {
+            /** @see java.lang.Thread#run() */
+            public void run() {
+               try {
+                  PersonalPrefs prefs = PersonalPrefs.getInstance();
+                  // load nick name, password and additional info
+                  try {
+                     prefs.open();
+                     if (prefs.currentSize() == 0) {
+                        // empty prefs => error message
+                        StringBuffer buf = new StringBuffer();
+                        buf.append("Nickname und Password müssen eingegeben ");
+                        buf.append("werden. Gehen Sie bitte hierfür auf ");
+                        buf.append("\"Einstellungen|Internet\" im Hauptmenü.");
+                        throw new PrefsException(buf.toString());
+                     }
+                     prefs.load();
+                  } catch (PrefsException pex) {
+                     Alert errorAlert = new Alert("Fehler", pex.getMessage(), null, AlertType.ERROR);
+                     errorAlert.setTimeout(FOREVER);
+                     d.setCurrent(errorAlert);
+                     return;
+                  }
+                  String[] loginData = prefs.getSavedData();
+                  LoginMessage loginMsg = new LoginMessage(loginData[0], loginData[1], loginData[3], "0.01");
+                  //loginMsg.sendRequest("doLogin.jsp");
+                  loginMsg.sendRequest("http://localhost:8080/simme/", "doLogin.jsp");
+                  
+                  // get response
+                  String response = new String(loginMsg.getResponse());
+                  
+                  // use response to build result
+                  LoginResult result = new LoginResult(response);
+                  
+                  System.out.println("result: " + result);
+                  
+                  if (result.isSucceed()) {
+                     DynamicUI dUI = new DynamicUI(result.getMessage());
+                     d.setCurrent(dUI.getDisplayable());
+                  } else {
+                     // no success => show info
+                     AlertType type = result.isSucceed() ? AlertType.INFO : AlertType.ERROR;
+                     Alert loginAlert = new Alert("Fehler bei Login", result.getMessage(), null, type);
+                     loginAlert.setTimeout(FOREVER);
+                     d.setCurrent(loginAlert);
+                  }
+                  
+               } catch (IOException ioex) {
+                  String errorMsg = ioex.getMessage();
+                  // if errorMsg doesn't contain any information, show some standard text
+                  if ((errorMsg == null) || (errorMsg.length() == 0)) {
+                     errorMsg = "Es konnte keine Verbindung hergestellt werden";
+                  }
+                  Alert errorAlert = new Alert("Fehler", errorMsg, null, AlertType.ERROR);
+                  errorAlert.setTimeout(FOREVER);
+                  d.setCurrent(errorAlert);
+               }
+            }
+         };
+         t.start();
+      }
+   }
+
 }

@@ -17,43 +17,52 @@ import javax.microedition.io.HttpConnection;
  */
 public class Request {
 
+   /** This request's default timeout in milliseconds */
+   public static final int DEFAULT_TIMEOUT = 5000;
+
    /** The base url where <code>Request</code>s are sent to. */
    public static final String URL_BASE = "http://www.einspiel.at/simme/";
 
    private static final int RESPONSE_INITIAL_SIZE = 1024;
    private static final int RESPONSE_GROWTH_FACTOR = 512;
 
-   private HttpConnection c;
-   private InputStream is;
-   private OutputStream os;
-   private Hashtable params;
+   /** The timeout used for this request */
+   protected final int timeout;
 
-   String text;
+   private Hashtable params;
+   private IOException occurredException;
+   private byte[] response;
 
    ConnectionThread sender;
-
-   private byte[] response;
 
    /**
     * Creates a new <code>Request</code>. The text has to be set manually.
     */
    public Request() {
-      this(null);
+      this(null, DEFAULT_TIMEOUT);
    }
 
    /**
     * Creates a new <code>Request</code> with the given text.
     * 
     * @param parameters the parameters for this request.
+    * @param timeout The timeout in milliseconds.
     */
-   public Request(Hashtable parameters) {
-      c = null;
-      is = null;
-      os = null;
+   public Request(Hashtable parameters, int timeout) {
       this.params = parameters;
       if (params == null) {
          params = new Hashtable();
       }
+      this.timeout = timeout;
+   }
+
+   /**
+    * Creates a new request with the given timeout.
+    * 
+    * @param timeout The timeout in milliseconds.
+    */
+   public Request(int timeout) {
+      this(null, timeout);
    }
 
    /**
@@ -72,12 +81,9 @@ public class Request {
     * {@link #getResponse()}.
     * 
     * @param path The path on the server ({@link #URL_BASE}).
-    * 
-    * @throws IOException if a problem has occured while sending the request.
-    *
     * @see #sendRequest(String, String)
     */
-   public void sendRequest(String path) throws IOException {
+   public void sendRequest(String path) {
       sendRequest(URL_BASE, path);
    }
 
@@ -90,12 +96,10 @@ public class Request {
     * 
     * @param path The path on the server identified by <code>urlBase</code>.
     * 
-    * @throws IOException if a problem has occured while sending the request.
-    * 
     * @see #sendRequest(String, String, boolean)
     */
-   public void sendRequest(String urlBase, String path) throws IOException {
-      sendRequest(urlBase, path, true);
+   public void sendRequest(String urlBase, String path) {
+      sendRequest(urlBase, path, false);
    }
 
    /**
@@ -108,11 +112,9 @@ public class Request {
     * @param path The path on the server identified by <code>urlBase</code>.
     * 
     * @param post Whether this message should be a POST or a GET.
-    *
-    * @throws IOException if a problem has occured while sending the request.
     */
-   public void sendRequest(String urlBase, String path, boolean post) throws IOException {
-      sender = new ConnectionThread(urlBase, path, post, Thread.currentThread());
+   public void sendRequest(String urlBase, String path, boolean post) {
+      sender = new ConnectionThread(urlBase, path, post);
       sender.start();
    }
 
@@ -160,20 +162,21 @@ public class Request {
     * Holds the response of this request.
     * 
     * @return the response.
+    * @throws IOException if an error has occurred while getting the response.
     */
-   public synchronized byte[] getResponse() {
+   public synchronized byte[] getResponse() throws IOException {
       if (sender != null) {
-         System.out.println("sender not null");
          if (sender.isStarted()) {
-            System.out.println("sender is started");
             while (sender.isAlive()) {
                try {
-                  wait(5000);
+                  wait(timeout);
                } catch (InterruptedException e) {
-                  ;
+                  throw new IOException(e.getMessage());
                }
             }
-            System.out.println("getting response " + System.currentTimeMillis());
+            if (occurredException != null) {
+               throw occurredException;
+            }
             return response;
          }
       }
@@ -204,10 +207,12 @@ public class Request {
    }
 
    private class ConnectionThread extends Thread {
-      boolean post;
-      StringBuffer url;
-      boolean started;
-      Thread caller;
+      private HttpConnection c;
+      private InputStream is;
+      private OutputStream os;
+      private boolean post;
+      private StringBuffer url;
+      private boolean started;
 
       /**
        * @param urlBase the server address (plus protocol, port, ...).
@@ -217,14 +222,17 @@ public class Request {
        * @param post <code>true</code> if it should be a post, otherwise a
        *        get will be executed.
        */
-      public ConnectionThread(String urlBase, String path, boolean post, Thread caller) {
+      public ConnectionThread(String urlBase, String path, boolean post) {
+         c = null;
+         is = null;
+         os = null;
          url = new StringBuffer(urlBase);
          url.append(path);
          if (!post) {
             url.append(getParamString(false));
          }
+         System.out.println("url=" + url.toString());
          this.post = post;
-         this.caller = caller;
       }
 
       public synchronized void start() {
@@ -236,52 +244,28 @@ public class Request {
          try {
             sendRequest(post);
          } catch (IOException e) {
-            // TODO do something here
+            setOccurredException(e);
          }
       }
 
       private void sendRequest(boolean post) throws IOException {
          try {
             c = getHttpConnection(url.toString());
-            /*
-            c.setRequestMethod(HttpConnection.POST);
-            c.setRequestProperty("IF-Modified-Since", "25 Nov 2001 15:17:19 GMT");
-            c.setRequestProperty("User-Agent","Profile/MIDP-1.0 Configuration/CLDC-1.0");
-            c.setRequestProperty("Content-Language", "en-CA");
-            c.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            
-            os = c.openOutputStream();
-            os.write(("name=test").getBytes());
-            os.flush();
-            
-            is = c.openDataInputStream();
-            
-            /*
-            int ch;
-            while ((ch = is.read()) != -1) {
-             b.append((char) ch);
-             System.out.print((char)ch);
-            }
-            t = new TextBox("Date", b.toString(), 1024, 0);
-            t.setCommandListener(this);
-            */
 
-            //setResponse(new byte[] {});
-
+            // set user agent
             c.setRequestProperty("User-Agent", "Profile/MIDP-1.0 Configuration/CLDC-1.0");
-            // TODO add content language via param
-            // c.setRequestProperty("Content-Language", "en-CA");
+            // set encoding to device encoding
+            c.setRequestProperty("Content-Language", System.getProperty("microedition.encoding"));
 
             if (post) {
                c.setRequestMethod(HttpConnection.POST);
                String postString = getParamString(true);
-               System.out.println("postString: " + postString);
+               System.out.println("posting: " + postString);
                if (postString.length() > 0) {
                   os = c.openOutputStream();
                   os.write(postString.getBytes());
                   os.flush();
-                  //os.close();
-
+                  os.close();
                }
             } else {
                c.setRequestMethod(HttpConnection.GET);
@@ -289,7 +273,7 @@ public class Request {
 
             int rc = c.getResponseCode();
             if (rc != HttpConnection.HTTP_OK) {
-               throw new IOException("Response code: " + rc);
+               throw new IOException("Response: " + rc);
             }
 
             //receive response
@@ -316,9 +300,7 @@ public class Request {
             // fit response to correct size
             byte[] responseCopy = new byte[counter];
             System.arraycopy(localResponse, 0, responseCopy, 0, counter);
-
-            System.out.println("setting response " + System.currentTimeMillis());
-            setResponse(localResponse); //*/
+            setResponse(localResponse);
 
          } finally {
             if (is != null) {
@@ -332,12 +314,44 @@ public class Request {
             }
          }
       }
+
       /**
-       * @return
+       * Shows if sending has already been started.
+       * 
+       * @return <code>true</code> if the request has already been sent,
+       * otherwise <code>false</code>.
        */
       public boolean isStarted() {
          return started;
       }
 
    }
+
+   /**
+    * Returns the current error message.
+    * 
+    * @return the current error, or <code>null</code> if no error has occurred.
+    */
+   public IOException getOccurredException() {
+      return occurredException;
+   }
+
+   /**
+    * Sets the current error.
+    * 
+    * @param exception the exception that occurred.
+    */
+   public void setOccurredException(IOException exception) {
+      occurredException = exception;
+   }
+
+   /**
+    * Returns the timeout of this request.
+    * 
+    * @return the timeout of this request in milliseconds.
+    */
+   public int getTimeout() {
+      return timeout;
+   }
+
 }
