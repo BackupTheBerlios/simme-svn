@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: GameModeForm.java
-//               $Date: 2004/09/14 22:31:01 $
-//           $Revision: 1.14 $
+//               $Date: 2004/09/16 08:30:35 $
+//           $Revision: 1.15 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -79,12 +79,12 @@ public class GameModeForm extends List implements CommandListener {
 
 				case 1 :
 					// Lokales Spiel (2 Spieler)
-					d.setCurrent(new Zeichenblatt());
+					d.setCurrent(new GameBoard());
 					break;
 
 				case 2 :
 					// Lokales Spiel (gg. Computer)
-					d.setCurrent(new Zeichenblatt(true));
+					d.setCurrent(new GameBoard(true));
 					break;
 
 			}
