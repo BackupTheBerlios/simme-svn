@@ -279,4 +279,18 @@ public class User implements Comparable, Serializable {
 		return false;
 	}
 
+	/**
+	 * Puts a formatted toString information info the given string buffer.
+	 * @param buf the string buffer.
+	 */
+	public void toString(StringBuffer buf) {
+		buf.append("Nickname:\t");
+		buf.append(nick);
+		buf.append("\nStatistics:\tno stats available yet");
+		buf.append("\nLanguage:\t");
+		buf.append(lang);
+		buf.append("\nClientModel:\t");
+		buf.append(clientmodel);
+	}
+
 }
