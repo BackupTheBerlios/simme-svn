@@ -1,0 +1,84 @@
+<page id="dev-environment">
+	<meta>
+		<title>SimME DevDocs - Development Environment</title>
+	</meta>
+
+<body>
+	<section><title>SimME - Development Environment</title>
+
+		<p>In here there are several tips and advices on how to help develop SimME.
+		As developing for the Java 2 Micro Edition (J2ME) is not very complicated,
+		this document is made short. It won't be a waste of time to read through
+		this. If so then it was not very much time.</p>
+
+		<section><title>What do you need?</title>
+
+			<p>Sure, there are a lot of different possibilities to develop for J2ME.
+			This section shows the way we do it.</p>
+
+			<table>
+				<tr>
+					<td valign="top">Wireless toolkit (WT)</td>
+					<td>
+						This is the main development tool used. Compiling of sources,
+						package deployment, emulation, etc. Newest version: <a
+						href="http://java.sun.com/products/j2mewtoolkit/index.html">http://java.sun.com/products/j2mewtoolkit/index.html</a>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top">JUnit</td>
+					<td>
+						Needed to run the tests. <a
+						href="http://www.junit.org/">http://www.junit.org/</a>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top">IDE</td>
+					<td>
+						Any IDE is possible to edit your code. Some tools integrate more
+						with the wireless tookit, while others do not. The choice depends on
+						your taste. See a list of possible tools at <a
+						href="http://wireless.java.sun.com/allsoftware/index.html#midpdev">http://wireless.java.sun.com/allsoftware/index.html#midpdev</a>
+						(we use eclipse, which is not listed there)
+					</td>
+				</tr>
+			</table>
+
+		</section>
+
+		<section><title>How to use the Sources</title>
+
+			<p>Create a directory in the <code>apps</code> directory of the WT. Put
+			the sources <strong>without</strong> the testing package into the
+			<code>src</code> directory within this newly created directory. Now you
+			have two possibilities. Either you create a new project pointing to this
+			direcotry, or you use our <code>.jad</code> file and put it into the
+			<code>bin</code> directory.</p>
+
+			<p>The testpackages may be put somewhere else (e.g.
+			<code>testsrc</code>).</p>
+
+		</section>
+
+		<section><title>Helpful Documentation</title>
+
+			<p>There are great books out there, but a lot of information is quite
+			near:</p>
+
+			<ul>
+				<li>
+					The program is intended for J2ME, so most information is directly at
+					the source: <a
+					href="http://java.sun.com/j2me/">java.sun.com/j2me</a>
+				</li>
+				<li>
+					The <a href="http://wireless.java.com/">wireless java homepage</a> is
+					a great place to find good information.
+				</li>
+			</ul>
+		</section>
+
+	</section>
+
+</body>
+</page>

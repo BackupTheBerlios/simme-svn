@@ -1,0 +1,50 @@
+body {
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+}
+a:hover {
+	color: #990000;
+	text-decoration: underline;
+
+}
+a {
+	color: #FF6633;
+	text-decoration: none;
+
+}
+a:visited {
+	color: #FF9933;
+}
+
+/* tables */
+table {
+  border-collapse: collapse;
+  font-size: 10pt;
+  margin-left: auto; margin-right:auto;
+}
+td {
+  vertical-align: top;
+  padding-left: 0.3em; padding-right: 0.3em;
+}
+
+
+.notes {
+  font-size: smaller;
+  font-style: italic;
+}
+
+#menu { font-size: small; }
+
+#info { width:100%;
+        text-align:center; font-size: smaller;
+        border-top: solid 1px; margin-top: 1em;
+}
+
+#nav {
+  font-size: small;
+  font-weight: bold;
+  margin-bottom: 1em;
+
+  /* border-width: 5px 0px 2px;
+  border-top-style: ridge;
+  border-bottom-style: dotted; */
+}
