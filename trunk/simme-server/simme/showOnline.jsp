@@ -1,4 +1,11 @@
 <%@page contentType="text/html"%>
+<!--
+   [Simme-Server]
+          Java ServerPage: showOnline.jsp
+                    $Date: 2003/12/28 18:21:43 $
+                $Revision: 1.3 $
+-->
+
 <%@page import="at.einspiel.simme.server.management.*"%>
 
 <html>

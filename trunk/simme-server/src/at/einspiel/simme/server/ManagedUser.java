@@ -152,8 +152,9 @@ public class ManagedUser extends User {
     /**
      * Selects an edge on the currently running game.
      * @param m the move to perform.
-     * @return the result of calling play, or <code>null</code> if the game is
-     *          not running.
+     * @return the result of calling make move on the game. This method returns
+     *          <code>null</code> if the game is <code>null</code> or not
+     *          running.
      */
     public Result makeMove(Move m) {
         if (game != null) {
@@ -172,7 +173,7 @@ public class ManagedUser extends User {
     public boolean isOnTurn() {
        if (game != null) {
           if (game.isRunning()) {
-             return game.isOnTurn(this);
+             return game.isPlayerOnTurn(this);
           }
        }
        return false;

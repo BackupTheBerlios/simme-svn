@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: IGame.java
-//                  $Date: 2003/12/28 13:08:24 $
-//              $Revision: 1.1 $
+//                  $Date: 2003/12/28 18:21:43 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.base;
 
@@ -95,5 +95,5 @@ public interface IGame {
     *          has already ended, or the given user is not allowed to make the
     *          next move.
     */
-   public abstract boolean isOnTurn(User user);
+   public abstract boolean isPlayerOnTurn(User user);
 }

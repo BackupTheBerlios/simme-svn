@@ -76,7 +76,6 @@ public class ServerGame implements IGame {
      */
     public void setPlayers(User p1, User p2) {
         this.player1 = p1;
-        System.out.println(p1.getNick() + " is the first player.");
         this.player2 = p2;
     }
 
@@ -88,6 +87,7 @@ public class ServerGame implements IGame {
     /** Starts the game */
     public void startGame() {
         running = true;
+        gameover = false;
         game.start();
         if (stopwatch == null) {
             stopwatch = new StopWatch();
@@ -95,6 +95,13 @@ public class ServerGame implements IGame {
         stopwatch.start();
     }
 
+    /** Rotates players and restarts the game. */
+    public void restartGame() {
+       setPlayers(player2, player1);
+       startGame();
+    }
+    
+    
     /** Stops the game */
     public void stopGame() {
         if (!gameover) {
@@ -214,7 +221,7 @@ public class ServerGame implements IGame {
      * @return the move's result.
      */
     public Result makeMove(User u, Move m) {
-        return selectEdge(u, m.getEdge()) ? Result.POSITIVE : Result.NEGATIVE;
+       return selectEdge(u, m.getEdge()) ? Result.POSITIVE : Result.NEGATIVE;
     }    
     
     /**
@@ -250,6 +257,9 @@ public class ServerGame implements IGame {
                     } else {
                         time2 += elapsed;
                     }
+                    if (game.isGameOver()) {
+                       stopGame();
+                    }
                 }
 
                 return edgeSelection;
@@ -266,7 +276,7 @@ public class ServerGame implements IGame {
      *          has already ended, or the given user is not allowed to make the
      *          next move.
      */
-    public boolean isOnTurn(User user) {
+    public boolean isPlayerOnTurn(User user) {
        return isOnTurn(user, game.getPlayersTurn());
     }
     

@@ -1,5 +1,10 @@
 <%@ page import="at.einspiel.simme.server.management.*, java.util.*" %>
-
+<!--
+   [Simme-Server]
+          Java ServerPage: usertable.jsp
+                    $Date: 2003/12/28 18:21:43 $
+                $Revision: 1.2 $
+-->
 <%
     SessionManager manager = SessionManager.getInstance();
 

@@ -1,6 +1,12 @@
 <%@page contentType="text/xml; charset=iso-8859-1"%>
+<!--
+   [Simme-Server]
+          Java ServerPage: doLogin.jsp
+                    $Date: 2003/12/28 18:21:42 $
+                $Revision: 1.4 $
+-->
+
 <%@page import="at.einspiel.simme.server.management.ManagedUser"%>
-<%@page import="at.einspiel.simme.server.management.SessionManager"%>
 
 <%@taglib prefix="c" uri="/WEB-INF/tlds/c.tld"%>
 <%@taglib prefix="x" uri="/WEB-INF/tlds/x.tld"%>
@@ -18,13 +24,13 @@
         <c:set var="pass" value="${param.pwd}"  />
         <c:set var="model" value="${param.model}" />
         <c:set var="version" value="${param.version}" />
-    
+
         <jsp:useBean id="user" class="at.einspiel.simme.server.management.ManagedUser" scope="session">
             <jsp:setProperty name="user" property="nick" param="user" />
             <jsp:setProperty name="user" property="pwd" />
             <jsp:setProperty name="user" property="clientmodel" param="model" />
         </jsp:useBean>
-    
+
         <%
             // retrieve the user from the session's context
             ManagedUser u = (ManagedUser) session.getAttribute("user");

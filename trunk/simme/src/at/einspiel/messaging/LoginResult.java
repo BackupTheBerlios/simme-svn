@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import at.einspiel.messaging.*;
 import at.einspiel.simme.nanoxml.XMLElement;
 import at.einspiel.simme.nanoxml.XMLParseException;
 
