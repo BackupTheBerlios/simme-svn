@@ -4,15 +4,13 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-
 /**
  * Provides methods for accessing the <code>RecordStore<code> responsible for
  * saving data for personal information.
  *
  * @author kariem
  */
-public class PersonalPrefs extends Prefs
-{
+public class PersonalPrefs extends Prefs {
   private static final String RECORD_NAME = "personal";
   private static PersonalPrefs instance = null;
   String[] savedData;
@@ -21,8 +19,7 @@ public class PersonalPrefs extends Prefs
   /**
    * Creates new Preferences used to save personal information.
    */
-  private PersonalPrefs()
-  {
+  private PersonalPrefs() {
     super(RECORD_NAME, (byte) 4);
     savedData = new String[getNbRecs()];
   }
@@ -34,10 +31,8 @@ public class PersonalPrefs extends Prefs
    *
    * @return A new instance.
    */
-  public static PersonalPrefs getInstance()
-  {
-    if (instance == null)
-    {
+  public static PersonalPrefs getInstance() {
+    if (instance == null) {
       instance = new PersonalPrefs();
     }
 
@@ -49,13 +44,11 @@ public class PersonalPrefs extends Prefs
    *
    * @throws PrefsException If not opened before calling this method.
    */
-  public void update() throws PrefsException
-  {
+  public void update() throws PrefsException {
     resetEnum();
     System.out.println("updating");
 
-    for (int i = 0; i < savedData.length; i++)
-    {
+    for (int i = 0; i < savedData.length; i++) {
       writeToBuffer(savedData[i]);
     }
 
@@ -68,13 +61,11 @@ public class PersonalPrefs extends Prefs
    *
    * @throws PrefsException If errors occur.
    */
-  public void save() throws PrefsException
-  {
+  public void save() throws PrefsException {
     resetEnum();
     System.out.println("saving");
 
-    for (int i = 0; i < savedData.length; i++)
-    {
+    for (int i = 0; i < savedData.length; i++) {
       writeToBuffer(savedData[i]);
     }
 
@@ -86,23 +77,18 @@ public class PersonalPrefs extends Prefs
    *
    * @throws PrefsException If not opened before calling this method.
    */
-  public void load() throws PrefsException
-  {
-    try
-    {
+  public void load() throws PrefsException {
+    try {
       //System.out.println("loading");
       byte[] b = readNext();
       DataInputStream dis = new DataInputStream(new ByteArrayInputStream(b));
 
-      for (int i = 0; i < savedData.length; i++)
-      {
+      for (int i = 0; i < savedData.length; i++) {
         savedData[i] = dis.readUTF();
 
         //System.out.println("loaded: " + savedData[i]);
       }
-    }
-    catch (IOException e)
-    {
+    } catch (IOException e) {
       throw new PrefsException(e.getMessage());
     }
   }
@@ -112,8 +98,7 @@ public class PersonalPrefs extends Prefs
    *
    * @return The data.
    */
-  public String[] getSavedData()
-  {
+  public String[] getSavedData() {
     return savedData;
   }
 
@@ -122,8 +107,7 @@ public class PersonalPrefs extends Prefs
    *
    * @param savedData the data to be saved.
    */
-  public void setSavedData(String[] savedData)
-  {
+  public void setSavedData(String[] savedData) {
     this.savedData = savedData;
   }
 }

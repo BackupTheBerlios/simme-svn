@@ -33,7 +33,7 @@ public class ColorMgmt {
       GREY, 0, // neutral node
       GREY, BLUE, // selected node
       GREY, GREY_DARK, // deactivated node 
-      PINK // background
+      WHITE // background
    };
 
    /** p1, p2, nc, nnc, nsc, ndc  - */

@@ -5,29 +5,23 @@ import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.ImageItem;
 
-
 /**
  * Splashscreen that runs before midlet.
  *
  * @author jorge
  */
-public class SplashScreen extends Form
-{
+public class SplashScreen extends Form {
   /**
    * Creates a new SplashScreen object.
    */
-  public SplashScreen()
-  {
+  public SplashScreen() {
     super("");
 
     Image image = null;
 
-    try
-    {
+    try {
       image = Image.createImage("/icons/Splash_k.png");
-    }
-    catch (Exception ex)
-    {
+    } catch (Exception ex) {
       ; // ??
     }
 
@@ -39,18 +33,13 @@ public class SplashScreen extends Form
     thread.start();
   }
 
-  private class Task implements Runnable
-  {
+  private class Task implements Runnable {
     private static final int DELAY = 1000;
 
-    public void run()
-    {
-      try
-      {
+    public void run() {
+      try {
         Thread.sleep(DELAY);
-      }
-      catch (Exception ex)
-      {
+      } catch (Exception ex) {
         ; // ??
       }
 
