@@ -19,32 +19,24 @@ public class Game {
    private Node[] nodes;
 
    /** edges between nodes */
-   private byte[][] edges;
+   private byte[] edges;
 
    /** Indicates the currently active node */
    byte activeNode;
 
-   /** Indicates the currently active player */
-   private byte currentPlayer;
-
+   /** Indicates the currently active player true=p1, false=p2*/
+   private boolean currentPlayer;
+   
    public Game() {
       nodes = new Node[6];
       for (byte i = 0; i < 6; i++) {
          nodes[i] = new Node();
       }
 
-      edges = new byte[6][6];
-      // initializing loop not necessary - values
-      /*
-      for (int i = 0; i < 6; i++) {
-         for (int j = 0; j < 6; j++) {
-            edges[i][j] = NEUTRAL; 
-         }
-      }
-      */
+      edges = new byte[15];
 
       activeNode = -1; // value, if there is no active node
-      currentPlayer = PLAYER1;
+      currentPlayer = false;
    }
 
    /**
@@ -77,16 +69,15 @@ public class Game {
       } else { // a second node is activated
          // test if edge still not owner by P1 nor P2
          if (getEdgeOwner(activeNode, index) == NEUTRAL) {
-            edges[activeNode][index] = currentPlayer;
-            edges[index][activeNode] = currentPlayer;
+            setEdgeOwner(activeNode, index, currentPlayer);
 
             // deselect active node
-				nodes[activeNode].activated = false;
+            nodes[activeNode].activated = false;
             activeNode = -1;
 
-				// disable node to be disabled
+            // disable node to be disabled
             disableNodes();
-            
+
             // switch players
             endTurn();
             return true;
@@ -125,7 +116,7 @@ public class Game {
     * Ends a turn for this game. The other player may make his move.
     */
    private void endTurn() {
-      currentPlayer = currentPlayer == PLAYER1 ? PLAYER2 : PLAYER1;
+      currentPlayer = !currentPlayer;
    }
 
    public boolean isActivated(byte index) {
@@ -140,21 +131,56 @@ public class Game {
       return nodes[index].disabled;
    }
 
-	/**
-	 * Returns the owner of the edge between <code>nodeA</code> and
-	 * <code>nodeB</code>. 
-	 * @param nodeA The first node.
-	 * @param nodeB The second node.
-	 * @return The owner of the edge between <code>nodeA</code> and 
-	 * <code>nodeB</code> indicated by {@link #NEUTRAL}, {@link #PLAYER1}, or
-	 * {@link #PLAYER2}. 
-	 */
+	private void setEdgeOwner(byte nodeA, byte nodeB, boolean player) {
+		byte index = nodeA<nodeB ? getIndex(nodeA, nodeB) : getIndex(nodeB, nodeA);
+		edges[index] = player ? PLAYER2 : PLAYER1;
+	}
+
+   /**
+    * Returns the owner of the edge between <code>nodeA</code> and
+    * <code>nodeB</code>. 
+    * @param nodeA The first node.
+    * @param nodeB The second node.
+    * @return The owner of the edge between <code>nodeA</code> and 
+    * <code>nodeB</code> indicated by {@link #NEUTRAL}, {@link #PLAYER1}, or
+    * {@link #PLAYER2}. 
+    */
    public byte getEdgeOwner(byte nodeA, byte nodeB) {
-      return edges[nodeA][nodeB];
+      if (nodeA == nodeB)
+         return NEUTRAL;
+      byte owner = nodeA < nodeB ? edges[getIndex(nodeA, nodeB)] : edges[getIndex(nodeB, nodeA)];
+      return owner;
    }
 
-	class Node {
-		boolean activated;
-		boolean disabled;
-	}
+	/**
+	 * Returns the index within the edgelist containing the owner of the edge
+	 * between <code>smaller</code> and <code>bigger</code>.
+	 * @param smaller The smaller node index.
+	 * @param bigger The bigger node index.
+	 * @return The index of the edge within the edge list containing the edge
+	 * between <code>smaller</code> and <code>bigger</code>.
+	 */
+   private byte getIndex(byte smaller, byte bigger) {
+		byte add = 0;
+		switch (smaller) {
+			case 1 :
+				add = 5;
+				break;
+			case 2 :
+				add = 9;
+				break;
+			case 3 :
+				add = 12;
+				break;
+			case 4 :
+				add = 14;
+				break;
+		}
+		return new Integer(add + bigger - smaller - 1).byteValue();
+   }
+
+   class Node {
+      boolean activated;
+      boolean disabled;
+   }
 }
