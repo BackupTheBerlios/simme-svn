@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- :mode=ant mode: -->
 <project default="build" name="SimME">
- 
     <property name="deploy-14.dir" value="D:/Devel/j2me-wtk104/apps/SimME"/>
     <property name="deploy-14.srcdir" value="${deploy.dir}/src"/>
 
@@ -12,10 +10,14 @@
     <property name="cls" value="cls"/>
     <property name="client-package" value="test/sim"/>
 
+    <!-- misc libraries for building -->
+    <property name="lib.junit" value="../lib/junit.jar"/>
+    <property name="lib.midp" value="../lib/midpapi.zip"/>
+
     <target name="initbuild">
         <path id="project.class.path">
-            <pathelement path="D:\Devel\j2me-wtk104\lib\midpapi.zip/"/>
-            <pathelement path="D:\Devel\JUnit\junit.jar"/>
+            <pathelement path="${lib.midp}"/>
+            <pathelement path="${lib.junit}"/>
         </path>
         <mkdir dir="${cls}"/>
     </target>
