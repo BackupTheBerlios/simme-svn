@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: AbstractXMLTestCase.java
-//                  $Date: 2004/02/21 23:04:20 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/09/07 13:30:36 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.util;
 
@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  */
 public class AbstractXMLTestCase extends XMLTestCase {
 
-   private static PrintStream output;
+   protected PrintStream output = null;
    
    private static DocumentBuilder builder;
    static {
@@ -58,7 +58,7 @@ public class AbstractXMLTestCase extends XMLTestCase {
     * 
     * @param outputStream the output stream used to verbose.
     */
-   protected static void setOutput(PrintStream outputStream) {
+   protected void setOutput(PrintStream outputStream) {
       output = outputStream;
    }
 
@@ -109,15 +109,15 @@ public class AbstractXMLTestCase extends XMLTestCase {
          throws TransformerException, SAXException, IOException,
          ParserConfigurationException {
       
-      StringWriter writer = new StringWriter();
-      synchronized (transformer) {
-         transformer.transform(new DOMSource(xmlNode), new StreamResult(writer));
-      }
-      if(outputStream != null) {
-         outputStream.println("comparing");
-         outputStream.print("\t");
-         outputStream.println(writer.toString());
-         outputStream.println(xmlString);
+	      StringWriter writer = new StringWriter();
+	      synchronized (transformer) {
+	         transformer.transform(new DOMSource(xmlNode), new StreamResult(writer));
+	      }
+      if (outputStream != null) {
+	      outputStream.println("comparing");
+	      outputStream.print("\t");
+	      outputStream.println(writer.toString());
+	      outputStream.println(xmlString);
       }
       assertXMLEqual(writer.toString(), xmlString);
    }

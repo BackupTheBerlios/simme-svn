@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: SessionManagerTest.java
-//                  $Date: 2004/02/23 09:10:36 $
-//              $Revision: 1.4 $
+//                  $Date: 2004/09/07 13:30:36 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
@@ -74,7 +74,7 @@ public class SessionManagerTest extends TestCase {
         }
 
         // update user "four"
-        users[3].update();
+        users[3].updateStatus();
 
         // wait again for more than a second (sum > 2 seconds for non-updated users)
         try {
@@ -84,11 +84,11 @@ public class SessionManagerTest extends TestCase {
         }
 
         // after more than 2 seconds users should be removed
-        assertEquals(2, sMgr.getNumberOfUsers());
+        assertEquals("Users online: " + sMgr.getUsers(), 2, sMgr.getNumberOfUsers());
 
         // update both remaining users
-        users[4].update();
-        users[3].update();
+        users[4].updateStatus();
+        users[3].updateStatus();
 
         // wait for more than two seconds
         try {

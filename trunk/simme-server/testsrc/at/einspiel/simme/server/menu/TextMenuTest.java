@@ -1,12 +1,14 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: TextMenuTest.java
-//                  $Date: 2004/02/21 23:04:20 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/09/07 13:30:36 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
 import org.w3c.dom.Element;
+
+import at.einspiel.messaging.ISimpleInfo;
 
 /**
  * Class to test text menu.
@@ -22,7 +24,7 @@ public class TextMenuTest extends AbstractMenuTestCase {
     * @throws Exception if an error occurred while loading the test xml file.
     */
    public TextMenuTest() throws Exception {
-      super(TEST_FILE_NAME, TextMenu.TAG_NAME);
+      super(TEST_FILE_NAME, ISimpleInfo.TAG_TEXT);
    }
 
    /** @see AbstractMenuTestCase#createMenu(Element) */

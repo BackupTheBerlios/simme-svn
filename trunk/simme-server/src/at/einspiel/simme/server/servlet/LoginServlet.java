@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: LoginServlet.java
-//                  $Date: 2004/09/02 10:15:30 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/09/07 13:30:36 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.servlet;
 
@@ -12,7 +12,6 @@ import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,19 +22,10 @@ import at.einspiel.simme.server.SessionManager;
  * 
  * @author kariem
  */
-public class LoginServlet extends HttpServlet {
+public class LoginServlet extends AbstractServlet {
 
 	private static final String LOGIN_JSP = "/doLogin.jsp";
 	private static final String MENU_URL = "/menu.xml";
-
-	/**
-	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse)
-	 */
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		doPost(req, resp);
-	}
 
 	/**
 	 * This method checks, if the client's menu has already been loaded. If not

@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: IMenu.java
-//                  $Date: 2004/09/02 10:21:49 $
-//              $Revision: 1.5 $
+//                  $Date: 2004/09/07 13:30:36 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
@@ -10,7 +10,7 @@ import at.einspiel.base.User;
 
 /**
  * Used to model a server-side menu. The contents of menus are sent to the
- * client, via the methods {@link #getXml()}and {@link #getXml(User)}.
+ * client, via the methods {@link #getXml()} and {@link #getXml(String)}.
  * 
  * @author kariem
  */
@@ -18,6 +18,14 @@ public interface IMenu extends Cloneable {
 
 	/** The default id for menus. The current value is <code>0</code>. */
 	String DEFAULT_ID = "0";
+
+	/**
+	 * The type attribute, which may be used for different instances of the same
+	 * class.
+	 * @see GenerateMenu
+	 * @see SpecialMenu
+	 */
+	String ATTR_TYPE = "type";
 
 	/**
 	 * Returns the title.
@@ -42,14 +50,12 @@ public interface IMenu extends Cloneable {
 	String getXml();
 
 	/**
-	 * Returns an xml representation for a specific user.
-	 * 
-	 * @param u
-	 *            the user.
+	 * Returns an xml representation with the additional meta parameter.
+	 * @param meta
+	 *            the meta information.
 	 * @return an xml representation.
-	 * @see #getXml()
 	 */
-	String getXml(User u);
+	String getXml(String meta);
 
 	/**
 	 * Sets the user for this menu. A subsequent call to {@linkplain #getXml()}
@@ -87,4 +93,5 @@ public interface IMenu extends Cloneable {
 	 * @see Cloneable
 	 */
 	IMenu copy();
+
 }

@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: UserState.java
-//                  $Date: 2004/09/02 10:20:38 $
-//              $Revision: 1.3 $
+//                  $Date: 2004/09/07 13:30:36 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
@@ -51,11 +51,8 @@ public class UserState implements IChangeSupport, Serializable {
 
    /**
     * Creates a new instance.
-    * 
-    * @param user the user that is in this state.
     */
-   public UserState(ManagedUser user) {
-      this.user = user;
+   public UserState() {
       stateCategory = STATE_IDLE;
       detailedState = new DetailedState();
       changeSupport = new ChangeSupport();
@@ -71,7 +68,6 @@ public class UserState implements IChangeSupport, Serializable {
       int old = stateCategory;
       if ((state >= 0) && (state <= 2)) {
          this.stateCategory = state;
-         user.update();
       }
       if (old != stateCategory) {
          fireStateEvent(new StateEvent(user, new Integer(old), new Integer(state)));
@@ -94,7 +90,7 @@ public class UserState implements IChangeSupport, Serializable {
     *          <code>false</code> otherwise.
     */
    public boolean isPlaying() {
-      return stateCategory == UserState.STATE_PLAYING;
+      return getStateCategory() == UserState.STATE_PLAYING;
    }
 
    /**
@@ -127,10 +123,10 @@ public class UserState implements IChangeSupport, Serializable {
     * without changing anything. 
     */
    public void waitForGame() {
-      if (stateCategory == STATE_PLAYING || detailedState.isPlaying()) {
+      if (getStateCategory() == STATE_PLAYING || detailedState.isPlaying()) {
          return;
       }
-      stateCategory = STATE_WAITING;
+      setStateCategory(STATE_WAITING);
       detailedState.waitForGame();
    }
 
@@ -161,7 +157,7 @@ public class UserState implements IChangeSupport, Serializable {
       detailedState.changeState(actionString);
    }
 
-   private class DetailedState {
+   private class DetailedState implements Serializable {
       private int id;
       private Message clientMessage;
 
@@ -304,13 +300,13 @@ public class UserState implements IChangeSupport, Serializable {
       }
    }
 
-   /** @see IChangeSupport#addStateListener(StateListener) */
-   public void addStateListener(StateListener listener) {
+   /** @see IChangeSupport#addStateListener(IStateListener) */
+   public void addStateListener(IStateListener listener) {
       changeSupport.addStateListener(listener);
    }
 
-   /** @see IChangeSupport#removeStateListener(StateListener) */
-   public void removeStateListener(StateListener listener) {
+   /** @see IChangeSupport#removeStateListener(IStateListener) */
+   public void removeStateListener(IStateListener listener) {
       changeSupport.removeStateListener(listener);
    }
    

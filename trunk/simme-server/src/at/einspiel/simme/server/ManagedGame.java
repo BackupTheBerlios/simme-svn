@@ -1,14 +1,14 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: ManagedGame.java
-//                  $Date: 2003/12/30 23:04:47 $
-//              $Revision: 1.4 $
+//                  $Date: 2004/09/07 13:30:36 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
 import at.einspiel.base.User;
 import at.einspiel.mgmt.StateEvent;
-import at.einspiel.mgmt.StateListener;
+import at.einspiel.mgmt.IStateListener;
 import at.einspiel.simme.server.net.MoveMessageXML;
 
 /**
@@ -16,7 +16,7 @@ import at.einspiel.simme.server.net.MoveMessageXML;
  * 
  * @author kariem
  */
-public class ManagedGame extends ServerGame implements StateListener {
+public class ManagedGame extends ServerGame implements IStateListener {
 
    /**
     * Creates a new <code>ManagedGame</code> with the given managed users.
@@ -59,7 +59,7 @@ public class ManagedGame extends ServerGame implements StateListener {
       getPlayer2().removeStateListener(this);
    }
 
-   /** @see at.einspiel.mgmt.StateListener#updateState(StateEvent) */
+   /** @see at.einspiel.mgmt.IStateListener#updateState(StateEvent) */
    public void updateState(StateEvent evt) {
       Object source = evt.getSource();
       if (source instanceof ManagedUser) {

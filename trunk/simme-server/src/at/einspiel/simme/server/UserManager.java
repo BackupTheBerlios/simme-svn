@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: UserManager.java
-//                  $Date: 2004/04/06 22:28:31 $
-//              $Revision: 1.5 $
+//                  $Date: 2004/09/07 13:30:36 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 
 package at.einspiel.simme.server;
@@ -207,12 +207,16 @@ public class UserManager {
                switch (mu.getUserState().getStateCategory()) {
                   case UserState.STATE_IDLE :
                      if (mu.secondsSinceLastUpdate() > getMaxSecondsIdle()) {
+                     	// TODO log this
+                     	//System.out.println(System.currentTimeMillis() + " " + mu + "\tremoved (idle)");
                         i.remove();
                      }
                      break;
 
                   case UserState.STATE_WAITING :
                      if (mu.secondsSinceLastUpdate() > getMaxSecondsWaiting()) {
+                     	// TODO log this
+                     	// System.out.println(System.currentTimeMillis() + " " + mu + "\tremoved (waiting)");
                         i.remove();
                      }
                      break;

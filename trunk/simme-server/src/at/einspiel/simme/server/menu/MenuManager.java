@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: MenuManager.java
-//                  $Date: 2004/09/02 10:21:49 $
-//              $Revision: 1.7 $
+//                  $Date: 2004/09/07 13:30:36 $
+//              $Revision: 1.8 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
@@ -46,7 +46,7 @@ import at.einspiel.util.XMLUtils;
  * 
  * The attribute <code>default</code> is optional. It declares the default
  * menu, i.e. the first menu to be shown, for the <code>MenuManager</code>.
- * If omitted, {@linkplain IMenu#DEFAULT_ID} is taken.
+ * If omitted, {@linkplain IMenu#DEFAULT_ID}is taken.
  * 
  * @author kariem
  */
@@ -204,12 +204,15 @@ public class MenuManager {
 	 *            then the default menu will be returned. The default menu is
 	 *            equal to {@linkplain IMenu#DEFAULT_ID}, unless otherwise
 	 *            specified.
-	 * 
 	 * @param u
-	 *            the user.
+	 *            the user. If this parameter is <code>null</code>, the
+	 *            method's result is the same as a call to
+	 *            {@linkplain #getMenu(String)}.
 	 * 
 	 * @return the menu associated with <code>id</code>, or <code>null</code>,
 	 *         if no such menu exists.
+	 * 
+	 * @see #getMenu(String)
 	 */
 	public IMenu getMenu(String id, User u) {
 		IMenu currentMenu = getMenu(id);
@@ -241,9 +244,9 @@ public class MenuManager {
 		String[] options = menu.getOptions();
 		if (selectedPosition >= options.length) {
 			selectedPosition = 0;
-			// TODO error logging
-			System.err.println("menu: selected position out of bounds [current=" + menuId
-					+ ",selected=" + selectedPosition + "]");
+			// TODO think about error loggin
+			// System.err.println("menu: selected position out of bounds
+			// [current=" + menuId + ",selected=" + selectedPosition + "]");
 		}
 		String selection = menu.getOptions()[selectedPosition];
 		return getMenu(menu.getIdFor(selection), u);

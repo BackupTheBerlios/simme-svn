@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: ManagedUser.java
-//                  $Date: 2004/09/02 10:25:10 $
-//              $Revision: 1.7 $
+//                  $Date: 2004/09/07 13:30:36 $
+//              $Revision: 1.8 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
@@ -12,8 +12,10 @@ import at.einspiel.base.UserException;
 import at.einspiel.db.UserDB;
 import at.einspiel.messaging.LoginMessage;
 import at.einspiel.messaging.Message;
+import at.einspiel.mgmt.*;
 import at.einspiel.mgmt.IChangeSupport;
-import at.einspiel.mgmt.StateListener;
+import at.einspiel.mgmt.IStateListener;
+import at.einspiel.mgmt.StateEvent;
 import at.einspiel.simme.client.Move;
 
 /**
@@ -24,21 +26,46 @@ import at.einspiel.simme.client.Move;
  * 
  * @author kariem
  */
-public class ManagedUser extends User implements IChangeSupport {
+public class ManagedUser extends User implements IChangeSupport, IStateListener {
 
     private static final int ACCURACY = 1000;
 
-    private UserState state;
+    private final UserState state;
+	private final ChangeSupport changeSupport;
+	
     private long lastStatusUpdate;
     private ManagedGame game;
     private Message clientMessage;
+
+
+    /**
+     * Creates a new instance of <code>ManagedUser</code>.
+     * @see User#User(String, String, String, byte, String, String, String)
+     */
+	public ManagedUser(String name, String passwd, String winmessage, byte language,
+			String information, String loc, String client) {
+		super(name, passwd, winmessage, language, information, loc, client);
+
+		state = new UserState();
+        state.addStateListener(this);
+        lastStatusUpdate = System.currentTimeMillis();
+        changeSupport = new ChangeSupport(); 
+	}    
+	
+    /**
+     * Creates a new <code>ManagedUser</code> with the given properties.
+     * @param u the user
+     */
+    public ManagedUser(User u) {
+        this(u.getNick(), u.getPwd(), u.getWinmsg(), u.getLang(), u.getInfo(),
+                u.getLocation(), u.getClientmodel());
+    }
 
     /**
      * Simple default constructor.
      */
     public ManagedUser() {
-        super();
-        init();
+        this("");
     }
 
     /**
@@ -46,20 +73,9 @@ public class ManagedUser extends User implements IChangeSupport {
      * @param nick
      */
     ManagedUser(String nick) {
-        super();
-        setNick(nick);
-        init();
+        this(nick, null, null, LANG_DE, null, null, null);
     }
 
-    /**
-     * Creates a new <code>ManagedUser</code> with the given properties.
-     * @param u the user
-     */
-    public ManagedUser(User u) {
-        super(u.getNick(), u.getPwd(), u.getWinmsg(), u.getLang(), u.getInfo(),
-                u.getLocation(), u.getClientmodel());
-        init();
-    }
 
     /**
      * Creates a new <code>ManagedUser</code> by querying the database with
@@ -91,11 +107,6 @@ public class ManagedUser extends User implements IChangeSupport {
         final User user = UserDB.getUser(nick, pwd);
         ManagedUser managedUser = new ManagedUser(user);
         return managedUser;
-    }
-
-    private void init() {
-        state = new UserState(this);
-        lastStatusUpdate = System.currentTimeMillis();
     }
 
     /**
@@ -138,8 +149,10 @@ public class ManagedUser extends User implements IChangeSupport {
      * Updates the user, setting the time of last update to the time of
      * executing this method.
      */
-    public void update() {
+    public void updateStatus() {
         lastStatusUpdate = System.currentTimeMillis();
+    	// TODO log this 
+        // System.out.println(lastStatusUpdate + " " + this + " updating status");
     }
 
     /**
@@ -229,17 +242,23 @@ public class ManagedUser extends User implements IChangeSupport {
         return false;
     }
 
-    /** @see IChangeSupport#addStateListener(StateListener) */
-    public void addStateListener(StateListener listener) {
-        state.addStateListener(listener);
+    /** @see IChangeSupport#addStateListener(IStateListener) */
+    public void addStateListener(IStateListener listener) {
+    	changeSupport.addStateListener(listener);
     }
 
-    /** @see IChangeSupport#removeStateListener(StateListener) */
-    public void removeStateListener(StateListener listener) {
-        state.removeStateListener(listener);
+    /** @see IChangeSupport#removeStateListener(IStateListener) */
+    public void removeStateListener(IStateListener listener) {
+    	changeSupport.removeStateListener(listener);
     }
 
-    /**
+	/** @see at.einspiel.mgmt.IStateListener#updateState(at.einspiel.mgmt.StateEvent) */
+	public void updateState(StateEvent event) {
+		event.setSource(this);
+		changeSupport.fireStateEvent(event);
+	}
+	
+	/**
      * Returns the message for the client.
      * @return the client message.
      */

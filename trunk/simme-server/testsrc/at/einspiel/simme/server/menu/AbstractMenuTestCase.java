@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: AbstractMenuTestCase.java
-//                  $Date: 2004/04/03 23:39:13 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/09/07 13:30:36 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
@@ -75,7 +75,7 @@ public abstract class AbstractMenuTestCase extends AbstractXMLTestCase {
          Element current = elementsMenu[i];
          IMenu menu = createMenu(current);
          Element result = elementsResult[i];
-         assertXMLEqual(result, menu.getXml(), System.out);
+         assertXMLEqual(result, menu.getXml(), output);
       }
    }
    

@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: AbstractListMenu.java
-//                  $Date: 2004/08/25 15:43:11 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/09/07 13:30:36 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
@@ -15,7 +15,7 @@ import at.einspiel.util.XMLUtils;
  * 
  * @author kariem
  */
-abstract class AbstractListMenu extends AbstractMenu implements IMenu {
+abstract class AbstractListMenu extends AbstractMenu {
 
 	/** @see AbstractMenu#AbstractMenu(Element) */
 	public AbstractListMenu(Element e) {

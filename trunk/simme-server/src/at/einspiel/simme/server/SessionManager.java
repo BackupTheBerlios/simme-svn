@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: SessionManager.java
-//                  $Date: 2004/09/02 10:24:51 $
-//              $Revision: 1.7 $
+//                  $Date: 2004/09/07 13:30:36 $
+//              $Revision: 1.8 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
@@ -12,8 +12,10 @@ import java.util.*;
 import at.einspiel.base.User;
 import at.einspiel.base.UserException;
 import at.einspiel.db.UserDB;
+import at.einspiel.messaging.IConstants;
 import at.einspiel.messaging.LoginMessage;
 import at.einspiel.messaging.SimpleClientMessage;
+import at.einspiel.simme.server.menu.IMenu;
 import at.einspiel.simme.server.menu.MenuCreateException;
 import at.einspiel.simme.server.menu.MenuManager;
 
@@ -106,28 +108,28 @@ public class SessionManager {
 	/**
 	 * Adds a user to the list of managed users.
 	 * 
-	 * @param u
+	 * @param mu
 	 *            the user.
 	 * @param version
 	 *            the user's version.
 	 * 
 	 * @return a login result
 	 */
-	public LoginMessage addUser(User u, String version) {
-		String response = null;
+	public LoginMessage addUser(ManagedUser mu, String version) {
+		String response = "User signed in";
 		// TODO check version with most current version and inform client
+		boolean success = true;
 		try {
-			User userFromDB = UserDB.getUser(u.getNick(), u.getPwd());
-			if (!userFromDB.equals(u)) {
-				u.saveToDB();
+			User userFromDB = UserDB.getUser(mu.getNick(), mu.getPwd());
+			if (!userFromDB.equals(mu)) {
+				mu.saveToDB(); // update user in database
 			}
-			addManagedUser(new ManagedUser(u));
-			response = "User signed on";
-			return new LoginMessage(true, response, MGMT_PAGE);
+			addManagedUser(mu);
 		} catch (UserException e) {
 			response = e.getMessage();
-			return new LoginMessage(false, response, MGMT_PAGE);
+			success = false;
 		}
+		return new LoginMessage(success, response, MGMT_PAGE);
 	}
 
 	/**
@@ -158,7 +160,8 @@ public class SessionManager {
 	 *            The user which is added.
 	 */
 	private void addManagedUser(ManagedUser user) {
-		System.out.println("[" + System.currentTimeMillis() + "] adding " + user.getNick());
+		// TODO log this 
+		// System.out.println(System.currentTimeMillis() + " adding " + user.getNick());
 		userManager.addUser(user); // adding to user manager
 	}
 
@@ -172,7 +175,8 @@ public class SessionManager {
 	 *         <code>false</code> otherwise.
 	 */
 	public boolean removeUser(String nick) {
-		System.out.println("[" + System.currentTimeMillis() + "] removing " + nick);
+		// TODO log this
+		// System.out.println("[" + System.currentTimeMillis() + "] removing " + nick);
 		return userManager.removeUser(nick);
 	}
 
@@ -242,17 +246,20 @@ public class SessionManager {
 	 * The user has to be logged in and in the correct state to perform the
 	 * requested menu selection or action.
 	 * 
-	 * @param userNick
-	 *            the user's nick name.
-	 * @param menuId
-	 *            the menu id.
-	 * @param selection
-	 *            the selection within the menu.
+	 * @param m
+	 *            a map with all the request's parameters.
 	 * @return an answer for the user.
 	 */
-	public String getAnswerFor(String userNick, String menuId, String selection) {
+	public String getAnswerFor(Map m) {
+
+		// retrieve parameters
+		String userNick = getParam(m, IConstants.PARAM_USER);
+		String menuId = getParam(m, IConstants.PARAM_MENUID);
+		String selection = getParam(m, IConstants.PARAM_SEL);
+		String meta = getParam(m, IConstants.PARAM_META);
+
 		// see, if user is online
-		ManagedUser u = (ManagedUser) users.get(userNick);
+		ManagedUser u = userNick == null ? null : (ManagedUser) users.get(userNick);
 		if (u == null) {
 			// user is not online => inform client to log in again
 			return makeMessage("Not logged in.", "The session for " + userNick
@@ -260,12 +267,28 @@ public class SessionManager {
 					+ " Please try to reconnect to SimME online.");
 		}
 
+		// user has done something, so update status
+		u.updateStatus();
+
+		IMenu result;
+
 		// user is online and seems to be active
 		if (selection != null) {
 			// see if user has selected a menu element
-			return menuManager.getMenu(menuId, Integer.parseInt(selection), u).getXml();
+			result = menuManager.getMenu(menuId, Integer.parseInt(selection), u);
+		} else {
+			result = menuManager.getMenu(menuId, u);
 		}
 
-		return menuManager.getMenu(menuId, u).getXml();
+		// add the meta tag to the XML generation
+		return result.getXml(meta);
+	}
+
+	private String getParam(Map m, String paramName) {
+		Object o = m.get(paramName);
+		if (o == null) {
+			return null;
+		}
+		return ((String[]) o)[0];
 	}
 }

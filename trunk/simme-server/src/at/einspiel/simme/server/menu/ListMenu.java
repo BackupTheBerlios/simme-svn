@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: ListMenu.java
-//                  $Date: 2004/08/25 15:43:11 $
-//              $Revision: 1.4 $
+//                  $Date: 2004/09/07 13:30:36 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
@@ -17,7 +17,7 @@ import org.w3c.dom.NodeList;
  * A simple list showing static entries.
  * @author kariem
  */
-class ListMenu extends AbstractListMenu implements IMenu {
+class ListMenu extends AbstractListMenu {
    
    static final String TAG_NAME = "list";
 
