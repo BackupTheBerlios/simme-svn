@@ -33,7 +33,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
 	private final Sim sim;
 	private static final Command CMD_CANCEL =
 		new Command("Cancel", Command.CANCEL, 1);
-	
+
 	private static final Command CMD_NEWGAME =
 		new Command("New Game", Command.OK, 1);
 
@@ -41,6 +41,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
 	static final byte linewidth = 5;
 	int node[][] = new int[6][2];
 	int xoff, yoff;
+	byte position[] = new byte[15];
 
 	Zeichenblatt(Sim midlet) {
 		this.sim = midlet;
@@ -196,6 +197,26 @@ class Zeichenblatt extends Canvas implements CommandListener {
 				node[4][1] + 9 / 2 + 4 * getHeightSpace(g, node[4][1]) / 5,
 				node[4][0]);
 
+			if (game.getPlayersTurn() == 1) {
+				g.setColor(0);
+				g.fillArc(
+					node[4][0] - 5 * xoff / 4,
+					node[4][1] + 2 * getHeightSpace(g, node[4][1]) / 5 - 4,
+					8,
+					8,
+					0,
+					360);
+			} else {
+				g.setColor(0);
+				g.fillArc(
+					node[4][0] - 5 * xoff / 4,
+					node[4][1] + 4 * getHeightSpace(g, node[4][1]) / 5 - 4,
+					8,
+					8,
+					0,
+					360);
+			}
+
 			if (game.getWinner() == 1) {
 				g.drawString(
 					"WINNER",
@@ -292,6 +313,57 @@ class Zeichenblatt extends Canvas implements CommandListener {
 
 	}
 
+	/*public void shaking()
+	{
+		int n1,n2;
+		double xx1,yy1,xx2,yy2,dx,dy;
+		byte  weight[] = new byte[6];
+		weight = game.weigh(position);
+		do
+		{
+			n1 = (int)(Math.random()*6);
+			n2 = (int)(Math.random()*6);
+		} while ( n1 == n2 || weight[n1] == weight[n2]);
+		int x1 = node[n1][0];
+		int y1 = node[n1][1];
+		int x2 = node[n2][0];
+		int y2 = node[n2][1];
+		xx1 = x1;
+		yy1 = y1;
+		xx2 = x2;
+		yy2 = y2;
+		dx = (x2 - x1)/20.0;
+		dy = (y2 - y1)/20.0;
+		for (int i=1;i<20;i++)
+		{
+			long startTime = System.currentTimeMillis();
+			xx1 += dx;
+			yy1 += dy;
+			xx2 -= dx;
+			yy2 -= dy;
+			node[n1][0] = (int)xx1;
+			node[n1][1] = (int)yy1;
+			node[n2][0] = (int)xx2;
+			node[n2][1] = (int)yy2;
+				repaint(); //Delay depending on how far we are behind
+			try
+			{
+				startTime += 10*Math.abs(10-i);
+				Thread.sleep(Math.max(0, startTime-System.currentTimeMillis()));
+			}
+			catch (InterruptedException e)
+			{
+				break;
+			}
+		}
+			node[n1][0] = x2;
+		node[n1][1] = y2;
+		node[n2][0] = x1;
+		node[n2][1] = y1;
+		repaint();
+	}
+	*/
+
 	private int getHeightSpace(Graphics g, int y) {
 		int height = getHeight();
 		return - (y - height);
@@ -318,9 +390,9 @@ class Zeichenblatt extends Canvas implements CommandListener {
 		if (c == CMD_CANCEL) {
 			Display.getDisplay(sim).setCurrent(sim.getMainScreen());
 		} else if (c == CMD_NEWGAME) {
-			
+
 			zeichenblatt = new Zeichenblatt(sim);
-               Display.getDisplay(sim).setCurrent(zeichenblatt);
+			Display.getDisplay(sim).setCurrent(zeichenblatt);
 		}
 	}
 
