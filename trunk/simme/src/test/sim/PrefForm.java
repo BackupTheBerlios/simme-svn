@@ -65,7 +65,8 @@ public class PrefForm extends List implements CommandListener {
       pPrefs.append(new ChoiceGroup("Sprache", ChoiceGroup.POPUP, LANGUAGE, null));
       pPrefs.append(new TextField("Info (opt.)", "", 8, TextField.ANY));
       pPrefs.append(new ChoiceGroup("Location (opt.)", ChoiceGroup.POPUP, LOCATION, null));
-      pPrefs.append(new TextField("Client Model", "Palm Tungsten T", 15, TextField.ANY | TextField.UNEDITABLE));
+      String platform = System.getProperty("microedition.platform");
+      pPrefs.append(new TextField("Client Model", platform, platform.length(), TextField.ANY | TextField.UNEDITABLE));
       pPrefs.addCommand(new Command("Back", Command.BACK, 0));
       pPrefs.setCommandListener(new CommandListener() {
          public void commandAction(Command arg0, Displayable arg1) {

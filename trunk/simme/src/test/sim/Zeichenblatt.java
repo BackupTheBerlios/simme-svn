@@ -30,7 +30,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
    private Game game;
 
    private final Sim sim;
-   private static final Command CMD_EXIT = new Command("Exit", Command.EXIT, 1);
+	private static final Command CMD_CANCEL = new Command("Cancel", Command.CANCEL, 1);
 
    static final byte diameter = 22;
    static final byte linewidth = 5;
@@ -81,7 +81,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
       FixNodePosition();
       g.setColor(bg);
       g.fillRect(0, 0, width, height);
-      addCommand(CMD_EXIT);
+      addCommand(CMD_CANCEL);
       setCommandListener(this);
 
       // Kanten zeichnen
@@ -175,16 +175,8 @@ class Zeichenblatt extends Canvas implements CommandListener {
    }
 
    public void commandAction(Command c, Displayable d) {
-      // hier sollten eigentlich Befehle entgegengenommen werden.
-      /*	switch (c.getCommandType()) {
-      		case Command.EXIT :
-               // einziger Befehl: aussteigen
-      			sim.notifyDestroyed();
-      			break;
-      	} */
-      if (c == CMD_EXIT) {
-         sim.destroyApp(false);
-         sim.notifyDestroyed();
+      if (c == CMD_CANCEL) {
+      	Display.getDisplay(sim).setCurrent(sim.getMainScreen());
       }
    }
 
