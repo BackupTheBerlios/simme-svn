@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: SuiteTestSimmeClient.java
-//                  $Date: 2004/08/12 22:00:07 $
-//              $Revision: 1.3 $
+//                  $Date: 2004/09/13 15:24:33 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client;
 
@@ -11,6 +11,7 @@ import junit.framework.TestSuite;
 import at.einspiel.logging.SuiteTestLogging;
 import at.einspiel.messaging.SuiteTestMessaging;
 import at.einspiel.simme.client.net.SuiteTestNet;
+import at.einspiel.simme.nanoxml.XMLElementTest;
 
 /**
  * Class to test simme module.
@@ -37,6 +38,7 @@ public class SuiteTestSimmeClient {
 		suite.addTestSuite(MoveTest.class);
 		suite.addTestSuite(GameTest.class);
 		suite.addTestSuite(GameRandomAITest.class);
+		suite.addTestSuite(XMLElementTest.class);
 		//$JUnit-END$
 		return suite;
 	}
