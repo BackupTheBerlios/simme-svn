@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: UserDB.java
-//                  $Date: 2004/09/07 13:28:33 $
-//              $Revision: 1.5 $
+//                  $Date: 2004/09/15 23:36:40 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package at.einspiel.db;
 
@@ -62,6 +62,7 @@ public class UserDB {
 				insert(u);
 				return u;
 			} catch (SQLException e1) {
+				e1.printStackTrace();
 				throw new UserException("User nicht gefunden. Neuer Benutzer "
 						+ "konnte aber nicht angelegt werden.");
 			}
