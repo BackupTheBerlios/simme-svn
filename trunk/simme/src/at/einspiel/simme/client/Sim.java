@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: Sim.java
-//               $Date: 2004/06/07 09:27:25 $
-//           $Revision: 1.4 $
+//               $Date: 2004/08/12 21:59:59 $
+//           $Revision: 1.5 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client;
 
@@ -29,6 +29,7 @@ public class Sim extends MIDlet {
      */
     public Sim() {
         instance = this;
+        
     }
 
     /** @see MIDlet#destroyApp(boolean) */
@@ -88,6 +89,9 @@ public class Sim extends MIDlet {
      * @see MIDlet#getAppProperty(String)
      */
     public static String getProperty(String key) {
+    	if (instance == null) {
+    		return null;
+    	}
         return instance.getAppProperty(key);
     }
 
