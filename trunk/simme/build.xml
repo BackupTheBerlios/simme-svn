@@ -49,7 +49,7 @@
     
     <target name="preverify-obfuscate" depends="obfuscate">
         <mkdir dir="${dir.obfuscate}/preverified"/>
-        <exec executable="${wtk14}/bin/preverify.exe">
+        <exec executable="${run.preverify}">
             <arg line="-classpath ${lib.midp}"/>
             <arg line="-d ${dir.obfuscate}/preverified"/>
             <arg line="${dir.obfuscate}/obfuscated"/>
@@ -58,7 +58,7 @@
     
     <target name="preverify" depends="compile-client">
         <mkdir dir="${dir.preverify}"/>
-        <exec executable="${wtk14}/bin/preverify.exe">
+        <exec executable="${run.preverify}">
             <arg line="-classpath ${lib.midp}"/>
             <arg line="-d ${dir.preverify}"/>
             <arg line="${cls-client}"/>
@@ -80,8 +80,8 @@
     </target>
     
     
-    <target name="run" depends="dist">
-        <exec executable="${wtk14}/bin/emulator.exe">
+    <target name="run" depends="dist" description="Runs simme in an emulator">
+        <exec executable="${run.emulator}">
             <arg line="-Xdescriptor:${debug.jad}"/>
         </exec>
     </target>
@@ -94,7 +94,7 @@
     </target>
     
     <!-- build simme.jar to include in client -->
-    <target name="simme-jar" depends="preverify">
+    <target name="simme-jar" depends="preverify" description="Creates simme application, ready for deployment on device">
         <mkdir dir="${build}"/>
         <jar basedir="${dir.preverify}"
              jarfile="${build}/SimME.jar"
@@ -103,7 +103,7 @@
         </jar>    
         <copy file="${build}/SimME.jar" tofile="${build}/SimME-${DSTAMP}${TSTAMP}.jar"/>
     </target>
-    <target name="simme-jar-small" depends="preverify-obfuscate">
+    <target name="simme-jar-small" depends="preverify-obfuscate" description="Creates smaller simme application.">
         <mkdir dir="${build}"/>
         <jar basedir="${dir.obfuscate}/preverified"
              jarfile="${build}/SimME-small.jar"
@@ -114,7 +114,7 @@
     </target>
 
 	<!-- build simme.jar to include in server -->    
-    <target name="build" depends="compile">
+    <target name="build" depends="compile" description="Creates simme.jar in order to be included in Webapp">
         <description>
             Creates the simme-client libraries, without test classes.
         </description>
@@ -129,6 +129,8 @@
         </jar>
     </target>
     
+	
+	<!-- Tasks for deployment in wireless toolkit directories -->
 
     <!-- deployment to wtk-104 -->
     <target name="deploy">
