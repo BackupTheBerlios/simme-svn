@@ -13,7 +13,8 @@
     <property name="webxml" value="${web-inf}/web.xml"/>
 
     <!-- deployment -->
-    <property name="deploy.war" value="simme-server.war"/>
+    <property name="deploy.war" value="simme.war"/>
+    <property name="deploy.dir" value="D:\Devel\Server\Tomcat-4.1\webapps" />
     
     <!-- misc libraries for building -->
     <property name="lib.dir" value="../lib" />
@@ -59,20 +60,10 @@
 
     <target name="war" depends="build">
         <description>Builds the web archive for deployment.</description>
-        <war destfile="${deploy.war}" webxml="${webxml}" update="true" index="true">
-            <classes dir="${cls}"/>
-            <lib dir="${web-inf.lib}"/>
-            <fileset dir=".">
-                <include name="${web-inf}/tlds/"/>
-                <!-- jsp and html files -->
-                <include name="**/*.jsp"/>
-                <include name="**/*.html"/>
-                <!-- all files in directory simme -->
-                <include name="simme/**"/>
-                <!-- remove hidden files -->
-                <exclude name="**/.*"/>
-            </fileset>
-        </war>
+        <!-- create war -->
+        <war basedir="${module}" destfile="${deploy.war}" webxml="${webxml}" index="true"/>
+        <!-- copy to deploy directory -->
+        <copy file="${deploy.war}" todir="${deploy.dir}" overwrite="true" />
     </target>
     
     <!-- delete created classes -->

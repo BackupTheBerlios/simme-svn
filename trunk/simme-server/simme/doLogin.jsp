@@ -1,5 +1,4 @@
 <%@page contentType="text/xml; charset=iso-8859-1"%>
-<%@page import="at.einspiel.simme.server.base.User"%>
 <%@page import="at.einspiel.simme.server.management.ManagedUser"%>
 <%@page import="at.einspiel.simme.server.management.SessionManager"%>
 
@@ -28,14 +27,10 @@
     
         <%
             // retrieve the user from the session's context
-            User u = (User) session.getAttribute("user");
-            // retrieve the session manager
-            SessionManager sMgr = SessionManager.getInstance();
-            String requestUrl = request.getRequestURL().toString();
-            sMgr.setBaseUrl(requestUrl.substring(0,requestUrl.lastIndexOf('/')));
-            String version = (String) pageContext.getAttribute("version");
-            // register user and return resulting messsage
-            out.print(sMgr.addUser(u, version).toString());
+            ManagedUser u = (ManagedUser) session.getAttribute("user");
+            // login
+            out.print(u.login((String) pageContext.getAttribute("version")).toString());
+            // print user to console
             System.out.println(request.getParameter("user"));
         %>
     </c:otherwise>
