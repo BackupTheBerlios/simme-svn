@@ -6,7 +6,7 @@ package at.einspiel.messaging;
  * 
  * @author kariem
  */
-public class SimpleClientMessage extends SendableUI implements Message {
+public class SimpleClientMessage extends SendableUI implements IMessage {
 
 	/**
 	 * Creates a simple message with the given title and content.
@@ -32,17 +32,17 @@ public class SimpleClientMessage extends SendableUI implements Message {
 		this("Information", msg);
 	}
 
-	/** @see at.einspiel.messaging.Message#getMessage() */
+	/** @see at.einspiel.messaging.IMessage#getMessage() */
 	public String getMessage() {
 		return getXmlString();
 	}
 
-	/** @see at.einspiel.messaging.SendableUI#getId() */
+	/** @see at.einspiel.messaging.IMessage#getId() */
 	public byte getId() {
 		return 0;
 	}
 
-	/** @see at.einspiel.messaging.Message#getInfo() */
+	/** @see at.einspiel.messaging.IMessage#getInfo() */
 	public String getInfo() {
 		return getInfoObject().getText();
 	}

@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
-//       Java Source File: Message.java
-//                  $Date: 2004/08/25 15:40:01 $
-//              $Revision: 1.4 $
+//       Java Source File: IMessage.java
+//                  $Date: 2004/09/13 15:19:39 $
+//              $Revision: 1.1 $
 // ----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
@@ -11,9 +11,9 @@ package at.einspiel.messaging;
  * 
  * @author kariem
  */
-public interface Message {
+public interface IMessage {
 
-	/** Message does not have an id. */
+	/** IMessage does not have an id. */
 	byte NO_ID = 0;
 
 	/** Attribute name for id. */

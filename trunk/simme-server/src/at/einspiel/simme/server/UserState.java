@@ -1,14 +1,14 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: UserState.java
-//                  $Date: 2004/09/07 13:30:36 $
-//              $Revision: 1.4 $
+//                  $Date: 2004/09/13 15:16:27 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
 import java.io.Serializable;
 
-import at.einspiel.messaging.Message;
+import at.einspiel.messaging.IMessage;
 import at.einspiel.messaging.SimpleClientMessage;
 import at.einspiel.mgmt.*;
 
@@ -159,7 +159,7 @@ public class UserState implements IChangeSupport, Serializable {
 
    private class DetailedState implements Serializable {
       private int id;
-      private Message clientMessage;
+      private IMessage clientMessage;
 
       /** idle */
       private static final int IDLE = 0;
@@ -295,7 +295,7 @@ public class UserState implements IChangeSupport, Serializable {
       }
 
       /** @return the message to the client. */
-      Message getClientMessage() {
+      IMessage getClientMessage() {
          return clientMessage;
       }
    }
