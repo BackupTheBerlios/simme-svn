@@ -1,24 +1,21 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: DynamicUI.java
-//                  $Date: 2004/09/02 10:17:05 $
-//              $Revision: 1.9 $
+//                  $Date: 2004/09/07 13:24:22 $
+//              $Revision: 1.10 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
-import java.io.IOException;
 import java.util.Enumeration;
 
 import javax.microedition.lcdui.*;
 
 import at.einspiel.logging.Logger;
 import at.einspiel.messaging.*;
-import at.einspiel.messaging.ISimpleInfo;
-import at.einspiel.messaging.Request;
-import at.einspiel.messaging.SendableUI;
 import at.einspiel.simme.client.Game;
 import at.einspiel.simme.client.Sim;
 import at.einspiel.simme.client.net.NetworkGame;
+import at.einspiel.simme.client.util.UIUtils;
 
 /**
  * This class is intended to create dynamically a user interface from the
@@ -27,34 +24,15 @@ import at.einspiel.simme.client.net.NetworkGame;
  * 
  * @author jorge
  */
-public class DynamicUI implements CommandListener {
-	private static final String COMM_PATH = "dynamicState";
+public class DynamicUI implements IDynamicUI, CommandListener {
 
 	final SendableUI ui;
 	boolean updateNecessary;
-	String url;
 	Displayable disp;
 
 	/**
-	 * Creates a new instance of this object with list entries built from the
-	 * data found in the given xml string.
-	 * 
-	 * @param xmlString
-	 *            information to build the user interface.
-	 */
-	public DynamicUI(String xmlString) {
-		System.out.println("xmlString=" + xmlString);
-		ui = new SendableUI(xmlString);
-
-		getDisplayable();
-
-		disp.addCommand(new Command("Exit", Command.EXIT, 0));
-		disp.setCommandListener(this);
-	}
-
-	/**
 	 * Creates a new dynamic user interface. A subsequent call to
-	 * {@linkplain #getDisplayable()}is necessary.
+	 * {@linkplain #updateDisplay()}is necessary.
 	 * 
 	 * @param title
 	 *            the title.
@@ -65,12 +43,10 @@ public class DynamicUI implements CommandListener {
 	 */
 	public DynamicUI(String title, String message, String url) {
 		Logger.debug(getClass(), "message=" + message);
+
 		ui = new SendableUI(title, message);
-
-		this.url = url;
-
-		disp.addCommand(new Command("Abort", Command.CANCEL, 0));
-		disp.setCommandListener(this);
+		ui.setDynamicUI(this);
+		ui.setCommPath(url);
 	}
 
 	/**
@@ -81,57 +57,53 @@ public class DynamicUI implements CommandListener {
 	private synchronized void connect() {
 		Logger.debug(getClass(), "called connect()");
 		if (updateNecessary) {
-			ConnectorThread connector = new ConnectorThread();
-			connector.start();
+			ui.update();
 		}
 	}
 
 	/** @see CommandListener#commandAction(Command, Displayable) */
 	public void commandAction(Command cmd, Displayable displayable) {
-		Display d = Sim.getDisplay();
-
-		if (cmd.getCommandType() == Command.EXIT) {
-			d.setCurrent(Sim.getMainScreen());
+		Logger.debug(getClass(), "command " + cmd.getLabel() + " executed");
+		if (cmd == UIUtils.CMD_CANCEL) {
+			// exit simme online
+			Sim.getDisplay().setCurrent(Sim.getMainScreen());
+		} else if (cmd == UIUtils.CMD_CONTINUE) {
+			// go to the main screen
+			connect();
 		} else {
 			Request r = handleCommand();
 			if (r == null) {
 				return;
 			}
-			r.addUserData();
-			r.sendRequest(COMM_PATH);
 
-			String response = null;
-
-			try {
-				response = new String(r.getResponse());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			// load response into UI
-			ui.initialize(response);
-
-			// show new UI
-			d.setCurrent(getDisplayable());
+			// dynamic user interface will be updated automatically
+			ui.update(r);
 		}
 	}
 
 	/**
 	 * A request that is generated, if a certain command has been executed.
-	 * 
 	 * @return a request.
 	 */
 	private Request handleCommand() {
 		if (ui.isList()) {
 			// find selected index
-			int selected = ((List) disp).getSelectedIndex();
+			final List currentList = (List) disp;
+			final int selected = currentList.getSelectedIndex();
+
+			Logger.debug(getClass(), "selected: " + selected);
+
+			Request r = new Request();
 
 			// send index to server
-			Request r = new Request();
 			r.setParam(IConstants.PARAM_SEL, Integer.toString(selected));
 
 			// attach id of menu if possible
 			r.setParam(IConstants.PARAM_MENUID, Integer.toString(ui.getId()));
+
+			if (ui.hasMetaInfo()) {
+				r.setParam(IConstants.PARAM_META, currentList.getString(selected));
+			}
 
 			return r;
 		}
@@ -139,40 +111,63 @@ public class DynamicUI implements CommandListener {
 	}
 
 	/**
-	 * Returns the current displayable object of the dynamic user interface.
-	 * Prior to this call the user interface usually should be initialized by a
-	 * call to {@link SendableUI#initialize(String)}.
-	 * 
-	 * @return a displayable.
+	 * Updates the display.
 	 */
-	protected Displayable getDisplayable() {
-		disp = makeDisplayable(ui);
-		connect();
-		return disp;
+	public void updateDisplay() {
+		Displayable d = makeDisplayable(ui.getInfoObject());
+
+		// add command listeners
+		// command to exit simme online
+		d.addCommand(UIUtils.CMD_CANCEL);
+		// command to go to the next page
+		if (updateNecessary) {
+			d.addCommand(UIUtils.CMD_CONTINUE);
+		}
+		d.setCommandListener(this);
+
+		// point field disp to temporary display
+		this.disp = d;
+
+		Sim.getDisplay().setCurrent(disp);
 	}
 
-	Displayable makeDisplayable(SendableUI sui) {
-		Displayable d;
-		ISimpleInfo infoObject = sui.getInfoObject();
-		String title = infoObject.getTitle();
+	/**
+	 * Creates a displayable from an ISimpleInfo object.
+	 * @param infoObject
+	 *            the object holding information to create the displayable.
+	 * @return a newly created displayable object.
+	 */
+	Displayable makeDisplayable(ISimpleInfo infoObject) {
+		final Displayable newDisp;
+		final String title = infoObject.getTitle();
 		if (infoObject.isList()) {
-			d = makeList(infoObject);
-			updateNecessary = false;
+			newDisp = makeList(infoObject);
 		} else if (infoObject.isXml()) {
 			// build game with xml information
-			Game g = new NetworkGame(infoObject.getXmlInfo(), Sim.getNick(), url);
-			// TODO Georg start game, create Zeichenblatt, ...
-			d = new Zeichenblatt(false);
-			((Zeichenblatt) d).setGame(g);
+			Game g = new NetworkGame(infoObject.getXmlInfo(), Sim.getNick(), ui.getCommPath());
+			newDisp = new Zeichenblatt(false);
+			((Zeichenblatt) newDisp).setGame(g);
 			updateNecessary = false;
 		} else {
-			d = new Form(title);
-			((Form) d).append(new StringItem("Status:", infoObject.getText()));
+			newDisp = UIUtils.uneditableTextComponent(title, infoObject.getText());
 			updateNecessary = true;
 		}
-		return d;
+		return newDisp;
 	}
 
+	/**
+	 * Creates a {@linkplain List}from an info object. If info object does not
+	 * contain any list elements ({@linkplain ISimpleInfo#getListElements()}
+	 * returns an empty vector), this method will return a short textual
+	 * information instead of a list.
+	 * 
+	 * @param infoObject
+	 *            the object that contains information to create the list.
+	 * @return a list object with all the elements contained in the info object,
+	 *         or a textual component if there are no elements.
+	 * 
+	 * @see UIUtils#uneditableTextComponent(String, String)
+	 */
 	private Displayable makeList(ISimpleInfo infoObject) {
 		List l = new List(infoObject.getTitle(), List.IMPLICIT);
 
@@ -181,33 +176,18 @@ public class DynamicUI implements CommandListener {
 			String name = (String) enum.nextElement();
 
 			if (name != null) {
-				appendToList(l, name, null);
+				l.append(name, null);
 			}
 		}
+		// if the list does not contain any elements, show a short textual info
+		if (l.size() == 0) {
+			updateNecessary = true;
+			return UIUtils.uneditableTextComponent("Leer",
+					"Zur Zeit befinden sich hier noch keine Einträge.");
+		}
+
+		// some elements are in the list, so return the rest
+		updateNecessary = false;
 		return l;
-	}
-
-	private void appendToList(List l, String name, Image img) {
-		l.append(name, img);
-	}
-
-	/** Establishes a connection and updates the user interface. */
-	class ConnectorThread extends Thread {
-
-		/** @see java.lang.Thread#run() */
-		public void run() {
-			// send the request
-			Request r = new Request();
-			r.addUserData();
-			r.sendRequest(url);
-
-			try {
-				String response = new String(r.getResponse());
-				ui.initialize(response);
-			} catch (IOException e) {
-				// error occured
-				ui.initialize("connection broken: " + e.getMessage());
-			}
-		}
 	}
 }
