@@ -1,7 +1,7 @@
 /* XMLElement.java
  *
- * $Revision: 1.1 $
- * $Date: 2003/04/15 21:04:04 $
+ * $Revision: 1.2 $
+ * $Date: 2003/04/16 19:43:41 $
  * $Name:  $
  *
  * This file is part of NanoXML 2 Lite.
@@ -87,7 +87,7 @@ import test.sim.util.StringReader;
  * <DL><DT><B>Subclassing XMLElement</B></DT>
  * <DD>
  * When subclassing XMLElement, you need to override the method
- * {@link #createAnotherElement() createAnotherElement}
+ * createAnotherElement()
  * which has to return a new copy of the receiver.
  * </DD></DL>
  * <P>
@@ -95,9 +95,10 @@ import test.sim.util.StringReader;
  *
  * <p>Changes made by kariem:
  * <ul>
- *   <li>removed all methods containing <code>double</code>s
- *   <li>removed char array parsing
- *   <li>changed getChildren() to return the children instead of a clone
+ *   <li>Removed all methods containing <code>double</code>s.</li>
+ *   <li>Removed char array parsing.</li>
+ *   <li>Changed getChildren() to return the children instead of a clone.</li>
+ *   <li>Remove minor (was 2) and major (was 2) version numbers and UID.</li>
  * </ul>
  * </p>
  *
@@ -105,34 +106,9 @@ import test.sim.util.StringReader;
  *
  * @author Marc De Scheemaecker
  *         &lt;<A href="mailto:cyberelf@mac.com">cyberelf@mac.com</A>&gt;
- * @version $Name:  $, $Revision: 1.1 $
+ * @version $Name:  $, $Revision: 1.2 $
  */
 public class XMLElement {
-
-   /**
-    * Serialization serial version ID.
-    */
-   static final long serialVersionUID = 6685035139346394777L;
-
-   /**
-    * Major version of NanoXML. Classes with the same major and minor
-    * version are binary compatible. Classes with the same major version
-    * are source compatible. If the major version is different, you may
-    * need to modify the client source code.
-    *
-    * @see nanoxml.XMLElement#NANOXML_MINOR_VERSION
-    */
-   public static final int NANOXML_MAJOR_VERSION = 2;
-
-   /**
-    * Minor version of NanoXML. Classes with the same major and minor
-    * version are binary compatible. Classes with the same major version
-    * are source compatible. If the major version is different, you may
-    * need to modify the client source code.
-    *
-    * @see nanoxml.XMLElement#NANOXML_MAJOR_VERSION
-    */
-   public static final int NANOXML_MINOR_VERSION = 2;
 
    /**
     * The attributes given to the element.
@@ -408,9 +384,6 @@ public class XMLElement {
    /**
     * Creates and initializes a new XML element.
     * <P>
-    * This constructor should <I>only</I> be called from
-    * {@link #createAnotherElement() createAnotherElement}
-    * to create child elements.
     *
     * @param entities
     *     The entity conversion table.
@@ -442,7 +415,6 @@ public class XMLElement {
     *     <li>getName() => null
     * </ul></dd></dl><dl>
     *
-    * @see nanoxml.XMLElement#createAnotherElement()
     */
    protected XMLElement(
       Hashtable entities,
@@ -559,21 +531,6 @@ public class XMLElement {
     * @param value
     *     The value of the attribute.
     *
-    * @deprecated Use {@link #setAttribute(java.lang.String, java.lang.Object)
-    *             setAttribute} instead.
-    */
-   public void addProperty(String name, Object value) {
-      this.setAttribute(name, value);
-   }
-
-   /**
-    * Adds or modifies an attribute.
-    *
-    * @param name
-    *     The name of the attribute.
-    * @param value
-    *     The value of the attribute.
-    *
     * </dl><dl><dt><b>Preconditions:</b></dt><dd>
     * <ul><li><code>name != null</code>
     *     <li><code>name</code> is a valid XML identifier
@@ -607,26 +564,13 @@ public class XMLElement {
    }
 
    /**
-    * Adds or modifies an attribute.
-    *
-    * @param name
-    *     The name of the attribute.
-    * @param value
-    *     The value of the attribute.
-    *
-    * @deprecated Use {@link #setIntAttribute(java.lang.String, int)
-    *             setIntAttribute} instead.
-    */
-   public void addProperty(String key, int value) {
-      this.setIntAttribute(key, value);
-   }
-
-   /**
     * Returns the number of child elements of the element.
     *
     * <dl><dt><b>Postconditions:</b></dt><dd>
     * <ul><li><code>result >= 0</code>
     * </ul></dd></dl>
+    *
+    * @return number of children elements.
     *
     * @see nanoxml.XMLElement#addChild(nanoxml.XMLElement)
     *         addChild(XMLElement)
@@ -634,6 +578,7 @@ public class XMLElement {
     * @see nanoxml.XMLElement#getChildren()
     * @see nanoxml.XMLElement#removeChild(nanoxml.XMLElement)
     *         removeChild(XMLElement)
+    * 
     */
    public int countChildren() {
       return this.children.size();
@@ -687,16 +632,6 @@ public class XMLElement {
    }
 
    /**
-    * Enumerates the attribute names.
-    *
-    * @deprecated Use {@link #enumerateAttributeNames()
-    *             enumerateAttributeNames} instead.
-    */
-   public Enumeration enumeratePropertyNames() {
-      return this.enumerateAttributeNames();
-   }
-
-   /**
     * Enumerates the child elements.
     *
     * <dl><dt><b>Postconditions:</b></dt><dd>
@@ -731,16 +666,6 @@ public class XMLElement {
     */
    public Vector getChildren() {
       return this.children;
-   }
-
-   /**
-    * Returns the PCDATA content of the object. If there is no such content,
-    * <CODE>null</CODE> is returned.
-    *
-    * @deprecated Use {@link #getContent() getContent} instead.
-    */
-   public String getContents() {
-      return this.getContent();
    }
 
    /**
@@ -1156,95 +1081,14 @@ public class XMLElement {
    }
 
    /**
-    * Returns an attribute by looking up a key in a hashtable.
-    *
-    * @deprecated Use {@link #getIntAttribute(java.lang.String,
-    *             java.util.Hashtable, java.lang.String, boolean)
-    *             getIntAttribute} instead.
-    */
-   public int getIntProperty(String name, Hashtable valueSet, String defaultKey) {
-      return this.getIntAttribute(name, valueSet, defaultKey, false);
-   }
-
-   /**
-    * Returns an attribute.
-    *
-    * @deprecated Use {@link #getStringAttribute(java.lang.String)
-    *             getStringAttribute} instead.
-    */
-   public String getProperty(String name) {
-      return this.getStringAttribute(name);
-   }
-
-   /**
-    * Returns an attribute.
-    *
-    * @deprecated Use {@link #getStringAttribute(java.lang.String,
-    *             java.lang.String) getStringAttribute} instead.
-    */
-   public String getProperty(String name, String defaultValue) {
-      return this.getStringAttribute(name, defaultValue);
-   }
-
-   /**
-    * Returns an attribute.
-    *
-    * @deprecated Use {@link #getIntAttribute(java.lang.String, int)
-    *             getIntAttribute} instead.
-    */
-   public int getProperty(String name, int defaultValue) {
-      return this.getIntAttribute(name, defaultValue);
-   }
-
-   /**
-    * Returns an attribute by looking up a key in a hashtable.
-    *
-    * @deprecated Use {@link #getAttribute(java.lang.String,
-    *             java.util.Hashtable, java.lang.String, boolean)
-    *             getAttribute} instead.
-    */
-   public Object getProperty(String name, Hashtable valueSet, String defaultKey) {
-      return this.getAttribute(name, valueSet, defaultKey, false);
-   }
-
-   /**
-    * Returns an attribute by looking up a key in a hashtable.
-    *
-    * @deprecated Use {@link #getStringAttribute(java.lang.String,
-    *             java.util.Hashtable, java.lang.String, boolean)
-    *             getStringAttribute} instead.
-    */
-   public String getStringProperty(String name, Hashtable valueSet, String defaultKey) {
-      return this.getStringAttribute(name, valueSet, defaultKey, false);
-   }
-
-   /**
-    * Returns an attribute by looking up a key in a hashtable.
-    *
-    * @deprecated Use {@link #getIntAttribute(java.lang.String,
-    *             java.util.Hashtable, java.lang.String, boolean)
-    *             getIntAttribute} instead.
-    */
-   public int getSpecialIntProperty(String name, Hashtable valueSet, String defaultKey) {
-      return this.getIntAttribute(name, valueSet, defaultKey, true);
-   }
-
-   /**
     * Returns the name of the element.
+    *
+    * @return element's name.
     *
     * @see nanoxml.XMLElement#setName(java.lang.String) setName(String)
     */
    public String getName() {
       return this.name;
-   }
-
-   /**
-    * Returns the name of the element.
-    *
-    * @deprecated Use {@link #getName() getName} instead.
-    */
-   public String getTagName() {
-      return this.getName();
    }
 
    /**
@@ -1265,9 +1109,9 @@ public class XMLElement {
     *         '&gt;' character of the XML element
     * </ul></dd></dl><dl>
     *
-    * @throws java.io.IOException
+    * @throws IOException
     *     If an error occured while reading the input.
-    * @throws nanoxml.XMLParseException
+    * @throws XMLParseException
     *     If an error occured while parsing the read data.
     */
    public void parseFromReader(Reader reader) throws IOException, XMLParseException {
@@ -1531,32 +1375,6 @@ public class XMLElement {
    }
 
    /**
-    * Removes an attribute.
-    *
-    * @param name
-    *     The name of the attribute.
-    *
-    * @deprecated Use {@link #removeAttribute(java.lang.String)
-    *             removeAttribute} instead.
-    */
-   public void removeProperty(String name) {
-      this.removeAttribute(name);
-   }
-
-   /**
-    * Removes an attribute.
-    *
-    * @param name
-    *     The name of the attribute.
-    *
-    * @deprecated Use {@link #removeAttribute(java.lang.String)
-    *             removeAttribute} instead.
-    */
-   public void removeChild(String name) {
-      this.removeAttribute(name);
-   }
-
-   /**
     * Creates a new similar XML element.
     * <P>
     * You should override this method when subclassing XMLElement.
@@ -1573,18 +1391,6 @@ public class XMLElement {
     */
    public void setContent(String content) {
       this.contents = content;
-   }
-
-   /**
-    * Changes the name of the element.
-    *
-    * @param name
-    *     The new name.
-    *
-    * @deprecated Use {@link #setName(java.lang.String) setName} instead.
-    */
-   public void setTagName(String name) {
-      this.setName(name);
    }
 
    /**
@@ -1815,9 +1621,11 @@ public class XMLElement {
     * </dl><dl><dt><b>Preconditions:</b></dt><dd>
     * <ul><li><code>result != null</code>
     * </ul></dd></dl>
+    * 
+    * @param result StringBuffer
     */
    protected char scanWhitespace(StringBuffer result) throws IOException {
-      for (;;) {
+      while (true) {
          char ch = this.readChar();
          switch (ch) {
             case ' ' :
@@ -1867,6 +1675,8 @@ public class XMLElement {
     * </dl><dl><dt><b>Preconditions:</b></dt><dd>
     * <ul><li><code>data != null</code>
     * </ul></dd></dl>
+    * 
+    * @param data buffer.
     */
    protected void scanPCData(StringBuffer data) throws IOException {
       for (;;) {
@@ -1895,6 +1705,8 @@ public class XMLElement {
     * <ul><li><code>buf != null</code>
     *     <li>The first &lt; has already been read.
     * </ul></dd></dl>
+    * 
+    * @param buf buffer.
     */
    protected boolean checkCDATA(StringBuffer buf) throws IOException {
       char ch = this.readChar();

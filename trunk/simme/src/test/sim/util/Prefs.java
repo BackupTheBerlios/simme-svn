@@ -22,8 +22,7 @@ import javax.microedition.rms.RecordStoreNotOpenException;
  */
 public class Prefs {
 
-   static final byte INITIAL_SIZE = 10;
-   static final byte GROWTH_FACTOR = 5;
+   static final byte INITIAL_SIZE = 15;
 
 
    RecordStore rs;
