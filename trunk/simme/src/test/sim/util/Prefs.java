@@ -16,7 +16,7 @@ import javax.microedition.rms.RecordStoreNotOpenException;
 
 
 /**
- * DOCUMENT ME!
+ * Class that provides easy and performant access to saved data.
  *
  * @author kariem
  */
@@ -39,8 +39,8 @@ public class Prefs {
    /**
     * Creates a new Prefs object.
     *
-    * @param name DOCUMENT ME!
-    * @param nbRecords DOCUMENT ME!
+    * @param name name of preferences
+    * @param nbRecords number of records
     */
    public Prefs(String name, byte nbRecords) {
       setName(name);
@@ -53,9 +53,17 @@ public class Prefs {
 
 
    /**
-    * DOCUMENT ME!
+    * Opens the recordset. This method has to be called before executing any
+    * other operation on this instance.
     *
-    * @throws PrefsException DOCUMENT ME!
+    * @throws PrefsException The "open" command cannot be successfully
+    *         executed, if one of the following conditions occur:
+    *         <ul>
+    *           <li>RecordStore is full.
+    *           <li>RecordStore could not be found.
+    *           <li>RecordStore throws general error.
+    *         </ul>
+    * 
     */
    public void open() throws PrefsException {
       try {
@@ -71,9 +79,15 @@ public class Prefs {
    }
 
    /**
-    * DOCUMENT ME!
+    * Closes the recordset. After closing the recordset may not be accessed any
+    * more until another call to open has occured.
     *
-    * @throws PrefsException DOCUMENT ME!
+    * @throws PrefsException The "close" command cannot be successfully
+    *         executed, if one of the following conditions occur:
+    *         <ul>
+    *           <li>RecordStore is not open.
+    *           <li>RecordStore throws general error.
+    *         </ul> 
     */
    public void close() throws PrefsException {
       if (rs != null) {
@@ -88,29 +102,34 @@ public class Prefs {
    }
 
    /**
-    * DOCUMENT ME!
+    * Shows if there are remaining data elements in this object after the
+    * current position.
     *
-    * @return DOCUMENT ME!
+    * @return <code>true</code>, if there are objects; <code>false</code>
+    *         otherwise.
     */
    public boolean hasNext() {
       return enum.hasNextElement();
    }
 
    /**
-    * DOCUMENT ME!
+    * Shows if there are remaining data elements in this object before the
+    * current position.
     *
-    * @return DOCUMENT ME!
+    * @return <code>true</code>, if there are objects; <code>false</code>
+    *         otherwise.
     */
    public boolean hasPrevious() {
       return enum.hasPreviousElement();
    }
 
    /**
-    * DOCUMENT ME!
+    * Returns the current size of the record that is in use. It shows the number
+    * of records.
     *
-    * @return DOCUMENT ME!
+    * @return The number of records.
     *
-    * @throws PrefsException DOCUMENT ME!
+    * @throws PrefsException if the RecordSet is not open.
     */
    public int currentSize() throws PrefsException {
       try {
@@ -215,20 +234,6 @@ public class Prefs {
       enum.rebuild();
       enum.reset();
    }
-
-   /*
-   public byte[] readPrevious() throws PrefsException {
-      try {
-         return enum.previousRecord();
-      } catch (InvalidRecordIDException e) {
-         throw new PrefsException(e.getMessage());
-      } catch (RecordStoreNotOpenException e) {
-         throw new PrefsException(e.getMessage());
-      } catch (RecordStoreException e) {
-         throw new PrefsException(e.getMessage());
-      }
-   }
-   */
 
    /**
     * DOCUMENT ME!

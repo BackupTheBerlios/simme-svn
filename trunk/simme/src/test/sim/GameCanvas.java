@@ -1,12 +1,9 @@
 package test.sim;
 
 /**
- * DOCUMENT ME!
+ * Intended to use for threading.
  *
- * @author Jorge De Mar To change this generated comment edit the template
- *         variable "typecomment": Window>Preferences>Java>Templates. To
- *         enable and disable the creation of type comments go to
- *         Window>Preferences>Java>Code Generation.
+ * @author jorge
  */
 public class GameCanvas {
 
@@ -14,16 +11,14 @@ public class GameCanvas {
    private GameThread thread;
    private boolean running;
 
-
    /**
     * Creates a new GameCanvas object.
     */
    public GameCanvas() {
    }
 
-
    /**
-    * DOCUMENT ME!
+    * Starts this thread.
     */
    public void start() {
       running = true;
@@ -32,14 +27,14 @@ public class GameCanvas {
    }
 
    /**
-    * DOCUMENT ME!
+    * Stops the running thread.
     */
    public void stop() {
       running = false;
    }
 
-
-   public class GameThread extends Thread {
+   private class GameThread extends Thread {
+      /** @see Thread#run() */
       public void run() {
          while (running) {
             long time = System.currentTimeMillis();
@@ -53,6 +48,7 @@ public class GameCanvas {
                   Thread.sleep(DELAY - (int) time);
                }
             } catch (Exception ex) {
+               ; // ??
             }
          }
       }

@@ -5,13 +5,21 @@ import junit.framework.TestSuite;
 
 
 /**
+ * DOCUMENT ME!
+ *
  * @author kariem
  */
 public class SimmeTestSuite {
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTestSuite(GameTest.class);
-		return suite;
-	} 
+   /**
+    * DOCUMENT ME!
+    *
+    * @return DOCUMENT ME!
+    */
+   public static Test suite() {
+      TestSuite suite = new TestSuite();
+      suite.addTestSuite(GameTest.class);
+
+      return suite;
+   }
 }

@@ -4,30 +4,24 @@ import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.ImageItem;
-import javax.microedition.lcdui.List;
-
 
 /**
- * DOCUMENT ME!
+ * Splashscreen that runs before midlet.
  *
  * @author jorge
  */
 public class SplashScreen extends Form {
 
    private Sim sim;
-   private List list;
-
 
    /**
     * Creates a new SplashScreen object.
     *
-    * @param sim DOCUMENT ME!
-    * @param list DOCUMENT ME!
+    * @param sim Midlet which the splash screen is intended for.
     */
-   public SplashScreen(Sim sim, List list) {
+   public SplashScreen(Sim sim) {
       super("");
       this.sim = sim;
-      this.list = list;
 
       Image image = null;
 
@@ -36,15 +30,13 @@ public class SplashScreen extends Form {
       } catch (Exception ex) {
       }
 
-      ImageItem item =
-         new ImageItem(null, image, ImageItem.LAYOUT_CENTER, null);
+      ImageItem item = new ImageItem(null, image, ImageItem.LAYOUT_CENTER, null);
       append(item);
 
       Task task = new Task();
       Thread thread = new Thread(task);
       thread.start();
    }
-
 
    public class Task implements Runnable {
       private static final int DELAY = 1000;

@@ -1,7 +1,7 @@
 package test.sim;
 
+import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
-
 
 /**
  * Has several methods that may be used to draw lines.
@@ -20,8 +20,7 @@ public class DrawUtils {
     * @param yEnd End y coordinate.
     * @param thickness Thickness of the line. Should be greater than 1
     */
-   public static void drawLine(
-      Graphics g, int xStart, int yStart, int xEnd, int yEnd, int thickness) {
+   public static void drawLine(Graphics g, int xStart, int yStart, int xEnd, int yEnd, int thickness) {
       if (thickness < 2) {
          return;
       }
@@ -97,8 +96,14 @@ public class DrawUtils {
     * @param outerColor Color for line border.
     */
    public static void drawLineWithBorder(
-      Graphics g, int xStart, int yStart, int xEnd, int yEnd, int thickness,
-      int innerColor, int outerColor) {
+      Graphics g,
+      int xStart,
+      int yStart,
+      int xEnd,
+      int yEnd,
+      int thickness,
+      int innerColor,
+      int outerColor) {
       if (thickness < 2) {
          return;
       }
@@ -207,8 +212,15 @@ public class DrawUtils {
     * @see Graphics#fillArc(int, int, int, int, int, int)
     */
    public static void fillArcWithBorder(
-      Graphics g, int x, int y, int width, int height, int startAngle,
-      int arcAngle, int innerColor, int outerColor) {
+      Graphics g,
+      int x,
+      int y,
+      int width,
+      int height,
+      int startAngle,
+      int arcAngle,
+      int innerColor,
+      int outerColor) {
       g.setColor(outerColor);
       g.fillArc(x, y, width, height, startAngle, arcAngle);
       g.setColor(innerColor);
@@ -228,8 +240,7 @@ public class DrawUtils {
     * @return <code>true</code> if the line was drawn, <code>false</code>
     * otherwise.
     */
-   private static boolean drawAxisLine(
-      Graphics g, int x1, int y1, int x2, int y2, int thickness) {
+   private static boolean drawAxisLine(Graphics g, int x1, int y1, int x2, int y2, int thickness) {
       int l;
 
       // wenn x Koordinaten, oder y Koordinaten gleich, dann einfach
@@ -258,9 +269,9 @@ public class DrawUtils {
     * @param y y coordinate
     * @param anchor ...
     */
-   public static void drawStringWithBorder(
-      Graphics g, String str, int x, int y, int anchor) {
+   public static void drawStringWithBorder(Graphics g, String str, int x, int y, int anchor) {
       g.drawString(str, x, y, anchor);
-      g.drawRect(x - (str.length() * 4) - 1, y - 10, 8 * str.length(), 11);
+      Font f = g.getFont();
+      g.drawRect(x - 2, y, f.stringWidth(str) + 4, f.getHeight());
    }
 }

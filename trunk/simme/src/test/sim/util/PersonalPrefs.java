@@ -22,13 +22,11 @@ public class PersonalPrefs extends Prefs {
 
 
    /**
-    * DOCUMENT ME!
+    * Creates new Preferences used to save personal information.
     */
    private PersonalPrefs() {
       super(RECORD_NAME, (byte) 7);
       savedData = new String[getNumberOfRecords()];
-
-      //recIds = new byte[getNumberOfRecords()];
    }
 
 
@@ -113,7 +111,7 @@ public class PersonalPrefs extends Prefs {
    /**
     * Returns the data saved for the preferences.
     *
-    * @param savedData DOCUMENT ME!
+    * @param savedData the data to be saved.
     */
    public void setSavedData(String[] savedData) {
       this.savedData = savedData;

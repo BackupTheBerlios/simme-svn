@@ -9,8 +9,10 @@ import javax.microedition.lcdui.Graphics;
 
 class Zeichenblatt extends Canvas implements CommandListener {
 
-   private static final byte DIAMETER = 22;
-   private static final byte LINEWIDTH = 5;
+   private static int diameter;
+   private static byte linewidth;
+   private static byte linewidththick;
+
    private static final Command CMD_CANCEL = new Command("Cancel", Command.CANCEL, 1);
    private static final Command CMD_NEWGAME = new Command("New Game", Command.OK, 1);
 
@@ -38,7 +40,12 @@ class Zeichenblatt extends Canvas implements CommandListener {
    private final Sim sim;
 
    int node[][] = new int[6][2];
-   int xoff, yoff;
+
+   int xPInfo1, xPInfo2, xPInfo3, xPInfo4, xPInfo5, xPInfo6;
+   int yPInfo1, yPInfo1middle, yPInfo2, yPInfo2middle;
+
+   int width, height;
+
    byte position[] = new byte[15];
 
    Zeichenblatt(Sim midlet) {
@@ -64,10 +71,16 @@ class Zeichenblatt extends Canvas implements CommandListener {
 
       // start a new Game()
       game = new Game();
-      
+
       // add cancel command
       addCommand(CMD_CANCEL);
       setCommandListener(this);
+
+      width = getWidth();
+      height = getHeight();
+
+      setDisplayParameters();
+
    }
 
    /**
@@ -89,20 +102,18 @@ class Zeichenblatt extends Canvas implements CommandListener {
       repaint();
    }
 
+   /** @see Canvas#paint(Graphics) */
    protected void paint(Graphics g) {
-      int width = getWidth();
-      int height = getHeight();
       byte i = 0; // byte < int  (byte [127-128]) 
       byte j = 0; // byte < int  (byte [127-128]) 
 
-      fixNodePosition();
+      //fixNodePosition();
       g.setColor(bg);
       g.fillRect(0, 0, width, height);
 
       if (game.getWinner() != 0) {
          addCommand(CMD_NEWGAME);
       }
-
 
       // Kanten zeichnen
       int c1 = nc1, c2 = nc2;
@@ -126,7 +137,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
                   break;
             }
 
-            DrawUtils.drawLineWithBorder(g, node[i][0], node[i][1], node[j][0], node[j][1], LINEWIDTH, c1, c2);
+            DrawUtils.drawLineWithBorder(g, node[i][0], node[i][1], node[j][0], node[j][1], linewidth, c1, c2);
          }
 
          i++;
@@ -147,102 +158,56 @@ class Zeichenblatt extends Canvas implements CommandListener {
 
          DrawUtils.fillArcWithBorder(
             g,
-            node[i][0] - (DIAMETER / 2),
-            node[i][1] - (DIAMETER / 2),
-            DIAMETER,
-            DIAMETER,
+            node[i][0] - (diameter / 2),
+            node[i][1] - (diameter / 2),
+            diameter,
+            diameter,
             0,
             360,
             c1,
             c2);
       }
 
+      // Spielerbalken zeichnen
+      g.setColor(p1c1);
+      DrawUtils.drawLine(g, xPInfo1, yPInfo1middle, xPInfo2, yPInfo1middle, linewidththick);
+      g.setColor(p2c1);
+      DrawUtils.drawLine(g, xPInfo1, yPInfo2middle, xPInfo2, yPInfo2middle, linewidththick);
 
-      // Spielerbeschreibung zeichnen
-      if (standardDisplay() == true) {
-         DrawUtils.drawLineWithBorder(
-            g,
-            node[4][0] - xoff,
-            node[4][1] + ((2 * getHeightSpace(g, node[4][1])) / 5),
-            node[4][0],
-            node[4][1] + ((2 * getHeightSpace(g, node[4][1])) / 5),
-            11,
-            p1c1,
-            p1c1);
+      // Spielernamen zeichnen
+      g.setColor(0);
+      g.drawString(game.getP1Name(), xPInfo3, yPInfo1 + linewidththick / 2, 0);
+      g.drawString(game.getP2Name(), xPInfo3, yPInfo2 + linewidththick / 2, 0);
 
-         g.setColor(0);
-         g.drawString(
-            game.getP1Name(),
-            node[4][0] + ((2 * xoff) / 3),
-            node[4][1] + (9 / 2) + ((2 * getHeightSpace(g, node[4][1])) / 5),
-            node[4][0]);
+      // Spielerinfo zeichnen
+      DrawUtils.drawStringWithBorder(g, game.getP1Info(), xPInfo5, yPInfo1 + linewidththick / 2, 0);
+      DrawUtils.drawStringWithBorder(g, game.getP2Info(), xPInfo5, yPInfo2 + linewidththick / 2, 0);
 
-         DrawUtils.drawStringWithBorder(
-            g,
-            game.getP1Info(),
-            node[4][0] + ((2 * xoff) / 3) + (5 * game.getP1Name().length()),
-            node[4][1] + (9 / 2) + ((2 * getHeightSpace(g, node[4][1])) / 5),
-            node[4][0]);
-
-         DrawUtils.drawLineWithBorder(
-            g,
-            node[4][0] - xoff,
-            node[4][1] + ((4 * getHeightSpace(g, node[4][1])) / 5),
-            node[4][0],
-            node[4][1] + ((4 * getHeightSpace(g, node[4][1])) / 5),
-            11,
-            p2c1,
-            p2c1);
-
-         g.setColor(0);
-         g.drawString(
-            game.getP2Name(),
-            node[4][0] + ((2 * xoff) / 3),
-            node[4][1] + (9 / 2) + ((4 * getHeightSpace(g, node[4][1])) / 5),
-            node[4][0]);
-
-         DrawUtils.drawStringWithBorder(
-            g,
-            game.getP2Info(),
-            node[4][0] + ((2 * xoff) / 3) + (5 * game.getP1Name().length()),
-            node[4][1] + (9 / 2) + ((4 * getHeightSpace(g, node[4][1])) / 5),
-            node[4][0]);
-
-         if (game.getPlayersTurn() == 1) {
-            g.setColor(0);
-            g.fillArc(node[4][0] - 5 * xoff / 4, node[4][1] + 2 * getHeightSpace(g, node[4][1]) / 5 - 4, 8, 8, 0, 360);
-         } else {
-            g.setColor(0);
-            g.fillArc(node[4][0] - 5 * xoff / 4, node[4][1] + 4 * getHeightSpace(g, node[4][1]) / 5 - 4, 8, 8, 0, 360);
-         }
-
-         if (game.isGameOver()) {
-            drawWinner(g);
-         }
-
+      // derzeitigen Spieler kennzeichnen
+      g.setColor(0);
+      if (game.getPlayersTurn() == Game.PLAYER1) {
+         g.fillArc(
+            xPInfo1 - linewidththick,
+            yPInfo1 + linewidththick / 2 + 1,
+            linewidththick - 2,
+            linewidththick - 2,
+            0,
+            360);
       } else {
-         DrawUtils.drawLineWithBorder(
-            g,
-            node[1][0] + xoff + (getWidthSpace(g, node[1][0] + xoff) / 4),
-            node[1][1] + (yoff / 2),
-            node[1][0] + xoff + (getWidthSpace(g, node[1][0] + xoff) / 2),
-            node[1][1] + (yoff / 2),
-            15,
-            p1c1,
-            p1c1);
-
-         DrawUtils.drawLineWithBorder(
-            g,
-            node[1][0] + xoff + (getWidthSpace(g, node[1][0] + xoff) / 4),
-            node[4][1] - (yoff / 2),
-            node[1][0] + xoff + (getWidthSpace(g, node[1][0] + xoff) / 2),
-            node[4][1] - (yoff / 2),
-            15,
-            p2c1,
-            p2c1);
+         g.fillArc(
+            xPInfo1 - linewidththick,
+            yPInfo2 + linewidththick / 2 + 1,
+            linewidththick - 2,
+            linewidththick - 2,
+            0,
+            360);
       }
 
-      //System.out.println(game.getWinner());
+      // am Ende den jeweiligen Gewinner anzeigen
+      if (game.isGameOver()) {
+         drawWinner(g);
+      }
+
    }
 
    /**
@@ -250,133 +215,73 @@ class Zeichenblatt extends Canvas implements CommandListener {
     */
    private void drawWinner(Graphics g) {
       if (game.getWinner() == Game.PLAYER1) {
-         g.drawString("WINNER", node[4][0] - (xoff / 2), node[4][1] + (getHeightSpace(g, node[4][1]) / 2), node[4][0]);
-
-         g.drawString(
-            "LOSER",
-            node[4][0] - (xoff / 2),
-            node[4][1] + ((7 * getHeightSpace(g, node[4][1])) / 8),
-            node[4][0]);
+         g.drawString("WINNER", xPInfo1 + 2, yPInfo1 + linewidththick / 2, 0);
+         g.drawString("LOSER", xPInfo1 + 2, yPInfo2 + linewidththick / 2, 0);
       } else if (game.getWinner() == Game.PLAYER2) {
-         g.drawString("LOSER", node[4][0] - (xoff / 2), node[4][1] + (getHeightSpace(g, node[4][1]) / 2), node[4][0]);
-
-         g.drawString(
-            "WINNER",
-            node[4][0] - (xoff / 2),
-            node[4][1] + ((7 * getHeightSpace(g, node[4][1])) / 8),
-            node[4][0]);
+         g.drawString("LOSER", xPInfo1 + 2, yPInfo1 + linewidththick / 2, 0);
+         g.drawString("WINNER", xPInfo1 + 2, yPInfo2 + linewidththick / 2, 0);
       }
    }
-
-   private void fixNodePosition() {
-      int width = getWidth();
-      int height = getHeight();
-      int margin = ((width + height) / 2) / 5;
-
-      if (standardDisplay() == true) {
-         xoff = (width - margin) / 3;
-         yoff = (width - margin) / 3;
-
-         margin /= 2;
-         node[0][0] = xoff + margin;
-         node[0][1] = 2 * margin;
-         node[1][0] = (2 * xoff) + margin;
-         node[1][1] = 2 * margin;
-         node[2][0] = (3 * xoff) + margin;
-         node[2][1] = (2 * margin) + yoff;
-         node[3][0] = (2 * xoff) + margin;
-         node[3][1] = (2 * margin) + (2 * yoff);
-         node[4][0] = xoff + margin;
-         node[4][1] = (2 * margin) + (2 * yoff);
-         node[5][0] = margin;
-         node[5][1] = (2 * margin) + yoff;
-      } else {
-         xoff = (width - (4 * margin)) / 3;
-         yoff = (height - margin) / 2;
-
-         margin /= 2;
-         node[0][0] = xoff + margin;
-         node[0][1] = margin;
-         node[1][0] = (2 * xoff) + margin;
-         node[1][1] = margin;
-         node[2][0] = (3 * xoff) + margin;
-         node[2][1] = margin + yoff;
-         node[3][0] = (2 * xoff) + margin;
-         node[3][1] = margin + (2 * yoff);
-         node[4][0] = xoff + margin;
-         node[4][1] = margin + (2 * yoff);
-         node[5][0] = margin;
-         node[5][1] = margin + yoff;
-      }
-   }
-
-   /*
-   public void shaking() {
-      int n1, n2;
-      double xx1, yy1, xx2, yy2, dx, dy;
-      byte weight[] = new byte[6];
-      weight = game.weigh(position);
-      do {
-         n1 = (int) (Math.random() * 6);
-         n2 = (int) (Math.random() * 6);
-      } while (n1 == n2 || weight[n1] == weight[n2]);
-      int x1 = node[n1][0];
-      int y1 = node[n1][1];
-      int x2 = node[n2][0];
-      int y2 = node[n2][1];
-      xx1 = x1;
-      yy1 = y1;
-      xx2 = x2;
-      yy2 = y2;
-      dx = (x2 - x1) / 20.0;
-      dy = (y2 - y1) / 20.0;
-      for (int i = 1; i < 20; i++) {
-         long startTime = System.currentTimeMillis();
-         xx1 += dx;
-         yy1 += dy;
-         xx2 -= dx;
-         yy2 -= dy;
-         node[n1][0] = (int) xx1;
-         node[n1][1] = (int) yy1;
-         node[n2][0] = (int) xx2;
-         node[n2][1] = (int) yy2;
-         repaint(); //Delay depending on how far we are behind
-         try {
-            startTime += 10 * Math.abs(10 - i);
-            Thread.sleep(Math.max(0, startTime - System.currentTimeMillis()));
-         } catch (InterruptedException e) {
-            break;
-         }
-      }
-      node[n1][0] = x2;
-      node[n1][1] = y2;
-      node[n2][0] = x1;
-      node[n2][1] = y1;
-      repaint();
-   }
-   */
 
    private int getHeightSpace(Graphics g, int y) {
       int height = getHeight();
+      System.out.println("calling heightspace");
 
       return height - y;
    }
 
    private int getWidthSpace(Graphics g, int x) {
-      int width = getWidth();
+      System.out.println("calling widthspace");
 
       return width - x;
    }
 
-   private boolean standardDisplay() {
-      int width = getWidth();
-      int height = getHeight();
+   /**
+    * Looks at current width and height and sets drawing parameters accordingly.
+    */
 
-      if (width <= ((4 * height) / 3)) {
-         return true;
+   private void setDisplayParameters() {
+      if (width * 10 > height * 12) {
+         // landscape configuration
       } else {
-         return false;
+         // portrait configuration
+         diameter = height / 10;
+         diameter += diameter % 2;
+         linewidth = new Integer(diameter / 4).byteValue();
+         linewidth += linewidth % 3;
+         linewidththick = new Integer(linewidth * 3).byteValue();
+
+         int col1 = width / 6;
+         int col2 = 2 * col1;
+         int col3 = 2 * col2;
+         int col4 = col3 + col1;
+
+         int row2 = height * 5 / 12;
+         int row1 = row2 - (height / 4 - diameter / 2);
+         int row3 = row2 + row2 - row1;
+
+         node[0] = new int[] { col2, row1 };
+         node[1] = new int[] { col3, row1 };
+         node[2] = new int[] { col4, row2 };
+         node[3] = new int[] { col3, row3 };
+         node[4] = new int[] { col2, row3 };
+         node[5] = new int[] { col1, row2 };
+
+         xPInfo1 = col1 - diameter / 2;
+         xPInfo2 = col2 + diameter / 2;
+         xPInfo3 = xPInfo2 + 5;
+         xPInfo4 = col3;
+         xPInfo5 = xPInfo4 + 5;
+         xPInfo6 = col4;
+
+         yPInfo1 = height - (height / 3) + 3;
+         yPInfo2 = yPInfo1 + (height / 6) - 3;
+
+         yPInfo1middle = yPInfo1 + (linewidththick);
+         yPInfo2middle = yPInfo2 + (linewidththick);
+
       }
+
    }
 
    /**

@@ -61,7 +61,7 @@ public class Game {
 
       activeNode = -1; // value, if there is no active node
       currentPlayer = true; // p1 is currentPlayer
-      moveNr = 1; // first move
+      moveNr = 0; // first move
       gameOver = false;
 
       // set to some default values - has to be changed.
@@ -176,6 +176,8 @@ public class Game {
    private void endTurn(byte a, byte b) {
       // only the player who just did his move may lose.
       byte player = currentPlayer ? PLAYER1 : PLAYER2;
+      
+      moveNr++;
 
       // if someone has lost, last edge drawn was deciding
       for (byte c = 0; c < 6; c++) {

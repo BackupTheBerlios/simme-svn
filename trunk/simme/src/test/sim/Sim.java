@@ -6,7 +6,6 @@ import javax.microedition.lcdui.Screen;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
-
 /**
  * Class
  *
@@ -16,39 +15,38 @@ public class Sim extends MIDlet {
 
    List main;
 
-
    /**
     * Creates a new Sim object.
     */
    public Sim() {
    }
 
-
+   /** @see MIDlet#destroyApp(boolean) */
    protected void destroyApp(boolean arg0) {
    }
 
+   /** @see MIDlet#pauseApp() */
    protected void pauseApp() {
    }
 
-   /* (non-Javadoc)
-    * @see javax.microedition.midlet.MIDlet#startApp()
+   /**
+    * Starts this application
+    * @throws MIDletStateChangeException is thrown if the MIDlet cannot start 
+    *         now but might be able to start at a later time.
+   
     */
    protected void startApp() throws MIDletStateChangeException {
-      /*
-      Display d = Display.getDisplay(this);
-      d.setCurrent(main);
-      */
       Display d = Display.getDisplay(this);
       main = new StartForm(this);
 
-      SplashScreen splashScreen = new SplashScreen(this, main);
+      SplashScreen splashScreen = new SplashScreen(this);
       d.setCurrent(splashScreen);
    }
 
    /**
-    * DOCUMENT ME!
+    * Returns the main screen of this application.
     *
-    * @return DOCUMENT ME!
+    * @return the main screen.
     */
    public Screen getMainScreen() {
       return main;

@@ -46,7 +46,7 @@ public class PrefForm extends List implements CommandListener {
    /**
     * Creates a new PrefForm object.
     *
-    * @param parent DOCUMENT ME!
+    * @param parent The parent of this form.
     */
    public PrefForm(Sim parent) {
       super("Preferences", List.IMPLICIT, MAIN, null);
@@ -177,12 +177,14 @@ public class PrefForm extends List implements CommandListener {
                         prefs.update();
                      }
                   } catch (PrefsException e) {
+                     ; // ??
                   }
                }
 
                try {
                   prefs.close();
                } catch (PrefsException e) {
+                  ; // ??
                }
 
                // show last display
@@ -193,7 +195,7 @@ public class PrefForm extends List implements CommandListener {
       return frmPrefs;
    }
 
-   /* (non-Javadoc)
+   /**
     * @see CommandListener#commandAction(Command, Displayable)
     */
    public void commandAction(Command cmd, Displayable disp) {
