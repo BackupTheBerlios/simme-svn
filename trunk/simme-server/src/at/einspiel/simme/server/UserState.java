@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: UserState.java
-//                  $Date: 2004/09/13 23:43:48 $
-//              $Revision: 1.6 $
+//                  $Date: 2004/09/14 22:27:54 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
@@ -139,6 +139,7 @@ public class UserState implements IChangeSupport, Serializable {
 	 * Sets the user's state into starting.
 	 */
 	public void startPlaying() {
+		setStateCategory(STATE_PLAYING);
 		detailedState.startPlaying();
 	}
 

@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: ManagedGame.java
-//                  $Date: 2004/09/13 23:43:48 $
-//              $Revision: 1.7 $
+//                  $Date: 2004/09/14 22:27:54 $
+//              $Revision: 1.8 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
@@ -81,9 +81,10 @@ public class ManagedGame extends ServerGame implements IStateListener {
 		Object source = evt.getSource();
 		if (source instanceof ManagedUser) {
 			if (!isRunning()) { // ... not yet running
-				// see if both users have now changed to playing state
+				// see if both users have already changed to playing state
 				if (getPlayer1().isPlaying() && getPlayer2().isPlaying()) {
-					// game may be started
+					// game may be started now
+					System.out.println("Game " + getNiceId() + " is being started now.");
 					startGame();
 				}
 			}
