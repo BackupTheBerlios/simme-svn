@@ -152,7 +152,7 @@ public class PrefForm extends List implements CommandListener {
     public void commandAction(Command cmd, Displayable disp) {
         Display d = Sim.getDisplay();
 
-        if (cmd.getCommandType() == Command.OK) {
+        if (cmd.getCommandType() == Command.BACK) {
             d.setCurrent(Sim.getMainScreen());
         }
 

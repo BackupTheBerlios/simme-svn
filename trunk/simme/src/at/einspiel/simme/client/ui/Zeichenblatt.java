@@ -19,9 +19,9 @@ class Zeichenblatt extends Canvas implements CommandListener {
 
     private static int diameter;
     private static byte linewidth;
-    private static final Command CMD_CANCEL = new Command("Cancel", Command.CANCEL, 1);
-    private static final Command CMD_NEWGAME = new Command("New Game", Command.OK, 1);
-    private static final Command CMD_NEWGAME2 = new Command("New Game", Command.OK, 1);
+    private static final Command CMD_CANCEL = new Command("Abbruch", Command.CANCEL, 1);
+    private static final Command CMD_NEWGAME = new Command("Neu", Command.OK, 1);
+    private static final Command CMD_NEWGAME2 = new Command("Neu", Command.OK, 1);
 
     /** Inner and outer colors of player1's lines */
     private static int p1c1, p1c2;
