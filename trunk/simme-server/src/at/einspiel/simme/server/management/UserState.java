@@ -127,6 +127,7 @@ public class UserState {
         private int id;
         private Message clientMessage;
 
+        /** idle */
         private static final int IDLE = 0;
         private static final int WAITING_FOR_OPP = 1;
         private static final int STARTING = 2;

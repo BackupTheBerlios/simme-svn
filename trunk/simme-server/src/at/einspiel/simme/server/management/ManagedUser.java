@@ -1,5 +1,6 @@
 package at.einspiel.simme.server.management;
 
+import at.einspiel.simme.client.net.LoginResult;
 import at.einspiel.simme.server.base.User;
 import at.einspiel.simme.server.base.UserException;
 
@@ -77,18 +78,23 @@ public class ManagedUser extends User {
         lastStatusUpdate = System.currentTimeMillis();
     }
 
-    /** Lets the user wait for a game. */
-    public void waitForGame() {
+    /** Starts a game against the first available opponent. */
+    public void startGame() {
+        // first set the user to waiting 
         setStateCategory(UserState.STATE_WAITING);
-        update();
+        // ... state manager will initialize the game, if possible
     }
     
-    /** Starts a game. */
-    public void startGame() {
-        setStateCategory(UserState.STATE_PLAYING);
-        update();
+    /**
+     * Starts the login procedure. The result will be returned.
+     * 
+     * @param version the SimME version of the client in use.
+     * @return the result of the login procedure.
+     */
+    public LoginResult login(String version) {
+        return SessionManager.getInstance().addUser(this, version);
     }
-
+    
     /**
      * Sets the state of this user.
      * 

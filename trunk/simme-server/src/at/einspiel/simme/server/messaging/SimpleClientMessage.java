@@ -1,6 +1,6 @@
 package at.einspiel.simme.server.messaging;
 
-import test.sim.net.SendableUI;
+import at.einspiel.simme.client.net.SendableUI;
 
 /**
  * This class implements the message interface and allows for easy transfer of

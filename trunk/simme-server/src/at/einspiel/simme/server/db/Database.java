@@ -28,7 +28,7 @@ public class Database {
     private static final String DRIVER_CLASS = "org.postgresql.Driver";
     private static final String SERVER_URL = "jdbc:postgresql://127.0.0.1/einspiel";
     private static final String USER = "einspiel";
-    private static final String PWD = "Weisahma";
+    private static final String PWD = System.getProperty("db.password");
 
     private Connection conn;
 

@@ -1,8 +1,8 @@
 package at.einspiel.simme.server.base;
 
-import java.util.Date;
+import at.einspiel.simme.client.Game;
 
-import test.sim.Game;
+import java.util.Date;
 
 /**
  * Represents a game that is played between two users.
@@ -15,6 +15,9 @@ public class ServerGame {
 
     /** date of game in seconds */
     private long date;
+    /** times each player needed to perform moves */
+    private long time1, time2;
+
     private StopWatch stopwatch;
     private Game game;
     private boolean running;
@@ -24,6 +27,9 @@ public class ServerGame {
     protected User player1;
     /** second player */
     protected User player2;
+
+    /** game id */
+    private String id;
 
     int moves;
     User winner;
@@ -37,13 +43,21 @@ public class ServerGame {
      * @throws Exception if rules are broken.
      */
     public ServerGame(User p1, User p2) throws Exception {
-        if (p1.getNick().equals(p2.getNick())) {
+        String nick1 = p1.getNick();
+        String nick2 = p2.getNick();
+        if (nick1.equals(nick2)) {
             throw new Exception("Users have same nick names.");
         }
 
         this.player1 = p1;
         this.player2 = p2;
         game = new Game();
+        setDate(new Date());
+        
+        // set id to something meaningful
+        id = date + "#~#" + nick1 + "#~#" + nick2;
+        
+        // initialize game status
         running = false;
         gameover = false;
     }
@@ -67,10 +81,9 @@ public class ServerGame {
         moves = game.getMoveNr();
     }
 
-    /**
-     * Cancels this game.
-     */
+    /** Cancels this game. */
     public void cancelGame() {
+        // TODO implement this
     }
 
     /**
@@ -91,7 +104,7 @@ public class ServerGame {
      * @return The date, of this game.
      */
     public Date getDate() {
-        return new Date(date - (date % ACCURACY));
+        return new Date(date);
     }
 
     /**
@@ -111,6 +124,14 @@ public class ServerGame {
      */
     protected boolean isRunning() {
         return running;
+    }
+
+    /**
+     * Returns the game's id.
+     * @return the id of the game.
+     */
+    public String getId() {
+        return id;
     }
 
     /**
@@ -140,4 +161,28 @@ public class ServerGame {
             return accumulatedTime;
         }
     }
+    
+    //
+    // game method accessors
+    //
+
+    /**
+     * Returns the move number.
+     * @return the move number.
+     */    
+    public byte getMoveNr() {
+        return game.getMoveNr();
+    }
+    
+    /**
+     * Selects an edge in the game on the server.
+     * 
+     * @param edge the edge to select (between 0 and 14)
+     * @return whether the selection has succeeded.
+     */
+    public boolean selectEdge(byte edge) {
+        return game.selectEdge(edge);
+        // TODO see how much time has passed and add to time1/time2
+    }
+   
 }

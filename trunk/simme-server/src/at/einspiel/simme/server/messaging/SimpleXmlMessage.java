@@ -1,6 +1,7 @@
 package at.einspiel.simme.server.messaging;
 
-import nanoxml.XMLElement;
+import at.einspiel.simme.nanoxml.XMLElement;
+
 
 /**
  * A simple xml message. It has the format:

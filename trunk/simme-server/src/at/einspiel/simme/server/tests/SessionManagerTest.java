@@ -37,9 +37,8 @@ public class SessionManagerTest extends TestCase {
         for (int i = 0; i < nicks.length; i++) {
             sMgr.addUser(nicks[i], pwds[i]);
         }
-        assertEquals(true, sMgr.removeUser(nicks[0]));
-
         // remove users
+        assertEquals(true, sMgr.removeUser(nicks[0]));
     }
 
     private static final int NB_USERS = 6;
@@ -53,14 +52,14 @@ public class SessionManagerTest extends TestCase {
         // add 6 users
         for (int i = 0; i < nicks.length; i++) {
             users[i] = ManagedUser.getManagedUser(nicks[i], pwds[i]);
-            sMgr.addManagedUser(users[i]);
+            users[i].login(null); // no version
         }
 
         // 6 users in management
         assertEquals(NB_USERS, sMgr.getNumberOfUsers());
 
         // set "five" to WAITING
-        users[4].waitForGame();
+        users[4].startGame();
 
         // wait for more than a second
         try {

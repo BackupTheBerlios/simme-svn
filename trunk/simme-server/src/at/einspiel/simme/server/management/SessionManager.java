@@ -1,5 +1,6 @@
 package at.einspiel.simme.server.management;
 
+import at.einspiel.simme.client.net.LoginResult;
 import at.einspiel.simme.server.base.User;
 import at.einspiel.simme.server.base.UserException;
 import at.einspiel.simme.server.messaging.SimpleClientMessage;
@@ -10,8 +11,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import test.sim.net.LoginResult;
 
 /**
  * This class is intended to be used for User management. Each user who
@@ -25,14 +24,12 @@ import test.sim.net.LoginResult;
  */
 public class SessionManager {
 
-    private static final String MGMT_PAGE = "sessionsMgr.jsp";
+    private static final String MGMT_PAGE = "sessionMgr.jsp";
 
     SortedMap users;
     UserManager stMgr;
 
     private static SessionManager instance;
-
-    private String baseUrl;
 
     /**
      * Ensures singleton
@@ -87,10 +84,10 @@ public class SessionManager {
             }
             addManagedUser(new ManagedUser(u));
             response = "User signed on";
-            return new LoginResult(true, response, baseUrl + MGMT_PAGE);
+            return new LoginResult(true, response, MGMT_PAGE);
         } catch (UserException e) {
             response = e.getMessage();
-            return new LoginResult(false, response, baseUrl + MGMT_PAGE);
+            return new LoginResult(false, response, MGMT_PAGE);
         }
     }
 
@@ -107,12 +104,13 @@ public class SessionManager {
         try {
             addManagedUser(ManagedUser.getManagedUser(nick, pwd));
             response = "User signed on";
-            return new LoginResult(true, response, baseUrl + MGMT_PAGE);
+            return new LoginResult(true, response, MGMT_PAGE);
         } catch (UserException e) {
             response = e.getMessage();
-            return new LoginResult(false, response, baseUrl + MGMT_PAGE);
+            return new LoginResult(false, response, MGMT_PAGE);
         }
     }
+    
     
     /* *
      * Sets the given user into the WAITING state. If another user is waiting
@@ -123,7 +121,7 @@ public class SessionManager {
      * @param mu the user
      * @return a string containing progress information for the client.
      *
-    public String waitForGame(ManagedUser mu) {
+    public String startGame(ManagedUser mu1, ManagedUser mu2) {
         if (mu.)
     }
 
@@ -134,12 +132,11 @@ public class SessionManager {
 
     /**
      * Adds the user to the list of managed users.
-     * 
      * @param user The user which is added.
      */
-    public void addManagedUser(ManagedUser user) {
+    private void addManagedUser(ManagedUser user) {
         System.out.println("[" + System.currentTimeMillis() + "] adding " + user.getNick());
-        stMgr.addUser(user);
+        stMgr.addUser(user); // adding to state manager
     }
 
     /**
@@ -162,17 +159,6 @@ public class SessionManager {
      */
     public int getNumberOfUsers() {
         return users.size();
-    }
-
-    /**
-     * Sets the base URL.
-     * @param string the base URL.
-     */
-    public void setBaseUrl(String string) {
-        if (!string.endsWith("/")) {
-            string = string + "/";
-        }
-        this.baseUrl = string;
     }
 
     /**
