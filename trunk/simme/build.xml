@@ -2,8 +2,8 @@
 <!-- 
   [Simme]
     Ant build file: build.xml
-             $Date: 2004/09/16 18:07:01 $
-         $Revision: 1.20 $
+             $Date: 2004/09/21 16:25:20 $
+         $Revision: 1.21 $
 
 	This ant build file is used to build the sources for SimME. The Targets
 	include means to compile the sources and build the package with optional 
@@ -105,8 +105,7 @@
 	        description="Creates source and binary distros."
 	        depends="dist,dist-nodebug"
 	>
-		<ant antfile="release-build.xml" target="packages" />
+		<ant antfile="build-release.xml" target="packages" />
 	</target>
-
 
 </project>

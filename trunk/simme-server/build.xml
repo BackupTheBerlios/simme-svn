@@ -2,18 +2,27 @@
 <!-- 
   [Simme-Server]
     Ant build file: build.xml
-             $Date: 2004/09/15 23:30:48 $
-         $Revision: 1.10 $
+             $Date: 2004/09/21 16:25:24 $
+         $Revision: 1.11 $
 
 	This ant build file is used for the server-side application of SimME (SimME
-	Server).
+	Server). 
+	
+	The targets "deploy" and "undeploy" use the catalina tasks from
+	${lib-ant}/catalina-ant.jar. In order to deploy or undeploy the application, 
+	the targets have to authenticate via the tomcat manager application. User
+	name and password are set in the following order:
+	
+	   1. properties ${deploy.user} and ${deploy.pass}
+	   2. environment variables DEPLOY_USER and DEPLOY_PASS
+	   3. from the input, if the build file is started from the command line
 	
  -->
 <project name="SimME Server" basedir="." default="build">
 	<description>Build server-side SimME application.</description>
 
-
 	<property file="ant-build.properties" />
+	<property environment="env" />
 
 	<path id="project.ant.path">
 		<fileset dir="${lib-ant}" includes="*.jar" />
@@ -50,7 +59,7 @@
 			<pathelement path="${lib.junit}" />
 			<pathelement path="${lib.xerces}" />
 			<pathelement path="${lib.servlet}" />
-			<pathelement location="${client.cls}" />
+			<pathelement path="${lib.client}" />
 			<path>
 				<fileset dir="${web-inf.lib}" />
 			</path>
@@ -89,23 +98,28 @@
 
 	<target name="-war.dev">
 		<antcall target="war">
-			<param name="file.lib.password" value="${lib.password}"/>
+			<param name="file.lib.password" value="${lib.password}" />
 		</antcall>
 	</target>
-	
+
 	<target name="deploy-dir"
-			depends="-war.dev"
+	        depends="-war.dev"
 	        description="Creates WAR and copies it to deploy directory."
 	>
-		
+
 		<copy file="${deploy.war}" todir="${deploy.dir}" overwrite="true" />
 	</target>
 
 	<!-- effective deployment -->
 
 	<target name="-enter-deploy-user" unless="deploy.user">
+		<condition property="deploy.user" value="${env.DEPLOY_USER}">
+			<isset property="env.DEPLOY_USER" />
+		</condition>
+
 		<input message="Please enter user name for ${deploy.url}"
 		       addproperty="deploy.user"
+		       defaultvalue="${env.DEPLOY_USER}"
 		/>
 	</target>
 
@@ -113,8 +127,13 @@
 	        unless="deploy.pass"
 	        depends="-enter-deploy-user"
 	>
+		<condition property="deploy.pass" value="${env.DEPLOY_PASS}">
+			<isset property="env.DEPLOY_PASS" />
+		</condition>
+
 		<input message="Please enter password for ${deploy.user}@${deploy.url}"
 		       addproperty="deploy.pass"
+		       defaultvalue="${env.DEPLOY_PASS}"
 		/>
 	</target>
 
@@ -148,13 +167,11 @@
 	</target>
 
 
-	<target name="distros"
-	        description="Creates source and binary distros."
-	>
+	<target name="distros" description="Creates source and binary distros.">
 		<antcall target="war">
-			<param name="file.lib.password" value="${lib.password.empty}"/>
+			<param name="file.lib.password" value="${lib.password.empty}" />
 		</antcall>
-		<ant antfile="release-build.xml" target="packages" />
+		<ant antfile="build-release.xml" target="packages" />
 	</target>
 
 	<!-- delete created classes -->

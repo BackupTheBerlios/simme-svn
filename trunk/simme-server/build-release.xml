@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-  [Simme]
+  [Simme-Server]
     Ant build file: build.xml
-             $Date: 2004/09/16 08:24:37 $
+             $Date: 2004/09/21 16:25:24 $
          $Revision: 1.1 $
 
-	Used to facilitate the creation of releases and changelogs.
+	Used in order to facilitate creation of releases and changelogs.
 	
  -->
-<project name="SimME Client Rel" basedir="." default="packages">
+<project name="SimME Server Rel" basedir="." default="packages">
 	<description>Create releases for SimME Server</description>
 
 	<property file="ant-build.properties" />
@@ -33,12 +33,11 @@
 		/>
 
 		<tar destfile="${rel.filename.src}.tar">
-			<tarfileset dir="${src}" prefix="/${src}"/>
-			<tarfileset dir="${src.test}" prefix="/${src.test}"/>
-			<tarfileset dir="${doc}" prefix="/${doc}"/>
-			<tarfileset dir="${resources}" prefix="/${resources}"/>
-			<tarfileset file="${jad.debug}"/>
-			<tarfileset file="${jad.run}"/>
+			<tarfileset dir="${src}" prefix="/src" />
+			<tarfileset dir="${src.test}" prefix="/testsrc" />
+			<tarfileset dir="${doc}" prefix="/doc" />
+			<tarfileset dir="${module}" prefix="/${module}" />
+			<tarfileset dir="${lib-ant}" prefix="/${lib-ant}" />
 			<tarfileset dir=".">
 				<include name="*ant*" />
 				<include name="*.properties" />
@@ -63,10 +62,7 @@
 		/>
 
 		<tar destfile="${rel.filename.bin}.tar">
-			<tarfileset file="${jar.debug}" prefix="/client"/>
-			<tarfileset file="${jad.debug}" prefix="/client"/>
-			<tarfileset file="${jar.run}" prefix="/client"/>
-			<tarfileset file="${jad.run}" prefix="/client"/>
+			<tarfileset file="${deploy.war}" />
 			<tarfileset dir=".">
 				<includesfile name="releasefiles.txt" />
 			</tarfileset>
