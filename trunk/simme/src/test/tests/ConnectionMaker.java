@@ -176,7 +176,7 @@ public class ConnectionMaker implements HttpConnection {
 
    /** @see javax.microedition.io.OutputConnection#openDataOutputStream() */
    public DataOutputStream openDataOutputStream() throws IOException {
-      return new DataOutputStream(openDataOutputStream());
+      return new DataOutputStream(openOutputStream());
    }
 
 }

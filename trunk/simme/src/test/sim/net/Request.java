@@ -30,6 +30,8 @@ public class Request {
 
    String text;
 
+   ConnectionThread sender;
+
    private byte[] response;
 
    /**
@@ -110,71 +112,8 @@ public class Request {
     * @throws IOException if a problem has occured while sending the request.
     */
    public void sendRequest(String urlBase, String path, boolean post) throws IOException {
-      StringBuffer url = new StringBuffer(urlBase);
-      url.append(path);
-      if (!post) {
-         url.append(getParamString(false));
-      }
-
-      try {
-         c = getHttpConnection(url.toString());
-         c.setRequestProperty("User-Agent", "Profile/MIDP-1.0 Configuration/CLDC-1.0");
-         // TODO add content language via param
-         // c.setRequestProperty("Content-Language", "en-CA");
-
-         if (post) {
-            c.setRequestMethod(HttpConnection.POST);
-            String postString = getParamString(true);
-            System.out.println("postString: " + postString);
-            if (postString.length() > 0) {
-               os = c.openOutputStream();
-               byte postmsg[] = postString.getBytes();
-               for (int i = 0; i < postmsg.length; i++) {
-                  os.write(postmsg[i]);
-               }
-               os.flush();
-            }
-         } else {
-            c.setRequestMethod(HttpConnection.GET);
-         }
-
-         //receive response
-         is = c.openDataInputStream();
-
-         int counter = 0;
-         byte current;
-
-         response = new byte[RESPONSE_INITIAL_SIZE];
-         int length = RESPONSE_INITIAL_SIZE;
-
-         while ((current = (byte) is.read()) != -1) {
-            if (counter > length - 1) {
-               // update length and copy current contents into bigger array
-               byte[] responseCopy = new byte[length + RESPONSE_GROWTH_FACTOR];
-               System.arraycopy(response, 0, responseCopy, 0, length);
-               response = responseCopy;
-               length += RESPONSE_GROWTH_FACTOR;
-            }
-            response[counter] = current;
-            counter++;
-         }
-
-         // fit response to correct size
-         byte[] responseCopy = new byte[counter];
-         System.arraycopy(response, 0, responseCopy, 0, counter);
-         response = responseCopy;
-
-      } finally {
-         if (is != null) {
-            is.close();
-         }
-         if (os != null) {
-            os.close();
-         }
-         if (c != null) {
-            c.close();
-         }
-      }
+      sender = new ConnectionThread(urlBase, path, post, Thread.currentThread());
+      sender.start();
    }
 
    /**
@@ -222,8 +161,33 @@ public class Request {
     * 
     * @return the response.
     */
-   public byte[] getResponse() {
-      return response;
+   public synchronized byte[] getResponse() {
+      if (sender != null) {
+         System.out.println("sender not null");
+         if (sender.isStarted()) {
+            System.out.println("sender is started");
+            while (sender.isAlive()) {
+               System.out.println("sender is alive");
+               try {
+                  wait(10000);
+               } catch (InterruptedException e) {
+                  ;
+               }
+            }
+            return response;
+         }
+      }
+      return null;
+   }
+
+   /**
+    * Sets the response of this request
+    * 
+    * @return the response.
+    */
+   private synchronized void setResponse(byte[] response) {
+      this.response = response;
+      notifyAll();
    }
 
    /**
@@ -237,5 +201,146 @@ public class Request {
     */
    public HttpConnection getHttpConnection(String url) throws IOException {
       return (HttpConnection) Connector.open(url);
+   }
+
+   private class ConnectionThread extends Thread {
+      boolean post;
+      StringBuffer url;
+      boolean started;
+      Thread caller;
+
+      /**
+       * @param urlBase the server address (plus protocol, port, ...).
+       * 
+       * @param path The path on the server identified by <code>urlBase</code>.
+       * 
+       * @param post <code>true</code> if it should be a post, otherwise a
+       *        get will be executed.
+       */
+      public ConnectionThread(String urlBase, String path, boolean post, Thread caller) {
+         url = new StringBuffer(urlBase);
+         url.append(path);
+         if (!post) {
+            url.append(getParamString(false));
+         }
+         this.post = post;
+         this.caller = caller;
+      }
+
+      public synchronized void start() {
+         started = true;
+         super.start();
+      }
+
+      public void run() {
+         System.out.println("running connectionthread");
+         try {
+            sendRequest(post);
+         } catch (IOException e) {
+            // TODO do something here
+
+         } finally {
+            System.out.println("stopping connectionthread");
+         }
+      }
+
+      private void sendRequest(boolean post) throws IOException {
+         try {
+            c = getHttpConnection(url.toString());
+
+            c.setRequestMethod(HttpConnection.POST);
+            c.setRequestProperty("IF-Modified-Since", "25 Nov 2001 15:17:19 GMT");
+            c.setRequestProperty("User-Agent","Profile/MIDP-1.0 Configuration/CLDC-1.0");
+            c.setRequestProperty("Content-Language", "en-CA");
+            c.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+     
+            os = c.openOutputStream();
+            os.write(("name=test").getBytes());
+            os.flush();
+
+            is = c.openDataInputStream();
+            
+            /*
+            int ch;
+            while ((ch = is.read()) != -1) {
+             b.append((char) ch);
+             System.out.print((char)ch);
+            }
+            t = new TextBox("Date", b.toString(), 1024, 0);
+            t.setCommandListener(this);
+            */
+            
+            setResponse(new byte[] {});
+            /*
+            c.setRequestProperty("User-Agent", "Profile/MIDP-1.0 Configuration/CLDC-1.0");
+            // TODO add content language via param
+            // c.setRequestProperty("Content-Language", "en-CA");
+
+            if (post) {
+               c.setRequestMethod(HttpConnection.POST);
+               String postString = getParamString(true);
+               System.out.println("postString: " + postString);
+               if (postString.length() > 0) {
+                  os = c.openOutputStream();
+                  os.write(postString.getBytes());
+                  os.flush();
+                  //os.close();
+
+               }
+            } else {
+               c.setRequestMethod(HttpConnection.GET);
+            }
+
+            int rc = c.getResponseCode();
+            if (rc != HttpConnection.HTTP_OK) {
+               throw new IOException("Response code: " + rc);
+            }
+
+            //receive response
+            is = c.openDataInputStream();
+
+            int counter = 0;
+            byte current;
+
+            byte[] localResponse = new byte[RESPONSE_INITIAL_SIZE];
+            int length = RESPONSE_INITIAL_SIZE;
+
+            while ((current = (byte) is.read()) != -1) {
+               if (counter > length - 1) {
+                  // update length and copy current contents into bigger array
+                  byte[] responseCopy = new byte[length + RESPONSE_GROWTH_FACTOR];
+                  System.arraycopy(localResponse, 0, responseCopy, 0, length);
+                  localResponse = responseCopy;
+                  length += RESPONSE_GROWTH_FACTOR;
+               }
+               localResponse[counter] = current;
+               counter++;
+            }
+
+            // fit response to correct size
+            byte[] responseCopy = new byte[counter];
+            System.arraycopy(localResponse, 0, responseCopy, 0, counter);
+
+            setResponse(localResponse);*/
+            
+         } finally {
+            if (is != null) {
+               is.close();
+            }
+            if (os != null) {
+               os.close();
+            }
+            if (c != null) {
+               c.close();
+            }
+         }
+      }
+      /**
+       * @return
+       */
+      public boolean isStarted() {
+         return started;
+      }
+
    }
 }

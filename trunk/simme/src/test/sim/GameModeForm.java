@@ -38,11 +38,11 @@ public class GameModeForm extends List implements CommandListener {
 
    /** @see CommandListener#commandAction(Command, Displayable) */
    public void commandAction(Command cmd, Displayable disp) {
-      if (cmd.getCommandType() == Command.EXIT) {
-         sim.destroyApp(false);
-         sim.notifyDestroyed();
+      Display d = Display.getDisplay(sim);
+      if (cmd.getCommandType() == Command.BACK) {
+         d.setCurrent(sim.getMainScreen());
       } else {
-         Display d = Display.getDisplay(sim);
+         d = Display.getDisplay(sim);
 
          switch (getSelectedIndex()) {
             case 0 : // Internet Spiel
