@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: Request.java
-//               $Date: 2004/09/13 15:26:35 $
-//           $Revision: 1.7 $
+//               $Date: 2004/09/14 22:29:16 $
+//           $Revision: 1.8 $
 //----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
@@ -108,7 +108,6 @@ public class Request {
 	public void setParam(String name, String value) {
 		if (value != null) {
 			params.put(name, value);
-			//Logger.debug(getClass(), "added param " + name);
 		}
 	}
 
@@ -331,7 +330,6 @@ public class Request {
 		/** @see java.lang.Thread#run() */
 		public void run() {
 			try {
-				//Logger.debug(getClass(), "sending message: " + url.toString());
 				sendRequest();
 			} catch (IOException e) {
 				setOccurredException(e);
@@ -342,6 +340,7 @@ public class Request {
 
 		private void sendRequest() throws IOException {
 			try {
+				Logger.debug("Connecting to " + url.toString());
 				c = getHttpConnection(url.toString());
 
 				// set user agent
