@@ -11,6 +11,8 @@ String nick="", pass="", model="", version="";
 
 nick = request.getParameter("user");
 pass = request.getParameter("pwd");
+version = request.getParameter("version");
+model = request.getParameter("model");      	
 
 if ((nick == null) || (pass == null)) {
 
@@ -30,7 +32,7 @@ if ((nick == null) || (pass == null)) {
       	nick = po.getAttribute("user");
       	pass = po.getAttribute("pwd");
 			version = po.getAttribute("version");
-			model = po.getAttribute("client");      	
+			model = po.getAttribute("model");      	
       	
       } catch (Exception e) {
          ; // ??
@@ -53,10 +55,8 @@ if ((nick != null) && (pass != null)) {
    String content = "<user nick=\"" + u.getNick() +"\" pass=\"" + u.getPassword() + "\">" + address + host + "</user>";
 
    SessionManager sMgr = SessionManager.getInstance();
-   sMgr.addUser(new ManagedUser(u));
-   
-   String answer = new LoginResult(true, "Benutzer angemeldet").toString().trim();
-   out.println(answer);
+
+   out.println(sMgr.addUser(u).toString());
 }
 
 %>
