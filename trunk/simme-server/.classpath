@@ -9,5 +9,9 @@
 	<classpathentry kind="src" path="testsrc"/>
 	<classpathentry kind="src" path="/Simme"/>
 	<classpathentry sourcepath="D:/Devel/xmlunit/src" kind="lib" path="E:/Uni/Hexi/lib/xmlunit1.0.jar"/>
+	<classpathentry kind="src" path="j2src"/>
+	<classpathentry kind="var" path="JDK_TOOLS"/>
+	<classpathentry kind="var" path="TOMCAT411/common/lib/servlet.jar"/>
+	<classpathentry kind="var" path="TOMCAT411/bin/bootstrap.jar"/>
 	<classpathentry kind="output" path="cls"/>
 </classpath>
