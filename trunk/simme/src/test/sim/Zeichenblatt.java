@@ -30,20 +30,12 @@ class Zeichenblatt extends Canvas implements CommandListener {
    private Game game;
 
    private final Sim sim;
-   private final static Command CMD_EXIT = new Command("Exit", Command.EXIT, 1);
-   static final int diameter = 15;
+   private static final Command CMD_EXIT = new Command("Exit", Command.EXIT, 1);
+
+   static final byte diameter = 22;
+   static final byte linewidth = 5;
    int node[][] = new int[6][2];
    int xoff, yoff;
-   
-   /*
-   private boolean selected = false;
-   private boolean side = false;
-
-   private int moves = 0;
-   private int key = 7;
-   private int key1;
-   private int key2;
-   */
 
    Zeichenblatt(Sim midlet) {
       this.sim = midlet;
@@ -73,39 +65,9 @@ class Zeichenblatt extends Canvas implements CommandListener {
    public void keyPressed(int keyCode) {
       if ((keyCode >= KEY_NUM1) && (keyCode <= KEY_NUM6)) {
          int key = keyCode - 49;
-         System.out.println(key);
+         //System.out.println(key);
          game.selectNode((byte) key);
       }
-
-      /*
-      if (selected == false) {
-      	if ((keyCode >= KEY_NUM1) && (keyCode <= KEY_NUM6)) {
-      		//key = getGameAction(keyCode);
-      		key = keyCode - 49;
-      		key1 = keyCode - 49;
-      		selected = true;
-      		side = false;
-      		System.out.println(key);
-      		System.out.println(keyCode);
-      		//System.out.println(getGameAction(keyCode));
-      	} else {
-      		key = 7;
-      	}
-      } else if (selected == true && keyCode >= KEY_NUM1 && (keyCode <= KEY_NUM6)) {
-      	key2 = keyCode - 49;
-      	if (key2 == key || key2 == -1) {
-      		key = 7;
-      		selected = false;
-      	} else {
-      
-      		key = keyCode - 49;
-      		moves++;
-      		side = true;
-      		selected = false;
-      		System.out.println(moves);
-      
-      	}
-      }*/
    }
 
    public void keyReleased(int keyCode) {
@@ -140,53 +102,10 @@ class Zeichenblatt extends Canvas implements CommandListener {
                   c2 = p2c2;
                   break;
             }
-            DrawUtils.drawLineWithBorder(g, node[i][0], node[i][1], node[j][0], node[j][1], 5, c1, c2);
+            DrawUtils.drawLineWithBorder(g, node[i][0], node[i][1], node[j][0], node[j][1], linewidth, c1, c2);
          }
          i++;
       }
-
-      /*
-      // Verbindungen zeichnen
-      while (j < 6) {
-      	for (i = 0; i < 5; i++)
-      		DrawUtils.drawLineWithBorder(
-      			g,
-      			node[i][0],
-      			node[i][1],
-      			node[j][0],
-      			node[j][1],
-      			5,
-      			nc1,
-      			nc2);
-      	j++;
-      }
-      
-      //ausgewählte Kante einzeichnen
-      if (moves % 2 == 0 && moves < 16 && side == true) {
-      	DrawUtils.drawLineWithBorder(
-      		g,
-      		node[key1][0],
-      		node[key1][1],
-      		node[key2][0],
-      		node[key2][1],
-      		5,
-      		p1c1,
-      		p1c2);
-      		repaint();
-      
-      } else if (moves % 2 == 1 && moves < 16 && side == true) {
-      	DrawUtils.drawLineWithBorder(
-      		g,
-      		node[key1][0],
-      		node[key1][1],
-      		node[key2][0],
-      		node[key2][1],
-      		5,
-      		p2c1,
-      		p2c2);
-      		repaint();
-      }
-      */
 
       // Punkte zeichnen
       for (i = 0; i < 6; i++) {
@@ -211,38 +130,6 @@ class Zeichenblatt extends Canvas implements CommandListener {
             c1,
             c2);
       }
-
-      /*
-      for (i = 0; i < 6; i++) {
-      	DrawUtils.fillArcWithBorder(
-      		g,
-      		node[i][0] - diameter / 2,
-      		node[i][1] - diameter / 2,
-      		diameter,
-      		diameter,
-      		0,
-      		360,
-      		nnc1,
-      		nnc2);
-      }
-      
-      // selektierte Punkte zeichnen
-      if (key < 6 && side == false) {
-      	DrawUtils.fillArcWithBorder(
-      		g,
-      		node[key][0] - diameter / 2,
-      		node[key][1] - diameter / 2,
-      		diameter,
-      		diameter,
-      		0,
-      		360,
-      		nsc1,
-      		nsc2);
-      	repaint();
-      } else if (key == 7) {
-      	repaint();
-      }
-      */
    }
 
    public void FixNodePosition() {
@@ -251,7 +138,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
       int margin = ((width + height) / 2) / 5;
       if (width <= (4 * height) / 3) {
          xoff = (width - margin) / 3;
-         yoff = (height - margin) / 2;
+         yoff = (height - margin) / 3;
 
          margin /= 2;
          node[0][0] = xoff + margin;
