@@ -82,4 +82,13 @@ public class XmlMessage {
       request.sendRequest(urlBase, path);
    }
 
+   /**
+    * Return the underlying XMLElement.
+    * 
+    * @return the underlying XMLElement.
+    */
+   public XMLElement getXmlElement() {
+      return xmlElement;
+   }
+
 }
