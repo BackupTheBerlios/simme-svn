@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="build" name="SimME">
+
+	<!-- wtk directories -->
 	<property name="wtk14" value="D:/Devel/j2me-wtk104"/>
     <property name="deploy-14.dir" value="${wtk14}/apps/SimME"/>
     <property name="deploy-14.srcdir" value="${deploy-14.dir}/src"/>
-
     <property name="deploy-2.dir" value="D:/Devel/j2me-wtk/apps/SimME"/>
     <property name="deploy-2.srcdir" value="${deploy-2.dir}/src"/>
+
+	<!-- debug jad-file -->
+	<property name="debug.jad" value="SimME-debug.jad"/>
 
 	<!-- directories used for building -->
     <property name="bin" value="bin"/>
@@ -86,7 +90,7 @@
     </target>
 
 
-    <target name="dist">
+    <target name="dist" depends="preverify">
         <mkdir dir="${build}/bin"/>
         <jar basedir="${dir.preverify}"
              jarfile="${build}/bin/SimME.jar"
@@ -101,8 +105,8 @@
     
     
     <target name="run" depends="dist">
-        <exec executable="${wtk14}/bin/emulatorw.exe">
-            <arg line="-Xdescriptor:${build}/bin/SimME.jad"/>
+        <exec executable="${wtk14}/bin/emulator.exe">
+            <arg line="-Xdescriptor:${debug.jad}"/>
         </exec>
     </target>
 

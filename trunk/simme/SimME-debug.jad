@@ -1,0 +1,8 @@
+MIDlet-1: SimME, /res/icons/SimME.png, test.sim.Sim 
+MIDlet-Jar-URL: build/bin/SimME.jar
+server.base: http://localhost:8080/simme/ 
+MicroEdition-Configuration: CLDC-1.0 
+MIDlet-Version: 0.3 
+MIDlet-Name: SimME 
+MIDlet-Vendor: Georg Spielmann & Kariem Hussein 
+MicroEdition-Profile: MIDP-1.0 
