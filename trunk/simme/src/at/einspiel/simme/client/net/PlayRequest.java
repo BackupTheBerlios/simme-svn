@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: PlayRequest.java
-//                  $Date: 2004/09/13 15:22:00 $
-//              $Revision: 1.8 $
+//                  $Date: 2004/09/13 23:38:46 $
+//              $Revision: 1.9 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client.net;
 
@@ -81,7 +81,7 @@ public class PlayRequest {
 	 *         if there were connection problems.
 	 */
 	public boolean sendMove(Move m) {
-		Logger.debug(getClass(), "sending move " + m + " for " + nickname);
+		Logger.debug(getClass(), "sending move " + m.getEdge() + " for " + nickname);
 		boolean sent = moveSender.sendMove(m);
 		message = moveSender.getMessage();
 		moveSender.reset();
@@ -108,7 +108,11 @@ public class PlayRequest {
 	public Move receiveMove() {
 		Logger.debug(getClass(), "trying to receive move for " + nickname);
 		Move m = moveReceiver.getMove();
-		Logger.debug(getClass(), "received move: " + m);
+		if (m == null) {
+			Logger.debug(getClass(), "received move was null");
+		} else {
+			Logger.debug(getClass(), "received move: " + m.getEdge() + " for " + nickname);
+		}
 		message = moveReceiver.getMessage();
 		moveReceiver.reset();
 		return m;
