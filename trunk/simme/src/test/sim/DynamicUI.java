@@ -2,10 +2,16 @@ package test.sim;
 
 import java.io.IOException;
 
+import java.util.Enumeration;
+
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.Form;
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.List;
+import javax.microedition.lcdui.StringItem;
 
 import test.sim.net.Request;
 import test.sim.net.SendableUI;
@@ -18,24 +24,27 @@ import test.sim.net.SendableUI;
  * @author jorge
  */
 public class DynamicUI implements CommandListener {
-   private static final String COMM_PATH = "dynamicState";
-   SendableUI ui;
+    private static final String COMM_PATH = "dynamicState";
 
-   /**
-    * Creates a new instance of this object with list entries built from the
-    * data found in the given xml string.
-    *
-    * @param xmlString information to build the user interface.
-    */
-   public DynamicUI(String xmlString) {
-      System.out.println("xmlString=" + xmlString);
+    SendableUI ui;
+    Displayable disp;
 
-      ui = new SendableUI(xmlString);
+    /**
+     * Creates a new instance of this object with list entries built from the
+     * data found in the given xml string.
+     *
+     * @param xmlString information to build the user interface.
+     */
+    public DynamicUI(String xmlString) {
+        System.out.println("xmlString=" + xmlString);
 
-      Displayable uiDisp = ui.getDisplayable();
-      uiDisp.addCommand(new Command("Exit", Command.EXIT, 0));
-      uiDisp.setCommandListener(this);
-   }
+        ui = new SendableUI(xmlString);
+
+        getDisplayable();
+
+        disp.addCommand(new Command("Exit", Command.EXIT, 0));
+        disp.setCommandListener(this);
+    }
 
     /**
      * Creates a new dynamic user interface.
@@ -46,14 +55,14 @@ public class DynamicUI implements CommandListener {
     public DynamicUI(String message, String url) {
         System.out.println("message=" + message);
         ui = new SendableUI(message);
-        
-        Displayable uiDisp = ui.getDisplayable();
-        uiDisp.addCommand(new Command("Abort", Command.CANCEL, 0));
-        uiDisp.setCommandListener(this);
+
+        getDisplayable();
+
+        disp.addCommand(new Command("Abort", Command.CANCEL, 0));
+        disp.setCommandListener(this);
         connect(url);
     }
-    
-    
+
     /**
      * Connects to the specified address and updates the user interface with
      * the information found in the given URL.
@@ -66,13 +75,13 @@ public class DynamicUI implements CommandListener {
     }
 
     /** @see CommandListener#commandAction(Command, Displayable) */
-    public void commandAction(Command cmd, Displayable disp) {
+    public void commandAction(Command cmd, Displayable displayable) {
         Display d = Sim.getDisplay();
 
         if (cmd.getCommandType() == Command.EXIT) {
             d.setCurrent(Sim.getMainScreen());
         } else {
-            Request r = ui.handleCommand(cmd, disp);
+            Request r = handleCommand(cmd, displayable);
             if (r == null) {
                 return;
             }
@@ -81,17 +90,42 @@ public class DynamicUI implements CommandListener {
             String response = null;
 
             try {
-               response = new String(r.getResponse());
+                response = new String(r.getResponse());
             } catch (IOException e) {
-               e.printStackTrace();
+                e.printStackTrace();
             }
 
             // load response into UI
             ui.initialize(response);
 
             // show new UI
-            d.setCurrent(ui.getDisplayable());
+            d.setCurrent(getDisplayable());
         }
+    }
+
+    /**
+     * A request that is generated, if a certain command has been executed.
+     * 
+     * @param cmd the command.
+     * @param displayable the displayable prior to the command.
+     * @return a request.
+     */
+    private Request handleCommand(Command cmd, Displayable displayable) {
+        if (ui.isList()) {
+            // find selected index
+            int selected = ((List) disp).getSelectedIndex();
+
+            // send index to server
+            Request r = new Request();
+            r.setParam("selected", Integer.toString(selected));
+
+            // attach id if possible
+            r.setParam("id", ui.getId());
+
+            return r;
+
+        }
+        return null;
     }
 
     /**
@@ -100,10 +134,35 @@ public class DynamicUI implements CommandListener {
      * @return a displayable.
      */
     protected Displayable getDisplayable() {
-        return ui.getDisplayable();
+        disp = makeDisplayable(ui);
+        return disp;
     }
-    
-    
+
+    Displayable makeDisplayable(SendableUI sui) {
+        Displayable d;
+        String title = sui.getTitle();
+        if (sui.isList()) {
+            d = new List(title, List.IMPLICIT);
+
+            Enumeration enum = sui.getListElements().elements();
+            while (enum.hasMoreElements()) {
+                String name = (String) enum.nextElement();
+
+                if (name != null) {
+                    appendToList((List) d, name, null);
+                }
+            }
+        } else {
+            d = new Form(title);
+            ((Form) d).append(new StringItem("Status:", sui.getText()));
+        }
+        return d;
+    }
+
+    private void appendToList(List l, String name, Image img) {
+        (l).append(name, img);
+    }
+
     /**
      * Establishes a connection and updates the user interface.
      */
@@ -119,13 +178,13 @@ public class DynamicUI implements CommandListener {
             this.url = url;
             // TODO implement connection and error handling - update UI accordingly
         }
-        
+
         /** @see java.lang.Thread#run() */
         public void run() {
             // send the request
             Request r = new Request();
             r.sendRequest(url);
-            
+
             try {
                 String response = new String(r.getResponse());
                 ui = new SendableUI(response);

@@ -3,13 +3,6 @@ package test.sim.net;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.Form;
-import javax.microedition.lcdui.Image;
-import javax.microedition.lcdui.List;
-import javax.microedition.lcdui.StringItem;
-
 import nanoxml.XMLElement;
 import nanoxml.XMLParseException;
 
@@ -36,109 +29,33 @@ import nanoxml.XMLParseException;
  */
 public class SendableUI {
 
-    private Displayable displayable;
     private String id;
     private String title;
     private boolean list;
-    
+
     /** for simple uis: only text */
     private String text;
     /** enumeration of list elements */
     private Vector listElements;
-    
 
     /** Default Constructor to use as bean. */
     public SendableUI() {
     }
-    
+
+    /**
+     * Creates a new <code>SendableUI</code> from a string.
+     * @param xmlString a string that contains information for the building
+     *         a displayable component.
+     * 
+     * @see #initialize(String)
+     */
     public SendableUI(String xmlString) {
         initialize(xmlString);
     }
-    
 
     /**
      * Initializes the SendableUI with the given xml string.
-     * 
-     * @param xmlString the input string. 
-     */
-    public void initialize(String xmlString) {
-        XMLElement xml = new XMLElement();
-
-        try {
-           xml.parseString(xmlString);
-           makeXmlDisplayable(xml);
-        } catch (XMLParseException xex) {
-           title = "Information";
-           createSimpleForm(xmlString);
-        }
-    }
-    
-    
-    public void setTitle(String title) {
-        this.title = title;
-    }
-    
-    public void setId(String id) {
-        this.id = id;
-    }
-    
-    /**
-     * Creates a list with the information found in the enumeration. The
-     * enumeration should only contain strings, which will be used as names
-     * for the list elements.
-     * 
-     * @param enum the enumeration.
-     */
-    public void createSimpleList(Vector v) {
-        listElements = v;
-        createSimpleList();
-    }
-    
-    private void createSimpleList() {
-        displayable = new List(title, List.IMPLICIT);
-
-        Enumeration enum = listElements.elements();
-        while (enum.hasMoreElements()) {
-           String name = (String) enum.nextElement();
-
-           if (name != null) {
-               appendToList(name, null);
-           }
-        }
-    }
-    
-    void createXmlList(Enumeration enum) {
-        displayable = new List(title, List.IMPLICIT);
-
-        while (enum.hasMoreElements()) {
-           XMLElement element = (XMLElement) enum.nextElement();
-           String name = element.getAttribute("name", null);
-
-           if (name != null) {
-               appendToList(name, null);
-           }
-        }
-    }
-    
-    private void appendToList(String name, Image img) {
-        ((List) displayable).append(name, img);
-    }
-    
-    /**
-     * Creates a simple form with <code>text</code> as the only item.
-     * 
-     * @param text the text to be displayed.
-     */
-    public void createSimpleForm(String message) {
-        System.out.println("text-ing");
-        displayable = new Form(title);
-        ((Form) displayable).append(new StringItem("Status: ", message));
-    }
-    
-    /**
-     * Creates a displayable from an xml string.
-     *
-     * @param xml a string of the form:
+     * @param xmlString should be for the format.
      * <p>
      * <pre>
      *    &lt;element title="title" id="ID" list="true" &gt;
@@ -158,39 +75,135 @@ public class SendableUI {
      * </pre>
      * </p>
      */
-    private void makeXmlDisplayable(XMLElement xml) {
-       System.out.println("xml-ing");
+    public void initialize(String xmlString) {
+        XMLElement xml = new XMLElement();
 
-       // set title
-       title = xml.getAttribute("title", "Auswahl");
+        try {
+            xml.parseString(xmlString);
+            makeXmlDisplayable(xml);
+        } catch (XMLParseException xex) {
+            title = "Information";
+            text = xmlString;
+        }
+    }
 
-       // set id, if available
-       id = xml.getAttribute("id", null);
+    /**
+     * Sets the id. This field is optional.
+     * @param id the id.
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
 
-       // show either list, or simple status message
-       if (xml.getAttributeBoolean("list", false)) {
-           list = true;
-           // add children to vector
-           listElements = new Vector();
-           Enumeration enum = xml.enumerateChildren();
-           while (enum.hasMoreElements()) {
-               XMLElement element = (XMLElement) enum.nextElement();
-               String name = element.getAttribute("name", null);
+    /**
+     * Returns the id.
+     * @return the id.
+     */
+    public String getId() {
+        return id;
+    }
 
-               if (name != null) {
-                   listElements.addElement(name);
-               }
-           }
-           
-           createSimpleList();
-       } else {
-           text = xml.getAttribute("msg", "Warte...");
-           createSimpleForm(text);
-       }
+    /**
+     * Sets the title.
+     * @param title the new title.
+     */
+    public void setTitle(String title) {
+        this.title = title;
     }
     
+    /**
+     * Returns the title. 
+     * @return the title.
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * Sets the message text.
+     * @param text the new message text.
+     */
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    /**
+     * Returns the message text.
+     * @return the message text.
+     */
+    public String getText() {
+        return text;
+    }
+
+    /**
+     * Sets the elements of a list.
+     * @param elements the new elements.
+     */
+    public void setListElements(Vector elements) {
+        this.listElements = elements;
+        list = true;
+    }
+
+    /**    
+     * Returns the elements of the list, which may be rendered by this instance.
+     * @return the list's elements.
+     */
+    public Vector getListElements() {
+        return listElements;
+    }
+
+    /**
+     * Whether this instance builds a list.
+     * @return <code>true</code> if this instance may be rendered into a list,
+     *          <code>false</code> otherwise.
+     */
+    public boolean isList() {
+        return list;
+    }
+
+    /**
+     * Creates a displayable from an xml element.
+     * @param xml the element.
+     */
+    private void makeXmlDisplayable(XMLElement xml) {
+        System.out.println("xml-ing");
+
+        // set title
+        title = xml.getAttribute("title", "Auswahl");
+
+        // set id, if available
+        id = xml.getAttribute("id", null);
+
+        // show either list, or simple status message
+        if (xml.getAttributeBoolean("list", false)) {
+            list = true;
+            // add children to vector
+            listElements = new Vector();
+            Enumeration enum = xml.enumerateChildren();
+            while (enum.hasMoreElements()) {
+                XMLElement element = (XMLElement) enum.nextElement();
+                String name = element.getAttribute("name", null);
+
+                if (name != null) {
+                    listElements.addElement(name);
+                }
+            }
+        } else {
+            text = xml.getAttribute("msg", "Warte...");
+        }
+    }
+
+    /**
+     * Returns a string which can be used to create a new sendable UI. This
+     * method may be used to send user interface information across a network
+     * using xml.
+     * 
+     * @return a string that contains the information for rendering the user
+     *          interface component.
+     */
     public String getXmlString() {
         XMLElement xml = new XMLElement();
+        xml.setName("sendable");
         xml.setAttribute("title", title);
         xml.setAttribute("id", id);
         if ((list) && (listElements != null) && (!listElements.isEmpty())) {
@@ -208,34 +221,4 @@ public class SendableUI {
         return xml.toString();
     }
 
-    /**
-     * A request that is generated, if a certain command has been executed.
-     * 
-     * @param cmd the command.
-     * @param disp the displayable prior to the command.
-     * @return a request.
-     */
-    public Request handleCommand(Command cmd, Displayable disp) {
-        if (list) {
-           // find selected index
-           int selected = ((List) displayable).getSelectedIndex();
-
-           // send index to server
-           Request r = new Request();
-           r.setParam("selected", Integer.toString(selected));
-
-           // attach id if possible
-           if (id != null) {
-              r.setParam("id", id);
-           }
-
-            return r;
-
-        }
-        return null;
-    }
-
-    public Displayable getDisplayable() {
-        return displayable;
-    }
 }
