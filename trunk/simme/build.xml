@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
   [Simme]
-    Ant build file: wtkbuild.xml
-             $Date: 2004/09/09 14:07:47 $
-         $Revision: 1.17 $
+    Ant build file: build.xml
+             $Date: 2004/09/13 15:18:08 $
+         $Revision: 1.18 $
 
+	This ant build file is used to build the sources for SimME. The Targets
+	include means to compile the sources and build the package with optional 
+	obfuscation and preverification.
+  
+	The following libraries are needed in from the ${lib} directory:
+  
+		- Antenna: http://antenna.sourceforge.net/
+  	
+	For obfuscation the Proguard library (http://proguard.sourceforge.net/) has
+	to be put in the directory ${wkt.home}/bin, as antenna looks in this
+	directory for the obfuscation libraries. Alternatively Retroguard can be
+	used.
+	
+	
  -->
 <project name="SimME" default="build">
 
 	<property file="ant-build.properties" />
 	<taskdef resource="antenna.properties" classpath="${lib.antenna}" />
-
-	<path id="project.classpath">
-		<path location="${lib.proguard}" />
-	</path>
-
 
 	<!-- build simme-client.jar to include in server -->
 	<target name="build"
@@ -33,7 +42,7 @@
 		          destdir="${cls-client}"
 		          preverify="${var.preverify}"
 		/>
-		<property name="backup.jar" value="${build}/SimME-${DSTAMP}.jar"/>
+		<property name="backup.jar" value="${build}/SimME-${DSTAMP}.jar" />
 	</target>
 
 	<target name="dist" depends="compile-client">
@@ -41,7 +50,6 @@
 		<wtkpackage jarfile="${build}/bin/SimME.jar"
 		            jadfile="${debug.jad}"
 		            obfuscate="${var.obfuscate}"
-		            classpath="${lib.proguard}"
 		>
 			<fileset dir="${resources}" />
 			<fileset dir="${cls-client}" />
@@ -59,9 +67,21 @@
 
 	<!-- delete created classes -->
 	<target name="clean">
-		<delete dir="${cls}" />
-		<delete dir="${cls-client}" />
+		<delete failonerror="false" dir="${cls}" />
+		<delete failonerror="false" dir="${cls-client}" />
 	</target>
+	
+    <!-- deployment -->
+    <target name="deploy" description="Deploys the sources to the wtk-home directory">
+    	
+      <copy todir="${dir.deploy}">
+        <fileset dir="${src}">
+          <include name="${client-package}/**/*.java"/>
+          <exclude name="**/*Test*,**/tests/*"/>
+        </fileset>
+      </copy>
+      <copy tofile="${dir.deploy}/bin/SimME.jad" file="${debug.jad}"/>	
+    </target>
 
 </project>
 
