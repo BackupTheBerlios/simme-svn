@@ -125,6 +125,7 @@ public class Request {
          if (post) {
             c.setRequestMethod(HttpConnection.POST);
             String postString = getParamString(true);
+            System.out.println("postString: " + postString);
             if (postString.length() > 0) {
                os = c.openOutputStream();
                byte postmsg[] = postString.getBytes();

@@ -93,8 +93,26 @@ public class NetTest extends TestCase {
       req.sendRequest(SERVER, "doLogin.jsp");
       
       XmlMessage msg = new XmlMessage(req.getResponse());
-      msg.write(new PrintWriter(System.out));
+      PrintWriter sysOut = new PrintWriter(System.out);
+      msg.write(sysOut);
+      sysOut.flush();
       System.out.println();
+   }
+
+   /**
+    * Tests sending login information
+    *  
+    * @throws IOException if a problem has occured while sending the request.
+    */
+   public void testLoginMessage() throws IOException {
+      TestLoginMessage login = new TestLoginMessage("loginTest", "password", "1.0");
+      /*
+      PrintWriter sysOut = new PrintWriter(System.out);
+      login.getXmlElement().write(sysOut);
+      sysOut.flush();
+      */
+      login.sendRequest(SERVER, "doLogin.jsp");
+      System.out.println(new String(login.getResponse()).trim());      
    }
 
 }

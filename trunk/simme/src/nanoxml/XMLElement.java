@@ -1,7 +1,7 @@
 /* XMLElement.java
  *
- * $Revision: 1.3 $
- * $Date: 2003/04/17 21:00:44 $
+ * $Revision: 1.4 $
+ * $Date: 2003/04/18 21:57:14 $
  * $Name:  $
  *
  * This file is part of NanoXML 2 Lite.
@@ -105,6 +105,7 @@ import test.sim.util.StringReader;
  *   <li>changed boolean handling</li>
  *   <li>Removed linenr</li>
  *   <li>set all protected methods except exceptions to private</li>
+ *   <li>changed constructor calling chain (ignoreWhitespace defaults to false</li>
  * </ul>
  * </p>
  *
@@ -219,85 +220,52 @@ public class XMLElement {
    private int parserLineNr;
 
    /**
-    * Creates and initializes a new XML element.
-    * Calling the construction is equivalent to:
-    * <ul><code>new XMLElement(new Hashtable(), false, true)
-    * </code></ul>
-    *
+    * Creates and initializes a new XML element with an empty hash table.
+    * 
+    * @see #XMLElement(Hashtable)
     */
    public XMLElement() {
-      this(new Hashtable(), false, true, true);
+      this(new Hashtable());
    }
 
    /**
-    * Creates and initializes a new XML element.
-    * Calling the construction is equivalent to:
-    * <ul><code>new XMLElement(entities, false, true)
-    * </code></ul>
+    * Creates and initializes a new XML element with the given hash table.
+    * <code>skipLeadingWhitespace</code> is set to <code>false</code>.
     *
-    * @param entities
-    *     The entity conversion table.
-    *
-    * </dl><dl><dt><b>Preconditions:</b></dt><dd>
-    * <ul><li><code>entities != null</code>
-    * </ul></dd></dl>
-    *
+    * @param entities The entity conversion table.
+    * 
+    * @see #XMLElement(Hashtable, boolean)
     */
    public XMLElement(Hashtable entities) {
-      this(entities, false, true, true);
+      this(entities, false);
    }
 
    /**
-    * Creates and initializes a new XML element.
-    * Calling the construction is equivalent to:
-    * <ul><code>new XMLElement(new Hashtable(), skipLeadingWhitespace, true)
-    * </code></ul>
+    * Creates and initializes a new XML element with the given hash table
+    * and the white space property. IgnoreCase is set to <code>false</code>.
     *
-    * @param skipLeadingWhitespace
-    *     <code>true</code> if leading and trailing whitespace in PCDATA
-    *     content has to be removed.
-    *
-    */
-   public XMLElement(boolean skipLeadingWhitespace) {
-      this(new Hashtable(), skipLeadingWhitespace, true, true);
-   }
-
-   /**
-    * Creates and initializes a new XML element.
-    * Calling the construction is equivalent to:
-    * <ul><code>new XMLElement(entities, skipLeadingWhitespace, true)
-    * </code></ul>
-    *
-    * @param entities
-    *     The entity conversion table.
-    * @param skipLeadingWhitespace
-    *     <code>true</code> if leading and trailing whitespace in PCDATA
-    *     content has to be removed.
-    *
-    * </dl><dl><dt><b>Preconditions:</b></dt><dd>
-    * <ul><li><code>entities != null</code>
-    * </ul></dd></dl>
+    * @param entities The entity conversion table.
+    * @param skipLeadingWhitespace <code>true</code> if leading and trailing
+    *        whitespace in PCDATA content has to be removed.
+    * 
+    * @see #XMLElement(Hashtable, boolean, boolean)
     *
     */
    public XMLElement(Hashtable entities, boolean skipLeadingWhitespace) {
-      this(entities, skipLeadingWhitespace, true, true);
+      this(entities, skipLeadingWhitespace, false);
    }
 
    /**
-    * Creates and initializes a new XML element.
+    * Creates and initializes a new XML element. A basic conversion table
+    * is built.
     *
-    * @param entities
-    *     The entity conversion table.
-    * @param skipLeadingWhitespace
-    *     <code>true</code> if leading and trailing whitespace in PCDATA
-    *     content has to be removed.
-    * @param ignoreCase
-    *     <code>true</code> if the case of element and attribute names have
-    *     to be ignored.
+    * @param entities The entity conversion table.
+    * @param skipLeadingWhitespace <code>true</code> if leading and trailing
+    *        whitespace in PCDATA content has to be removed.
+    * @param ignoreCase <code>true</code> if the case of element and attribute
+    *        names have to be ignored.
     *
-    * </dl><dl><dt><b>Preconditions:</b></dt><dd>
-    * <ul><li><code>entities != null</code>
-    * </ul></dd></dl>
+    * @see #XMLElement(Hashtable, boolean, boolean, boolean)
     *
     */
    public XMLElement(Hashtable entities, boolean skipLeadingWhitespace, boolean ignoreCase) {
@@ -306,19 +274,14 @@ public class XMLElement {
 
    /**
     * Creates and initializes a new XML element.
-    * <P>
     *
-    * @param entities
-    *     The entity conversion table.
-    * @param skipLeadingWhitespace
-    *     <code>true</code> if leading and trailing whitespace in PCDATA
-    *     content has to be removed.
-    * @param fillBasicConversionTable
-    *     <code>true</code> if the basic entities need to be added to
-    *     the entity list.
-    * @param ignoreCase
-    *     <code>true</code> if the case of element and attribute names have
-    *     to be ignored.
+    * @param entities The entity conversion table.
+    * @param skipLeadingWhitespace <code>true</code> if leading and trailing
+    *        whitespace in PCDATA content has to be removed.
+    * @param fillBasicConversionTable <code>true</code> if the basic entities
+    *        need to be added to the entity list.
+    * @param ignoreCase <code>true</code> if the case of element and attribute
+    *        names have to be ignored.
     *
     * </dl><dl><dt><b>Preconditions:</b></dt><dd>
     * <ul><li><code>entities != null</code>

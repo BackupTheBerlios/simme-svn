@@ -16,7 +16,9 @@ import test.sim.util.StringReader;
 public class XmlMessage {
 
    XMLElement xmlElement;
-   Request request;
+   
+   /** The request object used to transmit information */
+   protected Request request;
 
    /**
     * Creates a new XmlMessage from the given byte data.
@@ -77,8 +79,12 @@ public class XmlMessage {
     */
    public void sendRequest(String urlBase, String path) throws IOException {
       ByteArrayOutputStream bas = new ByteArrayOutputStream();
-      write(new OutputStreamWriter(bas));
+      OutputStreamWriter writer = new OutputStreamWriter(bas); 
+      write(writer);
+      writer.flush();
+      System.out.println("sending: " + bas.toString());
       request.setParam("xmldata", bas.toString());
+      System.out.println("sending: " + bas.toString());
       request.sendRequest(urlBase, path);
    }
 
@@ -90,5 +96,13 @@ public class XmlMessage {
    public XMLElement getXmlElement() {
       return xmlElement;
    }
-
+   
+   /**
+    * Return the response
+    * 
+    * @return response of the request.
+    */
+   public byte[] getResponse() {
+      return request.getResponse();
+   }
 }

@@ -9,25 +9,32 @@ import javax.microedition.lcdui.Display;
  * @author jorge
  */
 public class Info {
+   
+   private static final StringBuffer BUF = new StringBuffer();
 
-   private static final String howto =
-      "Das Spiel besteht aus 6 Knoten die jeder mit jedem "
-         + "verbunden sind. Der Spieler der an der Reihe ist wählt "
-         + "eine Verbindung zwischen 2 Knoten aus. Diese wird dann in "
-         + "seiner Farbe angezeigt. Dann wählt der 2. Spieler eine "
-         + "Verbindung und markiert sie in seiner Farbe usw. "
-         + "Der erste Spieler der in seiner Farbe ein Dreieck formt "
-         + "hat verloren. "
-         + "Ziel ist es also zu vermeiden ein Dreieck zu formen und "
-         + "den Gegenspieler zum Dreieck zu drängen."
-         + "\n \n \n"
-         + "Um eine Verbindung auszuwählen drückt man auf eine "
-         + "Nummer zwischen 1 und 6 auf dem Telefon um den ersten "
-         + "Knoten zu markieren und das gleiche nochmals um den "
-         + "zweiten Knoten und somit eine Verbindung zu markieren, "
-         + "sollte man sich nach der Wahl des ersten Knotens "
-         + "umentscheiden kann man durch nochmaliges klicken auf die "
-         + "selbe Taste den Knoten wieder deaktivieren. ";
+   static {
+      BUF.append("Das Spiel besteht aus 6 Knoten die jeder mit jedem ");
+      BUF.append("verbunden sind. Der Spieler der an der Reihe ist wählt ");
+      BUF.append("eine Verbindung zwischen 2 Knoten aus. Diese wird dann in ");
+      BUF.append("seiner Farbe angezeigt. Dann wählt der 2. Spieler eine ");
+      BUF.append("Verbindung und markiert sie in seiner Farbe usw. ");
+      BUF.append("Der erste Spieler der in seiner Farbe ein Dreieck formt ");
+      BUF.append("hat verloren. ");
+      BUF.append("Ziel ist es also zu vermeiden ein Dreieck zu formen und ");
+      BUF.append("den Gegenspieler zum Dreieck zu drängen.");
+      BUF.append("\n \n \n");
+      BUF.append("Um eine Verbindung auszuwählen drückt man auf eine ");
+      BUF.append("Nummer zwischen 1 und 6 auf dem Telefon um den ersten ");
+      BUF.append("Knoten zu markieren und das gleiche nochmals um den ");
+      BUF.append("zweiten Knoten und somit eine Verbindung zu markieren, ");
+      BUF.append("sollte man sich nach der Wahl des ersten Knotens ");
+      BUF.append("umentscheiden kann man durch nochmaliges klicken auf die ");
+      BUF.append("selbe Taste den Knoten wieder deaktivieren.");
+      
+   }
+
+   private static final String HOWTO = BUF.toString();
+      
 
    private Info() {
    }
@@ -40,7 +47,7 @@ public class Info {
    public static void showInfo(Display display) {
       Alert alert = new Alert("SimME HowTo");
       alert.setTimeout(Alert.FOREVER);
-      alert.setString(howto);
+      alert.setString(HOWTO);
 
       display.setCurrent(alert);
    }
