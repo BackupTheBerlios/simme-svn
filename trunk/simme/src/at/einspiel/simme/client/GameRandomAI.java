@@ -8,6 +8,7 @@ package at.einspiel.simme.client;
 
 import java.util.Random;
 
+import at.einspiel.logging.Logger;
 import at.einspiel.simme.client.util.PersonalPrefs;
 import at.einspiel.simme.client.util.PrefsException;
 
@@ -36,6 +37,11 @@ public class GameRandomAI extends GameOnePlayer {
 			// ignore Exception at this point
 		} catch (NullPointerException ex) {
 			// can only be executed within MIDP environment .. this is for tests
+		} catch (Throwable t) {
+			// all other exceptions should be monitored.
+			// player information for a game against the computer is not very
+			// important, so do not bail out
+			Logger.error("Could not retrieve player information", t);
 		}
 		info.setP1Name(playerName);
 		info.setP2Name("Computer");
