@@ -16,8 +16,10 @@
     <property name="deploy.war" value="simme-server.war"/>
     
     <!-- misc libraries for building -->
-    <property name="lib.junit" value="../lib/junit.jar"/>
-    <property name="lib.xerces" value="../lib/xercesImpl.jar"/>
+    <property name="lib.dir" value="../lib" />
+    <property name="lib.client" value="${lib.dir}/simme-client.jar"/>
+    <property name="lib.junit" value="${lib.dir}/junit.jar"/>
+    <property name="lib.xerces" value="${lib.dir}/xercesImpl.jar"/>
 
     <!-- client -->
     <property name="client.dir" value="../simme"/>
@@ -29,22 +31,7 @@
             directory.
         </description>
         <ant dir="${client.dir}" inheritAll="false"/>
-    </target>
-
-    <target name="clientlibs" depends="buildclient">
-        <description>
-            Includes the libraries of the client to the lib directory.
-        </description>
-        <jar destfile="${web-inf.lib}/simme-client.jar" index="true" update="true">
-            <fileset dir="${client.cls}">
-                <!-- omitting test classes -->
-                <patternset id="non.test.classes">
-                    <include name="**/*.class"/>
-                    <exclude name="**/*Test*"/>
-                    <exclude name="**/tests/*"/>
-                </patternset>
-            </fileset>
-        </jar>
+        <copy file="${lib.client}" todir="${web-inf.lib}"/>
     </target>
 
     <target name="initbuild" depends="buildclient">
@@ -58,17 +45,19 @@
     
     <!-- build simme -->
     <target name="build" depends="initbuild">
-    	<description>
-    	    Compiles the sources and copies the classes to the web module's
-    	    WEB-INF/classes directory.
-    	</description>
+        <description>
+            Compiles the sources and copies the classes to the web module's
+            WEB-INF/classes directory.
+        </description>
         <javac srcdir="${src}" destdir="${cls}" source="1.4">
             <classpath refid="project.class.path"/>
         </javac>
-        <copydir src="${cls}" dest="${web-inf.classes}"/>
+        <copy todir="${web-inf.classes}">
+    		<fileset dir="${cls}"/>
+  		</copy>
     </target>
 
-    <target name="war" depends="clientlibs, build">
+    <target name="war" depends="build">
         <description>Builds the web archive for deployment.</description>
         <war destfile="${deploy.war}" webxml="${webxml}" update="true" index="true">
             <classes dir="${cls}"/>
@@ -89,6 +78,7 @@
     <!-- delete created classes -->
     <target name="clean">
         <delete dir="${cls}"/>
+        <delete dir="${web-inf.classes}"/>
         <delete file="${deploy.war}"/>
     </target>
 </project>
