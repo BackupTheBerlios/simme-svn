@@ -39,8 +39,9 @@ public class Sim extends MIDlet {
       Display d = Display.getDisplay(this);
       main = new StartForm(this);
 
-      SplashScreen splashScreen = new SplashScreen(this);
-      d.setCurrent(splashScreen);
+      //SplashScreen splashScreen = new SplashScreen(this);
+      d.setCurrent(main);
+      
    }
 
    /**

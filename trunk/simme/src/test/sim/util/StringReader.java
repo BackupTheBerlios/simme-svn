@@ -110,29 +110,6 @@ public class StringReader extends Reader {
    }
 
    /**
-    * Tell whether this stream supports the mark() operation, which it does.
-    * 
-    * @return <code>true</code> if this stream supports this operation,
-    *         <code>false</code> otherwise.
-    */
-   public boolean markSupported() {
-      return true;
-   }
-
-   /**
-    * @see java.io.StringReader#mark(int)
-    */
-   public void mark(int readAheadLimit) throws IOException {
-      if (readAheadLimit < 0) {
-         throw new IllegalArgumentException("Read-ahead limit < 0");
-      }
-      synchronized (lock) {
-         ensureOpen();
-         mark = next;
-      }
-   }
-
-   /**
     * Reset the stream to the most recent mark, or to the beginning of the
     * string if it has never been marked.
     *

@@ -1,7 +1,7 @@
 /* XMLElement.java
  *
- * $Revision: 1.4 $
- * $Date: 2003/04/18 21:57:14 $
+ * $Revision: 1.5 $
+ * $Date: 2003/04/20 17:55:42 $
  * $Name:  $
  *
  * This file is part of NanoXML 2 Lite.
@@ -225,51 +225,7 @@ public class XMLElement {
     * @see #XMLElement(Hashtable)
     */
    public XMLElement() {
-      this(new Hashtable());
-   }
-
-   /**
-    * Creates and initializes a new XML element with the given hash table.
-    * <code>skipLeadingWhitespace</code> is set to <code>false</code>.
-    *
-    * @param entities The entity conversion table.
-    * 
-    * @see #XMLElement(Hashtable, boolean)
-    */
-   public XMLElement(Hashtable entities) {
-      this(entities, false);
-   }
-
-   /**
-    * Creates and initializes a new XML element with the given hash table
-    * and the white space property. IgnoreCase is set to <code>false</code>.
-    *
-    * @param entities The entity conversion table.
-    * @param skipLeadingWhitespace <code>true</code> if leading and trailing
-    *        whitespace in PCDATA content has to be removed.
-    * 
-    * @see #XMLElement(Hashtable, boolean, boolean)
-    *
-    */
-   public XMLElement(Hashtable entities, boolean skipLeadingWhitespace) {
-      this(entities, skipLeadingWhitespace, false);
-   }
-
-   /**
-    * Creates and initializes a new XML element. A basic conversion table
-    * is built.
-    *
-    * @param entities The entity conversion table.
-    * @param skipLeadingWhitespace <code>true</code> if leading and trailing
-    *        whitespace in PCDATA content has to be removed.
-    * @param ignoreCase <code>true</code> if the case of element and attribute
-    *        names have to be ignored.
-    *
-    * @see #XMLElement(Hashtable, boolean, boolean, boolean)
-    *
-    */
-   public XMLElement(Hashtable entities, boolean skipLeadingWhitespace, boolean ignoreCase) {
-      this(entities, skipLeadingWhitespace, true, ignoreCase);
+      this(new Hashtable(), false, true, false);
    }
 
    /**

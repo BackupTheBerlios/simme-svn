@@ -7,7 +7,7 @@ import java.io.IOException;
  * 
  * @author kariem
  */
-public class LoginMessage extends XmlMessage {
+public class LoginMessage extends Request {
 
    /**
     * Creates a new message with the given properties.
@@ -20,7 +20,12 @@ public class LoginMessage extends XmlMessage {
     * @throws IOException if an error occured while creating the XML information
     */
    public LoginMessage(String nick, String pwd, String clientmodel, String version) throws IOException {
-      super(makeLoginMessage(nick, pwd, clientmodel, version));
+      //super(makeLoginMessage(nick, pwd, clientmodel, version));
+      super();
+      setParam("user", nick);
+		setParam("pwd", pwd);
+		setParam("model", clientmodel);
+		setParam("version", version);
    }
 
    /**

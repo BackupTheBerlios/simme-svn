@@ -15,8 +15,8 @@ import test.sim.net.XmlMessage;
 public class NetTest extends TestCase {
 
    private Request req;
-   private static final String SERVER = "http://localhost:8080/simme/";
-
+   //private static final String SERVER = "http://localhost:8080/simme/";
+	private static final String SERVER = "http://128.131.111.157:8080/simme/";
    /** @see TestCase#setUp() */
    protected void setUp() {
       req = new TestRequest();
@@ -111,7 +111,7 @@ public class NetTest extends TestCase {
       login.getXmlElement().write(sysOut);
       sysOut.flush();
       */
-      login.sendRequest(SERVER, "doLogin.jsp");
+      login.sendRequest(SERVER, "doLogin.jsp", false);
       System.out.println(new String(login.getResponse()).trim());      
    }
 

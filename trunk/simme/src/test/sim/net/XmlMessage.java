@@ -85,9 +85,9 @@ public class XmlMessage {
       OutputStreamWriter writer = new OutputStreamWriter(bas); 
       write(writer);
       writer.flush();
-      System.out.println("sending: " + bas.toString());
+      //System.out.println("sending: " + bas.toString());
       request.setParam("xmldata", bas.toString());
-      System.out.println("sending: " + bas.toString());
+      //System.out.println("sending: " + bas.toString());
       request.sendRequest(urlBase, path);
    }
 
