@@ -14,6 +14,7 @@ import at.einspiel.logging.Logger;
 import at.einspiel.messaging.LoginMessage;
 import at.einspiel.messaging.LoginRequest;
 import at.einspiel.midp.ui.Action;
+import at.einspiel.midp.ui.ConnectionScreen;
 import at.einspiel.midp.ui.ICommandManager;
 import at.einspiel.simme.client.GameRandomAI;
 import at.einspiel.simme.client.GameUndoable;
@@ -70,9 +71,12 @@ public class GameModeForm extends List implements CommandListener {
 
 					try {
 						String[] personalInfo = PersonalPrefs.getPlayerInfo();
+						connect(personalInfo);
+						/*
 						ConnectionAlert connectionAlert = new ConnectionAlert(personalInfo);
 						d.setCurrent(connectionAlert);
 						connectionAlert.startConnection(d);
+						*/
 						break;
 
 					} catch (PrefsException pex) {
@@ -107,109 +111,102 @@ public class GameModeForm extends List implements CommandListener {
 		}
 	}
 
-	private class ConnectionAlert extends Alert {
-		String[] loginData;
+	/**
+	 * Connects to the server with the given data as login information.
+	 * @param loginData the login information.
+	 */
+	private void connect(final String[] loginData) {
+		Runnable r = new Runnable() {
+			public void run() {
+				try {
+					// construct login message
+					String version = Sim.getProperty("MIDlet-Version");
+					Logger.debug(getClass(), "constructing message (ver. " + version + ")");
 
-		/**
-		 * Constructs an empty <code>InfoAlert</code> with the given title
-		 * 
-		 * @param data
-		 *            the data for the alert.
-		 */
-		ConnectionAlert(String[] data) {
-			super("Verbinde ...");
-			setString("... mit dem Server.");
-			// Alert will be substituted by result message
-			setTimeout(Alert.FOREVER);
-			loginData = data;
+					LoginRequest loginMsg = null;
 
-			/*
-			 * debug output for (int i = 0; i < data.length; i++) { if (data[i] !=
-			 * null) { Logger.debug(i + ":" + data[i]); } }
-			 * Logger.debug("connectionalert created");
-			 */
-		}
-
-		/**
-		 * Initializes the connection and shows its output.
-		 * 
-		 * @param d
-		 *            the display which is used to show the output.
-		 */
-		void startConnection(final Display d) {
-			// enter new thread, so that the user interface is updated correctly
-			Thread t = new Thread() {
-				/** @see java.lang.Thread#run() */
-				public void run() {
 					try {
-						// construct login message
-						String version = Sim.getProperty("MIDlet-Version");
-						Logger.debug(getClass(), "constructing message (ver. " + version + ")");
-
-						LoginRequest loginMsg = null;
-
-						try {
-							loginMsg = new LoginRequest(loginData[0], loginData[1],
-									loginData[3], version);
-						} catch (NullPointerException npe) {
-							npe.printStackTrace();
-						}
-
-						loginMsg.sendRequest(Sim.getProperty("simme.page.login"));
-
-						// get response
-						Logger.debug(getClass(), "retrieving response");
-						String response = new String(loginMsg.getResponse());
-
-						// use response to build result
-						Logger.debug(getClass(), "building login message with response: "
-								+ response);
-						LoginMessage result = new LoginMessage(response);
-
-						Logger.debug(getClass(), "login result: " + result);
-
-						if (result.isSuccess()) {
-							final String url = result.getUrl();
-							// save nickname and url somewhere in order to be
-							// easily accessible without using prefs
-							Sim.setNick(loginData[0]);
-
-							DynamicUI dUI = new DynamicUI("SimME online", result.getMessage(),
-									url);
-
-							dUI.updateDisplay();
-
-						} else {
-							// no success => show cause
-							AlertType type = result.isSuccess()
-									? AlertType.INFO
-									: AlertType.ERROR;
-							final String errorMessage = result.getMessage();
-							Alert loginAlert = new Alert("Fehler beim Einloggen", errorMessage,
-									null, type);
-							loginAlert.setTimeout(FOREVER);
-							Logger.warn("login error: " + errorMessage);
-							d.setCurrent(loginAlert);
-						}
-					} catch (IOException ioex) {
-						Logger.warn("connection error");
-
-						String errorMsg = ioex.getMessage();
-
-						// if errorMsg doesn't contain any information, show
-						// some standard text
-						if ((errorMsg == null) || (errorMsg.length() == 0)) {
-							errorMsg = "No connection could be established";
-						}
-
-						Alert errorAlert = new Alert("Error", errorMsg, null, AlertType.ERROR);
-						errorAlert.setTimeout(FOREVER);
-						d.setCurrent(errorAlert);
+						loginMsg = new LoginRequest(loginData[0], loginData[1], loginData[3],
+								version);
+					} catch (NullPointerException npe) {
+						npe.printStackTrace();
 					}
-				}
-			};
 
-			t.start();
+					ConnectionScreen cs = new ConnectionScreen("SimME Online", GameModeForm.this);
+					cs.setDescription("Verbinde mit SimME Online");
+					cs.setRequest(loginMsg);
+					cs.go(Sim.getProperty("simme.page.login"));
+
+					// get response
+					Logger.debug(getClass(), "retrieving response");
+					String response = new String(cs.getResponse());
+
+					// use response to build result
+					Logger.debug(getClass(), "building login message with response: "
+							+ response);
+					LoginMessage result = new LoginMessage(response);
+
+					Logger.debug(getClass(), "login result: " + result);
+
+					handleResult(loginData[0], result);
+				} catch (IOException ioex) {
+					handleError(ioex);
+				}
+			}
+		};
+		new Thread(r).start();
+	}
+
+	/**
+	 * Handles the result of the LoginMessage.
+	 * @param nick the nick name.
+	 * @param result the login result.
+	 */
+	private void handleResult(String nick, LoginMessage result) {
+		if (result.isSuccess()) {
+			final String url = result.getUrl();
+			// save nickname and url somewhere in order to be
+			// easily accessible without using prefs
+			Sim.setNick(nick);
+
+			DynamicUI dUI = new DynamicUI("SimME online", result.getMessage(),
+					url);
+
+			dUI.updateDisplay();
+
+		} else {
+			// no success => show cause
+			AlertType type = result.isSuccess()
+					? AlertType.INFO
+					: AlertType.ERROR;
+			final String errorMessage = result.getMessage();
+			Alert loginAlert = new Alert("Fehler beim Einloggen", errorMessage,
+					null, type);
+			loginAlert.setTimeout(Alert.FOREVER);
+			Logger.warn("login error: " + errorMessage);
+			Display d = Sim.getDisplay();
+			d.setCurrent(loginAlert, this);
 		}
+	}
+
+	/**
+	 * Handles a possible error.
+	 * @param err the exception that caused this error.
+	 */
+	private void handleError(IOException err) {
+		Logger.warn("connection error");
+
+		String errorMsg = err.getMessage();
+
+		// if errorMsg doesn't contain any information, show
+		// some standard text
+		if ((errorMsg == null) || (errorMsg.length() == 0)) {
+			errorMsg = "No connection could be established";
+		}
+
+		Alert errorAlert = new Alert("Error", errorMsg, null, AlertType.ERROR);
+		errorAlert.setTimeout(Alert.FOREVER);
+		Display d = Sim.getDisplay();
+		d.setCurrent(errorAlert, this);
 	}
 }

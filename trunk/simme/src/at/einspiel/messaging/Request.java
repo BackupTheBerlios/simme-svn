@@ -7,15 +7,12 @@
 package at.einspiel.messaging;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
 
-import at.einspiel.logging.Logger;
 import at.einspiel.simme.client.Sim;
 
 /**
@@ -25,13 +22,8 @@ import at.einspiel.simme.client.Sim;
  */
 public class Request {
 
-	/** String to answer with ok. */
-	public static String ANSWER_OK = "OK";
-	/** String to answer with error. */
-	public static String ANSWER_ERR = "ERR";
-
 	/** This request's default timeout in milliseconds */
-	public static final int DEFAULT_TIMEOUT = 5000;
+	public static final int DEFAULT_TIMEOUT = 1000;
 
 	/**
 	 * The base url to where a <code>Request</code> will be sent. This should
@@ -43,8 +35,6 @@ public class Request {
 	 * The field is set by the MIDlet property <code>simme.server.base</code>.
 	 */
 	public static final String URL_BASE = Sim.getProperty("simme.server.base");
-	private static final int RESPONSE_INITIAL_SIZE = 1024;
-	private static final int RESPONSE_GROWTH_FACTOR = 512;
 
 	/** The timeout used for this request */
 	protected final int timeout;
@@ -52,6 +42,8 @@ public class Request {
 	private IOException occurredException;
 	private byte[] response;
 	ConnectionThread sender;
+
+	private boolean cancelled;
 
 	/**
 	 * Creates a new <code>Request</code>. The text has to be set manually.
@@ -75,6 +67,7 @@ public class Request {
 
 	private void init(Hashtable parameters) {
 		this.params = parameters;
+		cancelled = false;
 
 		if (params == null) {
 			params = new Hashtable();
@@ -147,6 +140,8 @@ public class Request {
 	 * response is saved in a byte array, which can be accessed via
 	 * {@link #getResponse()}.
 	 * 
+	 * TODO verify that there is only one connector running (reuse thread)
+	 * 
 	 * @param urlBase
 	 *            the server address (plus protocol, port, ...).
 	 * 
@@ -157,7 +152,7 @@ public class Request {
 	 *            Whether this message should be a POST or a GET.
 	 */
 	public void sendRequest(String urlBase, String path, boolean post) {
-		sender = new ConnectionThread(urlBase, path, post);
+		sender = new ConnectionThread(this, urlBase, path, post);
 		sender.start();
 	}
 
@@ -214,7 +209,7 @@ public class Request {
 	public synchronized byte[] getResponse() throws IOException {
 		if (sender != null) {
 			if (sender.isStarted()) {
-				while (sender.isAlive()) {
+				while (sender.isAlive() && !cancelled) {
 					try {
 						wait(timeout);
 					} catch (InterruptedException e) {
@@ -233,7 +228,7 @@ public class Request {
 	}
 
 	/**
-	 * Sets the response of this request
+	 * Sets the response of this request and unblocks {@link #getResponse()}.
 	 * 
 	 * @param response
 	 *            the response.
@@ -287,150 +282,15 @@ public class Request {
 		return timeout;
 	}
 
-	private class ConnectionThread extends Thread {
-		private HttpConnection c;
-		private InputStream is;
-		private OutputStream os;
-		private boolean post;
-		private StringBuffer url;
-		private boolean started;
-		private boolean cancelled = false;
-
-		/**
-		 * @param urlBase
-		 *            the server address (plus protocol, port, ...).
-		 * 
-		 * @param path
-		 *            The path on the server identified by <code>urlBase</code>.
-		 * 
-		 * @param post
-		 *            <code>true</code> if it should be a post, otherwise a
-		 *            get will be executed.
-		 */
-		public ConnectionThread(String urlBase, String path, boolean post) {
-			c = null;
-			is = null;
-			os = null;
-			url = new StringBuffer(urlBase);
-			url.append(path);
-
-			if (!post) {
-				url.append(getParamString(false));
-			}
-
-			this.post = post;
-		}
-
-		/** @see java.lang.Thread#start() */
-		public synchronized void start() {
-			started = true;
-			super.start();
-		}
-
-		/** @see java.lang.Thread#run() */
-		public void run() {
-			try {
-				sendRequest();
-			} catch (IOException e) {
-				setOccurredException(e);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-
-		private void sendRequest() throws IOException {
-			try {
-				Logger.debug("Connecting to " + url.toString());
-				c = getHttpConnection(url.toString());
-
-				// set user agent
-				c.setRequestProperty("User-Agent", "Profile/MIDP-1.0 Configuration/CLDC-1.0");
-
-				// set encoding to device encoding
-				c.setRequestProperty("Content-Language", System
-						.getProperty("microedition.locale"));
-
-				if (post) {
-					c.setRequestMethod(HttpConnection.POST);
-
-					String postString = getParamString(true);
-					System.out.println("posting: " + postString);
-
-					if (postString.length() > 0) {
-						os = c.openOutputStream();
-						os.write(postString.getBytes());
-						os.flush();
-						os.close();
-					}
-				} else {
-					c.setRequestMethod(HttpConnection.GET);
-				}
-
-				int rc = c.getResponseCode();
-				if (rc != HttpConnection.HTTP_OK) {
-					throw new IOException("Response: " + rc + "\nrequested URL: " + url + "\n\nPlease report this error.");
-				}
-				if (cancelled) {
-					throw new IOException("Request cancelled");
-				}
-
-				//receive response
-				is = c.openDataInputStream();
-
-				int pos = 0;
-				byte current;
-
-				byte[] localResponse = new byte[RESPONSE_INITIAL_SIZE];
-				int length = RESPONSE_INITIAL_SIZE;
-
-				// read until the end of the stream
-				while (((current = (byte) is.read()) != -1)) {
-					if (pos > (length - 1)) {
-						// update length and copy current contents into bigger
-						// array
-						byte[] responseCopy = new byte[length + RESPONSE_GROWTH_FACTOR];
-						System.arraycopy(localResponse, 0, responseCopy, 0, length);
-						localResponse = responseCopy;
-						length += RESPONSE_GROWTH_FACTOR;
-					}
-
-					localResponse[pos] = current;
-					pos++;
-				}
-
-				// fit response to correct size
-				byte[] responseCopy = new byte[pos];
-				System.arraycopy(localResponse, 0, responseCopy, 0, pos);
-				setResponse(responseCopy);
-			} finally {
-				if (is != null) {
-					is.close();
-				}
-				if (os != null) {
-					os.close();
-				}
-				if (c != null) {
-					c.close();
-				}
-			}
-		}
-
-		/**
-		 * Shows if sending has already been started.
-		 * 
-		 * @return <code>true</code> if the request has already been sent,
-		 *         otherwise <code>false</code>.
-		 */
-		public boolean isStarted() {
-			return started;
-		}
-	}
-
 	/**
 	 * Adds user data to the request. The data currently only consists of the
 	 * user name.
 	 */
 	public void addUserData() {
 		setParam(IConstants.PARAM_USER, Sim.getNick());
+	}
+	
+	public void cancel() {
+		cancelled = true;
 	}
 }

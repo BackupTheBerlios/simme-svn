@@ -2,6 +2,22 @@
 <?xml-stylesheet type="text/xsl" href="changes-html.xsl"?>
 <changelog title="Changelog SimME Client">
 
+	<release name="0.0.7 (beta)" date="2004-10-10" >
+		<changes>
+			<changer><name>kariem</name></changer>
+			<change>
+				<description>First implementation (MIDP 1.0) for active connection UI.</description>
+				<bugs><bug id="2476 ">updated</bug></bugs>
+			</change>
+			<change>
+				<description>Corrected error message for incorrectly set personal prefs</description>
+			</change>
+			<change>
+				<description>Lower timeout for requests. User interface should react faster now.</description>
+			</change>
+		</changes>
+	</release>
+
 	<release name="0.0.6 (beta)" date="2004-09-22" >
 		<changes>
 			<changer><name>kariem</name></changer>

@@ -1,3 +1,9 @@
+//----------------------------------------------------------------------------
+//[Simme]
+//  Java Source File: PersonalPrefs.java
+//             $Date: 2004/09/22 18:25:42 $
+//         $Revision: 1.16 $
+//----------------------------------------------------------------------------
 package at.einspiel.simme.client.util;
 
 import java.io.ByteArrayInputStream;
@@ -141,9 +147,9 @@ public class PersonalPrefs extends Prefs {
 		if (prefs.currentSize() == 0) {
 			// empty prefs => error message
 			StringBuffer buf = new StringBuffer();
-			buf.append("Nick name and password have to be entered. Please ");
-			buf.append("set your options in \"Settings | Internet\" in the ");
-			buf.append("main menu.");
+			buf.append("Nickname und Passwort müssen eingegeben werden. Bitte ");
+			buf.append("stellen Sie diese unter \"Einstellungen > Internet\" ");
+			buf.append("im Hauptmenü ein.");
 			throw new PrefsException(buf.toString());
 		}
 
