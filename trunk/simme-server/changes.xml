@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="changes-html.xsl"?>
+<changelog title="Changelog SimME Server">
+
+	<release name="0.0.5 (alpha)" date="2004-09-15" >
+		<changers>
+			<changer><name>Kariem Hussein</name></changer>
+		</changers>
+		<changes>
+			<change>
+				<description>First alpha release</description>
+			</change>
+		</changes>
+	</release>
+
+</changelog>
