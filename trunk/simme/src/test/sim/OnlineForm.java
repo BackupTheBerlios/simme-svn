@@ -15,7 +15,6 @@ public class OnlineForm extends List implements CommandListener {
    public OnlineForm() {
       super("SimME Online", List.IMPLICIT);
       append("Sofort spielen", null);
-      append("Voting", null);
       append("Info", null);
       append("Ende", null);
       setCommandListener(this);
@@ -26,18 +25,10 @@ public class OnlineForm extends List implements CommandListener {
       Display d = Sim.getDisplay();
       switch (getSelectedIndex()) {
          case 0 : // Sofort
-
             // TODO initialize game
-
             break;
 
-         case 1 : // Voting
-            VotingForm f = new VotingForm(this);
-            d.setCurrent(f);
-
-            break;
-
-         case 2 : // Info
+         case 1 : // Info
             StringBuffer buf = new StringBuffer();
             buf.append("Sie befinden sich im Hauptmenü von SimME online. ");
             buf.append("Hier können Sie entweder ein neues Spiel beginnen ");
@@ -48,7 +39,7 @@ public class OnlineForm extends List implements CommandListener {
 
             break;
 
-         case 3 : // Ende
+         case 2 : // Ende
             d.setCurrent(Sim.getMainScreen());
 
             break;
