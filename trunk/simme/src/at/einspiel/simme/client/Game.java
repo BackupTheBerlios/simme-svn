@@ -1,14 +1,14 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: Game.java
-//               $Date: 2004/09/16 18:07:59 $
-//           $Revision: 1.12 $
+//               $Date: 2004/09/22 18:25:42 $
+//           $Revision: 1.13 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client;
 
 import java.util.Random;
 
-import at.einspiel.simme.client.ui.IDynamicUI;
+import at.einspiel.midp.ui.IDynamicUI;
 import at.einspiel.simme.nanoxml.XMLElement;
 
 /**

@@ -1,18 +1,19 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: GameBoard.java
-//               $Date: 2004/09/16 08:28:49 $
-//           $Revision: 1.1 $
+//               $Date: 2004/09/22 18:25:42 $
+//           $Revision: 1.2 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
+
+import java.util.Enumeration;
+import java.util.Vector;
 
 import javax.microedition.lcdui.*;
 
 import at.einspiel.logging.Logger;
+import at.einspiel.midp.ui.*;
 import at.einspiel.simme.client.*;
-import at.einspiel.simme.client.Game;
-import at.einspiel.simme.client.GameRandomAI;
-import at.einspiel.simme.client.Sim;
 import at.einspiel.simme.client.util.DrawUtils;
 
 /**
@@ -20,44 +21,24 @@ import at.einspiel.simme.client.util.DrawUtils;
  * 
  * @author kariem
  */
-class GameBoard extends Canvas implements IDynamicUI, CommandListener {
+class GameBoard extends Canvas implements IDynamicUI {
 
 	private static final byte NB_NODES = Game.NB_NODES;
+	private static final Command CMD_NEWGAME = new Command("Neu", Command.OK, 1);
+	static final String[] NODE_LABELS = {"1", "2", "3", "4", "5", "6"};
 
 	private static int diameter;
 	private static byte linewidth;
-	private static final Command CMD_CANCEL = new Command("Beenden", Command.BACK, 1);
-	private static final Command CMD_NEWGAME = new Command("Neu", Command.OK, 1);
 
-	/** Inner and outer colors of player1's lines */
-	private static int p1c1, p1c2;
-
-	/** Inner and outer colors of player2's lines */
-	private static int p2c1, p2c2;
-
-	/** Inner and outer colors of neutral lines */
-	private static int nc1, nc2;
-
-	/** Inner and outer colors of a normal node */
-	private static int nnc1, nnc2;
-
-	/** Inner and outer colors of a selected node */
-	private static int nsc1, nsc2;
-
-	/** Inner and outer colors of a disabled node */
-	private static int ndc1, ndc2;
-
-	/** background */
-	private static int bg;
+	private final ICommandManager cmdMgr;
+	private Vector endGameActions;
 
 	/** game */
 	private Game game;
 	int[][] node = new int[NB_NODES][2];
 
-	static final String[] NODE_LABELS = {"1", "2", "3", "4", "5", "6"};
-
-	private int width;
-	private int height;
+	private final int width;
+	private final int height;
 	private Font fntLabel;
 	private int heightFntLabel;
 	private Font fntPlayerInfo;
@@ -68,50 +49,22 @@ class GameBoard extends Canvas implements IDynamicUI, CommandListener {
 	/**
 	 * Creates a new screen to play.
 	 * 
-	 * @param singlePlayer
-	 *            <code>true</code> to play against the computer,
-	 *            <code>false</code> to play against a human opponent.
+	 * @param g
+	 *            the game to be displayed on this game board.
 	 */
-	GameBoard(boolean singlePlayer) {
+	GameBoard(Game g) {
 		ColorMgmt.setDisplay(Sim.getDisplay());
+		cmdMgr = new SimpleCommandManager(this);
 
-		p1c1 = ColorMgmt.p1c1;
-		p1c2 = ColorMgmt.p1c2;
-		p2c1 = ColorMgmt.p2c1;
-		p2c2 = ColorMgmt.p2c2;
-		nc1 = ColorMgmt.nc1;
-		nc2 = ColorMgmt.nc2;
-		nnc1 = ColorMgmt.nnc1;
-		nnc2 = ColorMgmt.nnc2;
-		nsc1 = ColorMgmt.nsc1;
-		nsc2 = ColorMgmt.nsc2;
-		ndc1 = ColorMgmt.ndc1;
-		ndc2 = ColorMgmt.ndc2;
-		bg = ColorMgmt.bg;
+		setGame(g);
 
-		// start a new Game()
-		this.single = singlePlayer;
-		if (singlePlayer) {
-			setGame(new GameRandomAI());
-		} else {
-			setGame(new GameUndoable()); // two player game
-		}
 		// always start randomly
 		game.startRandom();
-
-		// add cancel command
-		addCommand(CMD_CANCEL);
-		setCommandListener(this);
 
 		width = getWidth();
 		height = getHeight();
 		Logger.debug(getClass(), "pointer events: " + hasPointerEvents());
 		setDisplayParameters(false);
-	}
-
-	/** Creates a new screen to play. Two human players. */
-	GameBoard() {
-		this(false);
 	}
 
 	/**
@@ -122,7 +75,15 @@ class GameBoard extends Canvas implements IDynamicUI, CommandListener {
 	 */
 	public void setGame(Game g) {
 		this.game = g;
-		game.start();
+		g.setDynamicUI(this);
+	}
+
+	/**
+	 * Returns the game.
+	 * @return the game.
+	 */
+	public Game getGame() {
+		return game;
 	}
 
 	/** @see Canvas#keyPressed(int) */
@@ -148,15 +109,15 @@ class GameBoard extends Canvas implements IDynamicUI, CommandListener {
 
 		this.graphics = g;
 		//fixNodePosition();
-		graphics.setColor(bg);
+		graphics.setColor(ColorMgmt.bg);
 		graphics.fillRect(0, 0, width, height);
 
 		if (game.getWinner() != 0) {
-			addCommand(CMD_NEWGAME);
+			showEndGameActions();
 		}
 
-		int c1 = nc1;
-		int c2 = nc2;
+		int c1 = ColorMgmt.nc1;
+		int c2 = ColorMgmt.nc2;
 
 		// draw edges
 		for (i = 0; i < NB_NODES; i++) {
@@ -164,18 +125,18 @@ class GameBoard extends Canvas implements IDynamicUI, CommandListener {
 
 				switch (game.getEdgeOwner(i, j)) {
 					case Game.NEUTRAL :
-						c1 = nc1;
-						c2 = nc2;
+						c1 = ColorMgmt.nc1;
+						c2 = ColorMgmt.nc2;
 						break;
 
 					case Game.PLAYER1 :
-						c1 = p1c1;
-						c2 = p1c2;
+						c1 = ColorMgmt.p1c1;
+						c2 = ColorMgmt.p1c2;
 						break;
 
 					case Game.PLAYER2 :
-						c1 = p2c1;
-						c2 = p2c2;
+						c1 = ColorMgmt.p2c1;
+						c2 = ColorMgmt.p2c2;
 						break;
 				}
 
@@ -187,14 +148,14 @@ class GameBoard extends Canvas implements IDynamicUI, CommandListener {
 		// draw corners
 		for (i = 0; i < NB_NODES; i++) {
 			if (game.isDisabled(i)) {
-				c1 = ndc1;
-				c2 = ndc2;
+				c1 = ColorMgmt.ndc1;
+				c2 = ColorMgmt.ndc2;
 			} else if (game.isActivated(i)) {
-				c1 = nsc1;
-				c2 = nsc2;
+				c1 = ColorMgmt.nsc1;
+				c2 = ColorMgmt.nsc2;
 			} else {
-				c1 = nnc1;
-				c2 = nnc2;
+				c1 = ColorMgmt.nnc1;
+				c2 = ColorMgmt.nnc2;
 			}
 
 			// draw circles
@@ -211,6 +172,54 @@ class GameBoard extends Canvas implements IDynamicUI, CommandListener {
 		graphics.setFont(fntPlayerInfo);
 		drawInfo(game.getMoveMessage());
 		drawWinner(game.getWinner());
+	}
+
+	/**
+	 * Adds an action that will be visible to the user at the end of the game.
+	 * 
+	 * @param acEndGame the action command to be added.
+	 */
+	public void addEndGameAction(ActionCommand acEndGame) {
+		if (endGameActions == null) {
+			endGameActions = new Vector(1);
+		}
+		endGameActions.addElement(acEndGame);
+	}
+
+	/**
+	 * Shows the end game actions.
+	 */
+	private void showEndGameActions() {
+		if (game instanceof GameRandomAI) {
+			addNewGameAction(new GameRandomAI());
+		} else if (game instanceof GameUndoable) {
+			addNewGameAction(new GameUndoable());
+		}
+		// see if there are actions for the end of the game
+		if (endGameActions != null && !endGameActions.isEmpty()) {
+			Enumeration enum = endGameActions.elements();
+			while (enum.hasMoreElements()) {
+				ActionCommand ac = (ActionCommand) enum.nextElement();
+				cmdMgr.addActionCommand(ac);
+			}
+		}
+	}
+
+	/**
+	 * Adds an action for the new game command.
+	 * @param g
+	 *            the game to be started.
+	 */
+	private void addNewGameAction(final Game g) {
+		Action a = new Action() {
+			/** @see Action#execute(Displayable) */
+			public void execute(Displayable d) {
+				GameBoard board = new GameBoard(g);
+				Sim.setDisplay(board);
+				g.startRandom();
+			}
+		};
+		cmdMgr.addCommand(CMD_NEWGAME, a);
 	}
 
 	private void drawInfo(String s, boolean winMsg) {
@@ -303,26 +312,18 @@ class GameBoard extends Canvas implements IDynamicUI, CommandListener {
 
 	}
 
-	/** @see CommandListener#commandAction(Command, Displayable) */
-	public void commandAction(Command c, Displayable d) {
-		Display display = Sim.getDisplay();
-
-		Displayable displayable = null;
-		if (c == CMD_CANCEL) {
-			displayable = Sim.getMainScreen();
-		} else if (c == CMD_NEWGAME) {
-			displayable = new GameBoard(single);
-		}
-
-		if (displayable != null) {
-			display.setCurrent(displayable);
-		}
+	/**
+	 * Returns the command manager.
+	 * @return Returns the command manager.
+	 */
+	public ICommandManager getCommandManager() {
+		return cmdMgr;
 	}
 
 	/**
 	 * This implementation directly calls {@link Canvas#repaint()}.
 	 * 
-	 * @see at.einspiel.simme.client.ui.IDynamicUI#updateDisplay()
+	 * @see at.einspiel.midp.ui.IDynamicUI#updateDisplay()
 	 */
 	public void updateDisplay() {
 		repaint();

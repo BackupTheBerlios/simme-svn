@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: DynamicUI.java
-//                  $Date: 2004/09/21 16:20:39 $
-//              $Revision: 1.13 $
+//                  $Date: 2004/09/22 18:25:42 $
+//              $Revision: 1.14 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -12,6 +12,10 @@ import javax.microedition.lcdui.*;
 
 import at.einspiel.logging.Logger;
 import at.einspiel.messaging.*;
+import at.einspiel.midp.ui.*;
+import at.einspiel.midp.ui.Action;
+import at.einspiel.midp.ui.ICommandManager;
+import at.einspiel.midp.ui.IDynamicUI;
 import at.einspiel.simme.client.Game;
 import at.einspiel.simme.client.Sim;
 import at.einspiel.simme.client.net.NetworkGame;
@@ -68,14 +72,13 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 		Logger.debug(getClass(), "command " + cmd.getLabel() + " executed");
 		if (cmd == UIUtils.CMD_CANCEL) {
 			// exit simme online
-			Sim.getDisplay().setCurrent(Sim.getMainScreen());
+			Sim.setDisplay(Sim.getMainScreen());
 		} else if (cmd == UIUtils.CMD_CONTINUE) {
 			// refresh the current display
 			connect();
 		} else if (cmd == CMD_MAIN) {
 			// reconnect ot default id (main menu)
-			sui.getInfoObject().setDefaultId();
-			updateNecessary = true;
+			gotoMainMenu();
 			connect();
 		} else { // only list selection left
 			Request r = handleCommand();
@@ -86,6 +89,16 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 			// dynamic user interface will be updated automatically
 			sui.update(r);
 		}
+	}
+
+	/**
+	 * Prepares all steps necessary to go to the SimME online main menu. A
+	 * subsequent call to {@linkplain #connect()}leads to the display of the
+	 * main menu.
+	 */
+	void gotoMainMenu() {
+		sui.getInfoObject().setDefaultId();
+		updateNecessary = true;
 	}
 
 	/**
@@ -136,7 +149,7 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 		// point field disp to temporary display
 		this.disp = d;
 
-		Sim.getDisplay().setCurrent(disp);
+		Sim.setDisplay(disp);
 		Logger.debug(getClass(), "Display set to " + disp);
 	}
 
@@ -155,8 +168,7 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 			// build game with xml information
 			final Game g = new NetworkGame(infoObject.getXmlInfo(), Sim.getNick(), sui
 					.getCommPath());
-			newDisp = new GameBoard(false);
-			g.setDynamicUI((IDynamicUI) newDisp);
+			newDisp = new GameBoard(g);
 			// start game in own thread, UI will be updated correctly
 			Thread t = new StartGameThread((GameBoard) newDisp, g);
 			t.start();
@@ -201,12 +213,12 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 		}
 
 		//l.addCommand(List.SELECT_COMMAND);
-		
+
 		// add a "main menu" button to the list, if its id is not the default id
 		if (infoObject.getId() != ISimpleInfo.DEFAULT_ID) {
 			l.addCommand(CMD_MAIN);
 		}
-		
+
 		// some elements are in the list, so return the rest
 		updateNecessary = false;
 		return l;
@@ -214,27 +226,52 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 
 	class StartGameThread extends Thread {
 
-		private final GameBoard zeichenblatt;
+		private final GameBoard board;
 		private final Game g;
 
 		/**
 		 * Creates a new instance of <code>StartGameThread</code>.
-		 * @param zeichenblatt
+		 * @param board
+		 *            the game board.
 		 * @param g
+		 *            the game.
 		 */
-		public StartGameThread(GameBoard zeichenblatt, Game g) {
-			this.zeichenblatt = zeichenblatt;
+		StartGameThread(GameBoard board, Game g) {
+			this.board = board;
 			this.g = g;
 		}
 
 		/** @see java.lang.Thread#run() */
 		public void run() {
+			ICommandManager mgr = board.getCommandManager();
+			
+			// create an action that reconnects to the SimME online main menu
+			Action gotoMainAction = new Action() {
+				/** @see Action#execute(Displayable) */
+				public void execute(Displayable d) {
+					// TODO insert user acknowledgement
+					gotoMainMenu();
+					connect();
+				}
+			};
+			
+			// add the give up action to the command manager.
+			Command cmdGiveUp = new Command("Aufgeben", Command.SCREEN, 2);
+			mgr.addCommand(cmdGiveUp, gotoMainAction);
+
+			// add the ok action for the end of the game
+			Command cmdOk = new Command("OK", Command.OK, 4);
+			board.addEndGameAction(new ActionCommand(gotoMainAction, cmdOk));
+			
+			
 			try {
+				// wait for user interface to initializse
 				sleep(1500);
 			} catch (InterruptedException e) {
 				Logger.error("Error while trying to sleep thread", e);
 			}
-			zeichenblatt.setGame(g);
+
+			g.start();
 		}
 
 	}

@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: GameModeForm.java
-//               $Date: 2004/09/16 08:30:35 $
-//           $Revision: 1.15 $
+//               $Date: 2004/09/22 18:25:42 $
+//           $Revision: 1.16 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -13,6 +13,10 @@ import javax.microedition.lcdui.*;
 import at.einspiel.logging.Logger;
 import at.einspiel.messaging.LoginMessage;
 import at.einspiel.messaging.LoginRequest;
+import at.einspiel.midp.ui.Action;
+import at.einspiel.midp.ui.ICommandManager;
+import at.einspiel.simme.client.GameRandomAI;
+import at.einspiel.simme.client.GameUndoable;
 import at.einspiel.simme.client.Sim;
 import at.einspiel.simme.client.util.PersonalPrefs;
 import at.einspiel.simme.client.util.PrefsException;
@@ -38,6 +42,8 @@ import at.einspiel.simme.client.util.UIUtils;
  */
 public class GameModeForm extends List implements CommandListener {
 
+	private static final Command CMD_CANCEL = new Command("Beenden", Command.BACK, 1);
+
 	private static final String[] CHOICES = {"Internet Spiel", "vs Human", "vs Computer"};
 
 	/**
@@ -57,9 +63,10 @@ public class GameModeForm extends List implements CommandListener {
 		if (cmd.getCommandType() == Command.BACK) {
 			d.setCurrent(Sim.getMainScreen());
 		} else {
+			GameBoard board = null;
 			switch (getSelectedIndex()) {
 				case 0 :
-					// Internet Spiel
+					// internet game
 
 					try {
 						String[] personalInfo = PersonalPrefs.getPlayerInfo();
@@ -78,15 +85,24 @@ public class GameModeForm extends List implements CommandListener {
 					}
 
 				case 1 :
-					// Lokales Spiel (2 Spieler)
-					d.setCurrent(new GameBoard());
+					// local game (2 players)
+					board = new GameBoard(new GameUndoable());
 					break;
 
 				case 2 :
-					// Lokales Spiel (gg. Computer)
-					d.setCurrent(new GameBoard(true));
-					break;
+					// local game (vs. computer)
+					board = new GameBoard(new GameRandomAI());
 
+			}
+			if (board != null) {
+				d.setCurrent(board);
+				ICommandManager cmdMgr = board.getCommandManager();
+				cmdMgr.addCommand(CMD_CANCEL, new Action() {
+					/** @see Action#execute(Displayable) */
+					public void execute(Displayable display) {
+						Sim.setDisplay(GameModeForm.this);
+					}
+				});
 			}
 		}
 	}
