@@ -89,7 +89,9 @@ class Zeichenblatt extends Canvas implements CommandListener {
     * @see Canvas#keyPressed(int)
     */
    public void keyPressed(int keyCode) {
-      if ((keyCode >= KEY_NUM1) && (keyCode <= KEY_NUM6)) {
+      if ((keyCode >= KEY_NUM1) && (keyCode <= KEY_NUM6) ||
+          (keyCode == KEY_NUM0))
+      {
          int key = keyCode - 49;
 
          //System.out.println(key);
@@ -221,6 +223,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
       if (moveMessage != "")
       {
         g.drawString(moveMessage, width / 3, height - height / 6, 0);
+        return;
       }
       if (game.getWinner() == Game.PLAYER1) {
          g.drawString("Red wins", width / 3, height - height / 6, 0);
