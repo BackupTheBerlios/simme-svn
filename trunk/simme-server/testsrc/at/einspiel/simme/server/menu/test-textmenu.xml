@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<test>
+    <menus>
+        <text title="The Title" id="1" msg="testmessage1"/>
+        <text title="The Title" id="2" msg="testmessage2">
+            <msg>This message should be ignored</msg>
+        </text>
+        <text title="The Title" id="3">
+            <msg>
+                This is a longer message, that should be delivered to the client
+                without too much whitespace.
+
+                Paragraphs are separated by two newline elements. Only in this
+                case newlines should be applied on the client side.
+                That means that this sentence should appear in the second
+                paragraph.
+             </msg>
+        </text>
+    </menus>
+    <results>
+        <text title="The Title" id="1" list="false" msg="testmessage1"/>
+        <text title="The Title" id="2" list="false" msg="testmessage2"/>
+        <text title="The Title" id="3" list="false"><msg>This is a longer message, that should be delivered to the client without too much whitespace.
+
+Paragraphs are separated by two newline elements. Only in this case newlines should be applied on the client side. That means that this sentence should appear in the second paragraph.</msg></text>
+    </results>
+</test>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<test>
+    <menus>
+        <list title="text" id="0">
+            <child name="text1" id="1"/>
+            <child name="text2" id="2"/>
+        </list>
+        <list title="Willkommen" id="0">
+            <child name="Sofort Spielen" id="1"/>
+            <child name="Gegner Wählen" id="4"/>
+            <child name="Wer ist online?" id="5"/>
+            <child name="Spielerliste" id="6"/>
+            <child name="Hilfe" id="7"/>
+        </list>
+    </menus>
+    <results>
+        <list title="text" id="0" list="true"><child name="text1"/><child name="text2"/></list>
+        <list title="Willkommen" id="0" list="true"><child name="Sofort Spielen"/><child name="Gegner Wählen"/><child name="Wer ist online?"/><child name="Spielerliste"/><child name="Hilfe"/></list>
+    </results>
+</test>

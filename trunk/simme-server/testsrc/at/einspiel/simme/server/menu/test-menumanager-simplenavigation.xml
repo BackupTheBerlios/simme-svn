@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<menus>
+
+    <list title="Welcome" id="0" list="true">
+        <child name="First entry" id="1"/>
+        <child name="Second entry" id="2"/>
+        <child name="Third entry" id="3"/>
+    </list>
+
+    <text title="First" id="1" msg="testmessage1"/>
+
+    <text title="Second" id="2" msg="testmessage1"/>
+
+    <list title="Third" id="3" list="true">
+        <child name="Main screen - welcome" id="0"/>
+        <child name="First entry" id="1"/>
+        <child name="Second entry" id="2"/>
+    </list>
+
+</menus>
