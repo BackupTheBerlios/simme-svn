@@ -3,6 +3,26 @@
 
     <property file="ant-build.properties"/>
 
+	<path id="project.ant.path">
+		<fileset dir="${lib-ant}" includes="*.jar" />
+	</path>
+
+	<!-- Configure custom Ant tasks for the Manager application -->
+	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask">
+		<classpath refid="project.ant.path" />
+	</taskdef>
+	<taskdef name="remove" classname="org.apache.catalina.ant.RemoveTask">
+		<classpath refid="project.ant.path" />
+	</taskdef>
+	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask">
+		<classpath refid="project.ant.path" />
+	</taskdef>
+	<!-- Configure custom Ant tasks for try-catch (antelope.tigris.org) -->
+	<taskdef name="try" classname="ise.antelope.tasks.TryTask">
+		<classpath refid="project.ant.path" />
+	</taskdef>
+
+
     <target name="buildclient">
         <description>
             Builds the client classes by running the build file in the client
@@ -35,18 +55,48 @@
   		</copy>
     </target>
 
+	<!-- deployment -->
+	
     <target name="war" depends="build">
         <description>Builds the web archive for deployment.</description>
         <!-- create war -->
         <war basedir="${module}" destfile="${deploy.war}" webxml="${webxml}" index="true"/>
-        <!-- copy to deploy directory -->
-        <copy file="${deploy.war}" todir="${deploy.dir}" overwrite="true" />
     </target>
-    
+
+	<target name="deploy-dir" depends="war" description="Create WAR and copy it to deploy directory">
+        <copy file="${deploy.war}" todir="${deploy.dir}" overwrite="true" />
+	</target>
+	
+	<!-- effective deployment -->
+
+	<target name="-enter-deploy-user" unless="deploy.user">
+		<input message="Please enter user name for ${deploy.url}" addproperty="deploy.user" />
+	</target>
+
+	<target name="-enter-deploy-pass" unless="deploy.pass" depends="-enter-deploy-user">
+		<input message="Please enter password for ${deploy.user}@${deploy.url}" addproperty="deploy.pass" />
+	</target>
+
+	<target name="undeploy" depends="-enter-deploy-pass" description="Undeploys the current application">
+		<try break="no">
+			<remove path="/${module}" url="${deploy.url}" username="${deploy.user}" password="${deploy.pass}" />
+			<catch>
+				<echo>/${module} not found .. nothing removed</echo>
+			</catch>
+		</try>
+	</target>
+
+	<target name="deploy" depends="war, undeploy" description="Deploys the application.">
+		<echo>Deploying application to /${module} ...</echo>
+		<deploy path="/${module}" url="${deploy.url}" username="${deploy.user}" password="${deploy.pass}" war="file:${deploy.war}" />
+	</target>
+	
+	
     <!-- delete created classes -->
     <target name="clean">
         <delete dir="${cls}"/>
         <delete dir="${web-inf.classes}"/>
         <delete file="${deploy.war}"/>
     </target>
+	
 </project>
