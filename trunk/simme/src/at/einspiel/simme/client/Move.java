@@ -55,6 +55,14 @@ public class Move {
      * @param edge the edge index.
      */
     public Move(byte edge) {
+        setEdge(edge);
+    }
+
+    /**
+     * Sets the edge
+     * @param edge the edge
+     */
+    public void setEdge(byte edge) {
         if (edge < 0 || edge > MAX_EDGE_INDEX) {
             throw new IllegalArgumentException(
                 "Edge must be greater than 0 and less than " + MAX_EDGE_INDEX);

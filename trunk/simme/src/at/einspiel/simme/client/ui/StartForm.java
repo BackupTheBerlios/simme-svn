@@ -1,4 +1,6 @@
-package at.einspiel.simme.client;
+package at.einspiel.simme.client.ui;
+
+import at.einspiel.simme.client.Sim;
 
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.AlertType;

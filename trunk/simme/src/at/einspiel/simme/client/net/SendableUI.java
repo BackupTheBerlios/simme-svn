@@ -209,7 +209,7 @@ public class SendableUI {
             }
         } else if (xml.countChildren() == 1) {
             // single child ... must be information to create a game
-            xmlElement = (XMLElement) xml.getChildren().get(0);
+            xmlElement = (XMLElement) xml.getChildren().elementAt(0);
             xmlInfo = true;
         } else {
             text = xml.getAttribute("msg", "Warte...");

@@ -1,4 +1,9 @@
-package at.einspiel.simme.client;
+package at.einspiel.simme.client.ui;
+
+import at.einspiel.simme.client.Game;
+import at.einspiel.simme.client.GameRandomAI;
+import at.einspiel.simme.client.Sim;
+import at.einspiel.simme.client.util.DrawUtils;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Command;

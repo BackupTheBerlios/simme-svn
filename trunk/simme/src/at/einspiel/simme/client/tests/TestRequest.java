@@ -1,8 +1,6 @@
 package at.einspiel.simme.client.tests;
 
 import at.einspiel.simme.client.net.Request;
-import at.einspiel.simme.client.tests.*;
-import tests.*;
 
 import java.io.IOException;
 

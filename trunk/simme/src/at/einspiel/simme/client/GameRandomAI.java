@@ -9,22 +9,20 @@ import java.util.Random;
  */
 public class GameRandomAI extends Game {
 
-  /** @see test.sim.Game#performComputerMove() */
-  protected void performComputerMove() {
-    Random random = new Random();
-    byte firstNode = (byte) java.lang.Math.abs((random.nextInt() % NB_NODES));
-    byte secondNode = (byte) java.lang.Math.abs((random.nextInt() % NB_NODES));
-    if (!gameOver) {
-      while ((getEdgeOwner(firstNode, secondNode) != NEUTRAL) || (firstNode == secondNode)) {
-        firstNode = (byte) java.lang.Math.abs((random.nextInt() % NB_NODES));
-        secondNode = (byte) java.lang.Math.abs((random.nextInt() % NB_NODES));
-      }
+    /** @see test.sim.Game#performComputerMove() */
+    protected void performComputerMove() {
 
-      setEdgeOwner(firstNode, secondNode);
+        if (!gameOver) {
+            Random random = new Random();
+            byte edge = (byte) Math.abs(random.nextInt() % NB_EDGES);
+            while (getEdgeOwner(edge) != NEUTRAL) {
+                edge = (byte) Math.abs(random.nextInt() % NB_EDGES);
+            }
+            setEdgeOwner(edge);
 
-      // switch players and see if someone has won
-      endTurn(firstNode, secondNode);
+            // switch players and see if someone has won
+            endTurn(new Move(edge));
+        }
     }
-  }
 
 }

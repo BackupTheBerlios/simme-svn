@@ -1,4 +1,4 @@
-package at.einspiel.simme.client;
+package at.einspiel.simme.client.ui;
 
 import javax.microedition.lcdui.Display;
 

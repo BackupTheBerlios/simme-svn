@@ -1,4 +1,4 @@
-package at.einspiel.simme.client;
+package at.einspiel.simme.client.ui;
 
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.AlertType;
@@ -20,7 +20,7 @@ public class Info {
     BUF.append("Verbindung und markiert sie in seiner Farbe usw.\n\n");
     BUF.append("Der erste Spieler der in seiner Farbe ein Dreieck formt ");
     BUF.append("hat verloren. Ziel ist es also zu vermeiden, ein Dreieck zu");
-    BUF.append("formen und den Gegenspieler zum \"dreiecken\" zu drängen.");
+    BUF.append("formen und den Gegenspieler zum \"Dreiecken\" zu drängen.");
     BUF.append("\n\n");
     BUF.append("Um eine Verbindung auszuwählen, drückt man auf eine ");
     BUF.append("Zahl zwischen 1 und 6 um den ersten Knoten zu markieren ");

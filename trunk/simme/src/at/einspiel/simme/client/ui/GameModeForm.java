@@ -1,4 +1,10 @@
-package at.einspiel.simme.client;
+package at.einspiel.simme.client.ui;
+
+import at.einspiel.simme.client.Sim;
+import at.einspiel.simme.client.net.LoginMessage;
+import at.einspiel.simme.client.net.LoginResult;
+import at.einspiel.simme.client.util.PersonalPrefs;
+import at.einspiel.simme.client.util.PrefsException;
 
 import java.io.IOException;
 
@@ -9,11 +15,6 @@ import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.List;
-
-import at.einspiel.simme.client.net.LoginMessage;
-import at.einspiel.simme.client.net.LoginResult;
-import at.einspiel.simme.client.util.PersonalPrefs;
-import at.einspiel.simme.client.util.PrefsException;
 
 /**
  * @author Jorge

@@ -4,7 +4,6 @@ import java.util.Stack;
 
 import at.einspiel.simme.nanoxml.XMLElement;
 
-
 /**
  * Represents a single game with all its states. Provides methods to start,
  * end, pause a game and uses a <code>Canvas</code> to draw itself to the
@@ -15,7 +14,7 @@ import at.einspiel.simme.nanoxml.XMLElement;
 public class Game {
 
     /** Number of Edges */
-    private static final int NB_EDGES = 15;
+    static final int NB_EDGES = 15;
     /** Number of Nodes */
     static final byte NB_NODES = 6;
 
@@ -51,6 +50,8 @@ public class Game {
     /** the move message */
     private String moveMessage = "";
 
+    private Move tmpMove;
+
     /**
      * Initializes a new game and starts it.
      *
@@ -77,6 +78,7 @@ public class Game {
             // set to some default values
             setGameInfo("Player 1", "Player 2", "AT", "AT");
         }
+        tmpMove = new Move((byte) 0);
         start();
     }
 
@@ -163,35 +165,40 @@ public class Game {
             moveMessage = (index + 1) + " already chosen!";
 
             return false;
-        } else { // a second node is activated
-            // test if edge still not owner by P1 nor P2
-
-            if (getEdgeOwner(activeNode, index) == NEUTRAL) {
-                return drawEdge(index);
-            } else {
-                moveMessage = "Edge selected!";
-
-                return false;
-            }
+        } else {
+            // select the second node
+            return edgeTo(index);
         }
     }
 
-    private boolean drawEdge(byte edgeIndex) {
-        setEdgeOwner(activeNode, edgeIndex);
+    /**
+     * Selects the edge.
+     * @param edgeIndex the index of the edge to be selected.
+     * @return whether the edge was successfully selected.
+     */
+    public boolean selectEdge(byte edgeIndex) {
+        byte owner = getEdgeOwner(edgeIndex);
+        if (owner != NEUTRAL) {
+            moveMessage = "Edge selected!";
+            return false;
+        }
+
+        // deselect nodes, if contained in edge
+        byte[] edgeNodes = Move.getNodeIndices(edgeIndex);
+        nodes[edgeNodes[0]].activated = false;
+        nodes[edgeNodes[1]].activated = false;
+        activeNode = -1;
+
+        setEdgeOwner(edgeIndex);
 
         // switch players and see if someone has won
-        endTurn(activeNode, edgeIndex);
+        tmpMove.setEdge(edgeIndex);
+        endTurn(tmpMove);
 
         performComputerMove();
 
-        // deselect active node
-        nodes[activeNode].activated = false;
-        activeNode = -1;
-
         // disable node to be disabled
         disableNodes();
-
-        moveMessage = null;
 
         if (gameOver) {
             if (currentPlayer) {
@@ -199,27 +206,16 @@ public class Game {
             } else {
                 moveMessage = "You win!";
             }
+        } else { // reset move message
+            moveMessage = null;
         }
 
         return true;
+
     }
 
-    private boolean undo() {
-        // undo
-        if (gameOver) {
-            currentPlayer = !currentPlayer;
-            gameOver = false;
-        }
-
-        if (undoTurn()) {
-            moveMessage = "Undo successful!";
-
-            return true;
-        } else {
-            moveMessage = "Undo not possible!";
-
-            return false;
-        }
+    private boolean edgeTo(byte secondNode) {
+        return selectEdge(Move.getEdgeIndex(activeNode, secondNode));
     }
 
     /** 
@@ -264,7 +260,7 @@ public class Game {
      * @param a First node of last edge drawn.
      * @param b Second node of last edge drawn.
      */
-    void endTurn(byte a, byte b) {
+    void endTurn(Move m) {
         // only the player who just did his move may lose.
         byte player = currentPlayer ? PLAYER1 : PLAYER2;
 
@@ -272,9 +268,9 @@ public class Game {
 
         // if someone has lost, last edge drawn was deciding
         for (byte c = 0; c < NB_NODES; c++) {
-            if ((c != a) && (c != b)) {
+            if ((c != m.n1) && (c != m.n2)) {
                 // find triangle
-                if ((getEdgeOwner(a, c) == player) && (getEdgeOwner(b, c) == player)) {
+                if ((getEdgeOwner(m.n1, c) == player) && (getEdgeOwner(m.n2, c) == player)) {
                     gameOver = true;
 
                     return;
@@ -285,9 +281,28 @@ public class Game {
         currentPlayer = !currentPlayer;
     }
 
+    private boolean undo() {
+        // undo
+        if (gameOver) {
+            currentPlayer = !currentPlayer;
+            gameOver = false;
+        }
+
+        if (undoTurn()) {
+            moveMessage = "Undo successful!";
+
+            return true;
+        } else {
+            moveMessage = "Undo not possible!";
+
+            return false;
+        }
+    }
+
+
     /**
      * Undos last edge operation.
-     *
+     * @return whether undo has been performed.
      */
     private boolean undoTurn() {
         byte edgeIdx = -1;
@@ -302,7 +317,6 @@ public class Game {
 
             return true;
         } else {
-            // System.out.println("Undo not possible!\n");
             return false;
         }
     }
@@ -377,10 +391,8 @@ public class Game {
         return currentPlayer ? PLAYER2 : PLAYER1;
     }
 
-    void setEdgeOwner(byte nodeA, byte nodeB) {
-        byte index = Move.getEdgeIndex(nodeA, nodeB);
+    void setEdgeOwner(byte index) {
         edges[index] = currentPlayer ? PLAYER1 : PLAYER2;
-
         undoStack.push(new Byte(index));
     }
 
@@ -390,19 +402,33 @@ public class Game {
      *
      * @param nodeA The first node.
      * @param nodeB The second node.
-     *
      * @return The owner of the edge between <code>nodeA</code> and
-     *         <code>nodeB</code> indicated by {@link #NEUTRAL}, {@link
-     *         #PLAYER1}, or {@link #PLAYER2}.
+     *          <code>nodeB</code> indicated by {@link #NEUTRAL}, {@link
+     *          #PLAYER1}, or {@link #PLAYER2}.
+     * 
+     * @see #getEdgeOwner(byte)
      */
     public byte getEdgeOwner(byte nodeA, byte nodeB) {
         if (nodeA == nodeB) {
             return NEUTRAL;
         }
 
-        byte owner = edges[Move.getEdgeIndex(nodeA, nodeB)];
+        return getEdgeOwner(Move.getEdgeIndex(nodeA, nodeB));
+    }
 
-        return owner;
+    /**
+     * Returns the owner of the edge identified by <code>edgeIndex</code>.
+     * 
+     * @param edgeIndex the index.
+     * @return the owner of the edge indicated by {@link #NEUTRAL}, {@link
+     *          #PLAYER1}, or {@link #PLAYER2}. 
+     * 
+     * @throws ArrayIndexOutOfBoundsException if <code>edgeIndex</code> is not
+     *          between 0 and 14 (including).
+     * @see #getEdgeOwner(byte, byte)
+     */
+    public byte getEdgeOwner(byte edgeIndex) throws ArrayIndexOutOfBoundsException {
+        return edges[edgeIndex];
     }
 
     /**

@@ -1,4 +1,4 @@
-package at.einspiel.simme.client;
+package at.einspiel.simme.client.util;
 
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;

@@ -1,5 +1,7 @@
 package at.einspiel.simme.client;
 
+import at.einspiel.simme.client.ui.StartForm;
+
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.List;
 import javax.microedition.lcdui.Screen;
@@ -23,7 +25,7 @@ public class Sim extends MIDlet {
   }
 
   /** @see MIDlet#destroyApp(boolean) */
-  protected void destroyApp(boolean arg0) {
+  public void destroyApp(boolean b) {
   }
 
   /** @see MIDlet#pauseApp() */

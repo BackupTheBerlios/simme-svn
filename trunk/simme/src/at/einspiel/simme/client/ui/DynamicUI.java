@@ -1,4 +1,9 @@
-package at.einspiel.simme.client;
+package at.einspiel.simme.client.ui;
+
+import at.einspiel.simme.client.Game;
+import at.einspiel.simme.client.Sim;
+import at.einspiel.simme.client.net.Request;
+import at.einspiel.simme.client.net.SendableUI;
 
 import java.io.IOException;
 
@@ -12,9 +17,6 @@ import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.List;
 import javax.microedition.lcdui.StringItem;
-
-import at.einspiel.simme.client.net.Request;
-import at.einspiel.simme.client.net.SendableUI;
 
 /**
  * This class is intended to create dynamically a user interface from the
