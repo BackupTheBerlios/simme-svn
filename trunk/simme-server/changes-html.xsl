@@ -65,7 +65,7 @@
         <dt><xsl:text>Bug </xsl:text>
           <a>
             <xsl:attribute name="href">
-              <xsl:text>http://student.rise.tuwien.ac.at/cgi-bin/bugzilla/show_bug.cgi?id=</xsl:text>
+              <xsl:text>https://developer.berlios.de/bugs/?func=detailbug&amp;group_id=730&amp;bug_id=</xsl:text>
               <xsl:choose>
                 <xsl:when test="substring-before(@id, ',') = ''">
                   <xsl:value-of select="@id"/>
