@@ -8,7 +8,9 @@ import javax.microedition.io.ContentConnection;
 import javax.microedition.lcdui.*;
 
 /**
- * Provides mechanism to vote for simme (1-5).
+ * Provides mechanism to vote for simme. Marks from 1 to 5 are provided: 1=best,
+ * 5=worst. A message with the result is sent to a server and the user is
+ * provided a thank-you-message after voting.
  * 
  * @author kariem
  */
@@ -17,7 +19,7 @@ public class VotingForm extends List implements CommandListener {
    private Displayable caller;
 
    private static final String[] POINTS =
-      { "1 - spitze !", "2 - gut", "3 - naja", "4 - mmh", "5 - sauerei" };
+      { "1 - supa !", "2 - guat", "3 - naja", "4 - mmh", "5 - schmarrn" };
 
    private int proId = 6464;
    private int appId = 4526;
@@ -46,23 +48,24 @@ public class VotingForm extends List implements CommandListener {
          // calculate points
          int score = getSelectedIndex() + 1;
 
+         String title = null, alertText = null;
+         StringBuffer buf = new StringBuffer();
          try {
             String result =
                gzApiSetHighscore(proId, appId, voteId, score).trim();
             System.out.println("result: " + result);
+            buf.append("Sie haben SimME mit der Note \"");
+            buf.append(score);
+            buf.append("\" bewertet.\n\nWir bedanken uns für die Teilnahme.");
+            title = "Voting durchgeführt";
          } catch (IOException e) {
-            e.printStackTrace();
+            title = "Fehler";
+            buf.append("Beim Abschicken des Votings trat ein Fehler auf.");
+            buf.append("Versuchen Sie es bitte, zu einem späteren Zeitpunkt.");
+            buf.append("\n\nVielen Dank.");
          } finally {
-            StringBuffer text = new StringBuffer();
-            text.append("Sie haben SimME mit der Note ");
-            text.append(score);
-            text.append(" bewertet. Wir bedanken uns für die Teilnahme.");
-            Alert alert =
-               new Alert(
-                  "Voting abgeschickt",
-                  text.toString(),
-                  null,
-                  AlertType.INFO);
+            alertText = buf.toString();
+            Alert alert = new Alert(title, alertText, null, AlertType.INFO);
             d.setCurrent(alert, caller);
          }
       }
@@ -105,25 +108,20 @@ public class VotingForm extends List implements CommandListener {
             for (int i = 0; i < data.length; i++) {
                buffer.append((char) data[i]);
             }
-
          } else {
             int ch;
             while ((ch = is.read()) != -1) {
                buffer.append((char) ch);
             }
          }
-
       } finally {
          if (is != null) {
             is.close();
          }
-
          if (c != null) {
             c.close();
          }
       }
-
       return buffer.toString();
    }
-
 }

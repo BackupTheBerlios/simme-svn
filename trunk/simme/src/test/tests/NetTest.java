@@ -1,11 +1,9 @@
 package test.tests;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import junit.framework.TestCase;
 import test.sim.net.Request;
-import test.sim.net.XmlMessage;
 
 /**
  * Class used to Test class {@link test.sim.Game}
@@ -77,25 +75,6 @@ public class NetTest extends TestCase {
       assertEquals("user=username2&pwd=password", req.getParamString(true));
 
       req.sendRequest(SERVER, "doLogin.jsp");
-   }
-
-   /**
-    * Tests parse response into XML and print it
-    * 
-    * @throws IOException if a problem has occured while sending the request.
-    */
-   public void testXmlResponse() throws IOException {
-      req.setParam("user", "xmltest");
-      req.setParam("pwd", "password");
-      assertEquals("user=xmltest&pwd=password", req.getParamString(true));
-
-      req.sendRequest(SERVER, "doLogin.jsp");
-
-      XmlMessage msg = new XmlMessage(req.getResponse());
-      PrintWriter sysOut = new PrintWriter(System.out);
-      msg.write(sysOut);
-      sysOut.flush();
-      System.out.println();
    }
 
    /**

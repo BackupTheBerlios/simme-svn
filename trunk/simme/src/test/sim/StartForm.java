@@ -1,12 +1,6 @@
 package test.sim;
 
-import javax.microedition.lcdui.Alert;
-import javax.microedition.lcdui.AlertType;
-import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.CommandListener;
-import javax.microedition.lcdui.Display;
-import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.List;
+import javax.microedition.lcdui.*;
 
 /**
  * A Form that shows some options - main menu of the game.
@@ -29,7 +23,6 @@ public class StartForm extends List implements CommandListener {
       super("SimME", List.IMPLICIT, CHOICES, null);
       this.sim = sim;
       addCommand(new Command("Exit", Command.EXIT, 0));
-      addCommand(new Command("OK", Command.OK, 1));
       setCommandListener(this);
    }
 

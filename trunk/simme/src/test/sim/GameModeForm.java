@@ -17,8 +17,6 @@ public class GameModeForm extends List implements CommandListener {
    private static final String[] CHOICES =
       { "Internet Spiel", "Lokales Spiel" };
 
-   private Zeichenblatt zeichenblatt;
-
    /**
     * Creates a new Form where the user can choose between several types of
     * games.
@@ -39,14 +37,42 @@ public class GameModeForm extends List implements CommandListener {
 
          switch (getSelectedIndex()) {
             case 0 : // Internet Spiel
-               ConnectionAlert infoAlert = new ConnectionAlert("Verbinde");
+
+               // get preferences
+               PersonalPrefs prefs = PersonalPrefs.getInstance();
+               // load nick name, password and additional info
+               try {
+                  prefs.open();
+                  if (prefs.currentSize() == 0) {
+                     // empty prefs => error message
+                     StringBuffer buf = new StringBuffer();
+                     buf.append("Nickname und Password müssen eingegeben ");
+                     buf.append("werden. Gehen Sie bitte hierfür auf ");
+                     buf.append("\"Einstellungen|Internet\" im Hauptmenü.");
+                     throw new PrefsException(buf.toString());
+                  }
+                  prefs.load();
+               } catch (PrefsException pex) {
+                  Alert error =
+                     new Alert(
+                        "Fehler",
+                        pex.getMessage(),
+                        null,
+                        AlertType.ERROR);
+                  error.setTimeout(Alert.FOREVER);
+                  d.setCurrent(error, this);
+                  return;
+               }
+
+               ConnectionAlert infoAlert =
+                  new ConnectionAlert(prefs.getSavedData());
                d.setCurrent(infoAlert);
                infoAlert.startConnection(d);
 
                break;
 
             case 1 : // Lokales Spiel
-               zeichenblatt = new Zeichenblatt();
+               Zeichenblatt zeichenblatt = new Zeichenblatt();
                d.setCurrent(zeichenblatt);
 
                break;
@@ -55,62 +81,52 @@ public class GameModeForm extends List implements CommandListener {
    }
 
    private class ConnectionAlert extends Alert {
+      private String[] loginData;
+
       /**
        * Constructs an empty <code>InfoAlert</code> with the given title
        */
-      public ConnectionAlert(String title) {
-         super(title);
+      public ConnectionAlert(String[] data) {
+         super("Verbinde");
+         setString("Verbindung zum Server wird hergestellt.");
          setTimeout(LoginMessage.DEFAULT_TIMEOUT - 20); // 20 ms less
+         loginData = data;
+         for (int i = 0; i < data.length; i++) {
+            if (data[i] != null) {
+               System.out.println(i + ":" + data[i]);
+            }
+         }
+         System.out.println("connectionalert created");
       }
 
       /**
        * Initializes the connection and shows its output.
        */
       public void startConnection(final Display d) {
-         setString("Verbindung zum Server wird aufgebaut");
-
          // enter new thread, so that the user interface is updated correctly
          Thread t = new Thread() {
             /** @see java.lang.Thread#run() */
             public void run() {
                try {
-                  PersonalPrefs prefs = PersonalPrefs.getInstance();
-                  // load nick name, password and additional info
-                  try {
-                     prefs.open();
-                     if (prefs.currentSize() == 0) {
-                        // empty prefs => error message
-                        StringBuffer buf = new StringBuffer();
-                        buf.append("Nickname und Password müssen eingegeben ");
-                        buf.append("werden. Gehen Sie bitte hierfür auf ");
-                        buf.append("\"Einstellungen|Internet\" im Hauptmenü.");
-                        throw new PrefsException(buf.toString());
-                     }
-                     prefs.load();
-                  } catch (PrefsException pex) {
-                     // error occurred while loading
-                     Alert errorAlert =
-                        new Alert(
-                           "Fehler",
-                           pex.getMessage(),
-                           null,
-                           AlertType.ERROR);
-                     errorAlert.setTimeout(FOREVER);
-                     d.setCurrent(errorAlert);
-                     return;
-                  }
-                  // construct login message
-                  String[] loginData = prefs.getSavedData();
-                  String version = Sim.getProperty("MIDlet-Version");
-                  LoginMessage loginMsg =
-                     new LoginMessage(
-                        loginData[0],
-                        loginData[1],
-                        loginData[3],
-                        version);
+                  System.out.println("constructing message");
 
-                  //loginMsg.sendRequest("doLogin.jsp");
-                  loginMsg.sendRequest("doLogin.jsp");
+                  // construct login message
+                  String version = Sim.getProperty("MIDlet-Version");
+                  System.out.println(version);
+                  LoginMessage loginMsg = null;
+                  try {
+                     loginMsg =
+                        new LoginMessage(
+                           loginData[0],
+                           loginData[1],
+                           loginData[3],
+                           version);
+                  } catch (NullPointerException pppe) {
+                     pppe.printStackTrace();
+                  }
+
+                  System.out.println("sending message");
+                  loginMsg.sendRequest("doLogin");
 
                   // get response
                   String response = new String(loginMsg.getResponse());
@@ -125,7 +141,7 @@ public class GameModeForm extends List implements CommandListener {
                      //d.setCurrent(dUI.getDisplayable());
                      d.setCurrent(new OnlineForm());
                   } else {
-                     // no success => show info
+                     // no success => show cause
                      AlertType type =
                         result.isSucceed() ? AlertType.INFO : AlertType.ERROR;
                      Alert loginAlert =
@@ -135,10 +151,12 @@ public class GameModeForm extends List implements CommandListener {
                            null,
                            type);
                      loginAlert.setTimeout(FOREVER);
+                     System.out.println("login error");
                      d.setCurrent(loginAlert);
                   }
 
                } catch (IOException ioex) {
+                  System.out.println("connection error");
                   String errorMsg = ioex.getMessage();
                   // if errorMsg doesn't contain any information, show some standard text
                   if ((errorMsg == null) || (errorMsg.length() == 0)) {
