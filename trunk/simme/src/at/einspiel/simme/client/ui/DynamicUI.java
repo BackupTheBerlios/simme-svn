@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: DynamicUI.java
-//                  $Date: 2004/09/22 18:25:42 $
-//              $Revision: 1.14 $
+//                  $Date: 2004/09/22 19:11:39 $
+//              $Revision: 1.15 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -208,11 +208,12 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 		// if the list does not contain any elements, show a short textual info
 		if (l.size() == 0) {
 			updateNecessary = true;
+			// set default id here, so that client does not reconnect to the
+			// same empty page.
+			infoObject.setDefaultId();
 			return UIUtils.uneditableTextComponent("Leer",
 					"Zur Zeit befinden sich hier noch keine Einträge.");
 		}
-
-		//l.addCommand(List.SELECT_COMMAND);
 
 		// add a "main menu" button to the list, if its id is not the default id
 		if (infoObject.getId() != ISimpleInfo.DEFAULT_ID) {
