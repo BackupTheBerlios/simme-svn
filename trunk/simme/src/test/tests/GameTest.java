@@ -22,7 +22,11 @@ public class GameTest extends TestCase {
    private byte n5 = 5;
 
 
-   /** @see TestCase#setUp() */
+   /**
+    * Sets up the game which is used for the tests.
+    * 
+    * @see TestCase#setUp()
+    */
    protected void setUp() {
       g = new Game();
    }

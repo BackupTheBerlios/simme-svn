@@ -2,7 +2,6 @@ package test.sim;
 
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.Display;
-import javax.microedition.lcdui.Displayable;
 
 /**
  * Shows information on this game.
@@ -29,8 +28,6 @@ public class Info {
          + "sollte man sich nach der Wahl des ersten Knotens "
          + "umentscheiden kann man durch nochmaliges klicken auf die "
          + "selbe Taste den Knoten wieder deaktivieren. ";
-
-   private Displayable previous;
 
    private Info() {
    }
