@@ -1,15 +1,16 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: SessionManagerTest.java
-//                  $Date: 2004/09/07 13:30:36 $
-//              $Revision: 1.5 $
+//                  $Date: 2004/09/13 15:10:28 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
+
+import junit.framework.TestCase;
 
 import at.einspiel.base.User;
 import at.einspiel.base.UserException;
 import at.einspiel.db.UserDB;
-import junit.framework.TestCase;
 
 /**
  * Class to test the session manager
