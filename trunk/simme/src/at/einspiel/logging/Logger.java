@@ -1,10 +1,12 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: Logger.java
-//                  $Date: 2004/09/07 13:21:08 $
-//              $Revision: 1.3 $
+//                  $Date: 2004/09/13 15:19:26 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package at.einspiel.logging;
+
+import java.io.PrintStream;
 
 /**
  * This class provides a simple logging interface for the whole application. For
@@ -42,27 +44,48 @@ public class Logger {
 	 * </p>
 	 * 
 	 * @param c
-	 *            the class which has called the log method.
+	 *            the class which has called the log method. This parameter may
+	 *            be <code>null</code>.
 	 * 
 	 * @param message
 	 *            the message.
 	 * @param lvl
 	 *            the log level.
+	 * @param t
+	 *            additional info on the cause. This parameter may be
+	 *            <code>null</code>.
 	 */
-	static void log(Class c, String message, int lvl) {
+	static void log(Class c, String message, int lvl, Throwable t) {
 		if (c != null) {
 			message = addClassInfo(message, c);
 		}
+		if (t != null) {
+			message = message + ": " + t.getMessage();
+		}
 		message = addLevelInfo(message, lvl);
 		if (lvl >= verboseLevel) {
+			final PrintStream ps;
 			// log to stdout or stderr accordingly
 			if (lvl == LVL_DEBUG || lvl == LVL_INFO) {
-				System.out.println(message);
+				ps = System.out;
 			} else {
-				System.err.println(message);
+				ps = System.err;
+			}
+			ps.println(message);
+			// add stack trace if necessary
+			if (t != null) {
+				t.printStackTrace();
 			}
 		}
 		appendToLog(message);
+	}
+
+	static void log(Class c, String message, int lvl) {
+		log(c, message, lvl, null);
+	}
+
+	static void log(String message, int lvl, Throwable t) {
+		log(null, message, lvl, t);
 	}
 
 	static void log(String message, int lvl) {
@@ -100,8 +123,8 @@ public class Logger {
 	private static String addClassInfo(String message, Class c) {
 		String name = c.getName();
 		int dotPos = name.lastIndexOf('.');
-		return "#" + name.substring(dotPos + 1) + "# " + message + "  \t_"
-				+ Thread.currentThread();
+		return "#" + name.substring(dotPos + 1) + "# " + message;
+		//+ " \t_" + Thread.currentThread();
 	}
 
 	/**
@@ -172,12 +195,24 @@ public class Logger {
 
 	/**
 	 * Reports an error message to the logger.
+	 * @param message
+	 *            the message.
+	 * @param t
+	 *            a throwable that cause the error. This might be
+	 *            <code>null</code>.
+	 */
+	public static void error(String message, Throwable t) {
+		log(message, LVL_ERROR, t);
+	}
+
+	/**
+	 * Reports an error message to the logger.
 	 * 
 	 * @param message
 	 *            the error message.
 	 */
 	public static void error(String message) {
-		log(message, LVL_ERROR);
+		error(message, null);
 	}
 
 	/**
