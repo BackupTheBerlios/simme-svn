@@ -112,6 +112,15 @@ public class SessionManager {
    public int getNumberOfUsers() {
       return users.size();
    }
+   
+   /**
+    * Returns an iterator over the currently managed users
+    * 
+    * @return an <code>Iterator</code> running over currently managed users.
+    */
+   public Iterator userIterator() {
+      return users.values().iterator();
+   }
 
    private class UserUpdater extends Thread {
 

@@ -75,4 +75,28 @@ public class ManagedUser extends User {
    public void update() {
       lastStatusUpdate = System.currentTimeMillis();
    }
+
+   /**
+    * Shows the state of the user in a String representation.
+    * 
+    * @return User's state as String.
+    */
+   public String getStateAsString() {
+      String state = "unknown";
+      switch (getState()) {
+         case STATE_IDLE :
+            state = "idle";
+            break;
+
+         case STATE_PLAYING :
+            state = "playing";
+            break;
+
+         case STATE_WAITING :
+            state = "waiting";
+            break;
+
+      }
+      return state;
+   }
 }
