@@ -1,7 +1,8 @@
-package at.einspiel.simme.server.management;
+package at.einspiel.simme.server;
 
-import at.einspiel.simme.client.net.Message;
-import at.einspiel.simme.server.messaging.SimpleClientMessage;
+import at.einspiel.messaging.Message;
+import at.einspiel.messaging.SimpleClientMessage;
+import at.einspiel.mgmt.*;
 
 /**
  * <p>Models the user's state. This class has three main state categories for
@@ -143,7 +144,6 @@ public class UserState {
          * <code>DetailedState</code> with a string that initiates the change.
          * 
          * @param changeString the string which changes the state
-         * @return a new <code>DetailedState</code>
          * 
          * @throws StateException if the given <code>changeString</code> does
          *         not change the state or has produced an error.

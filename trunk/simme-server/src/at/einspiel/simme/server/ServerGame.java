@@ -1,16 +1,19 @@
-package at.einspiel.simme.server.base;
+package at.einspiel.simme.server;
 
 import java.util.Date;
 
+import at.einspiel.base.*;
+import at.einspiel.base.Result;
+import at.einspiel.base.User;
 import at.einspiel.simme.client.Game;
 import at.einspiel.simme.client.Move;
 
 /**
- * Represents a game that is played between two users.
+ * Represents a simme game that is played between two users.
  *
  * @author kariem
  */
-public class ServerGame {
+public class ServerGame implements IGame {
 
     private static final int ACCURACY = 1000;
 
@@ -50,9 +53,12 @@ public class ServerGame {
             throw new RuntimeException("Users have same nick names.");
         }
 
-        this.player1 = p1;
-        this.player2 = p2;
         game = new Game();
+        if (Math.random() > 0.5) {
+            setPlayers(p1, p2);
+        } else {
+            setPlayers(p2, p1);
+        }
         setDate(new Date());
 
         // set id to something unique
@@ -61,6 +67,17 @@ public class ServerGame {
         // initialize game status
         running = false;
         gameover = false;
+    }
+
+    /**
+     * Sets the players for this game.
+     * @param p1 player 1.
+     * @param p2 player 2.
+     */
+    public void setPlayers(User p1, User p2) {
+        this.player1 = p1;
+        System.out.println(p1.getNick() + " is the first player.");
+        this.player2 = p2;
     }
 
     /** initializes the game */
@@ -152,7 +169,7 @@ public class ServerGame {
             started = true;
         }
 
-        long pause() {
+        long elapsed() {
             pause(System.currentTimeMillis());
             return lastDuration;
         }
@@ -191,43 +208,85 @@ public class ServerGame {
     }
 
     /**
+     * Performs the given move for a user.
+     * @param u the user.
+     * @param m the move to perform.
+     * @return the move's result.
+     */
+    public Result makeMove(User u, Move m) {
+        return selectEdge(u, m.getEdge()) ? Result.POSITIVE : Result.NEGATIVE;
+    }    
+    
+    /**
      * Performs the given move.
      * 
      * @param m the move to perform.
      * @return the move's result.
      */
     public Result makeMove(Move m) {
-        return selectEdge(m.getEdge()) ? Result.POSITIVE : Result.NEGATIVE;
+        return makeMove(null, m);
     }
 
     /**
      * Selects an edge in the game on the server.
      * 
-     * @param edge the edge to select (between 0 and 14)
+     * @param u the user who performs the move.
+     * @param edge the edge to select (between 0 and 14).
      * @return whether the selection has succeeded.
      */
-    public boolean selectEdge(byte edge) {
+    public boolean selectEdge(User u, byte edge) {
         if (isRunning()) {
             byte playersTurn = game.getPlayersTurn();
-            if (playersTurn == Game.NEUTRAL) {
-                return false; // do nothing
-            }
+            if (isOnTurn(u, playersTurn)) {
 
-            // make move
-            boolean edgeSelection = game.selectEdge(edge);
-            if (edgeSelection) {
-                long duration = stopwatch.pause();
+                // make move
+                boolean edgeSelection = game.selectEdge(edge);
+                if (edgeSelection) {
+                    long elapsed = stopwatch.elapsed();
 
-                // add duration to move time of player
-                if (playersTurn == Game.PLAYER1) {
-                    time1 += duration;
-                } else {
-                    time2 += duration;
+                    // add elapsed time to move time of player
+                    if (playersTurn == Game.PLAYER1) {
+                        time1 += elapsed;
+                    } else {
+                        time2 += elapsed;
+                    }
                 }
-            }
 
-            return edgeSelection;
+                return edgeSelection;
+            }
         }
         return false;
+    }
+
+    /**
+     * Returns whether it is the given user's turn to play.
+     * @param user the user.
+     * @return <code>true</code> if the game is running and it is the given
+     *          user's turn. <code>false</code> if the game is not running or
+     *          has already ended, or the given user is not allowed to make the
+     *          next move.
+     */
+    public boolean isOnTurn(User user) {
+       return isOnTurn(user, game.getPlayersTurn());
+    }
+    
+    boolean isOnTurn(User u, byte playersTurn) {
+        if (playersTurn == Game.NEUTRAL) {
+            return false; // do nothing
+        } else {
+            if (u != null) {
+                String nick = u.getNick();
+                if (playersTurn == Game.PLAYER1) {
+                    if (!nick.equals(player1.getNick())) {
+                        return false;
+                    }
+                } else if (playersTurn == Game.PLAYER2) {
+                    if (!nick.equals(player2.getNick())) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 }

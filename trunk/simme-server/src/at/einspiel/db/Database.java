@@ -1,4 +1,4 @@
-package at.einspiel.simme.server.db;
+package at.einspiel.db;
 
 import java.io.File;
 import java.io.FileNotFoundException;

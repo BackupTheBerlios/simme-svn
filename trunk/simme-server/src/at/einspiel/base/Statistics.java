@@ -1,4 +1,5 @@
-package at.einspiel.simme.server.base;
+package at.einspiel.base;
+
 
 /**
  * Used to save statistics on a single {@link User}.

@@ -1,7 +1,5 @@
-package at.einspiel.simme.server.messaging;
+package at.einspiel.messaging;
 
-import at.einspiel.simme.client.net.Message;
-import at.einspiel.simme.client.net.SendableUI;
 
 /**
  * This class implements the message interface and allows for easy transfer of

@@ -1,4 +1,4 @@
-package at.einspiel.simme.server.base;
+package at.einspiel.base;
 
 import java.io.Serializable;
 
@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import at.einspiel.simme.server.db.Database;
+import at.einspiel.db.Database;
 
 /**
  * Represents a Simme user. Serializable to be used in JSPs.

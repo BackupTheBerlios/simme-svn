@@ -1,5 +1,6 @@
 package at.einspiel.simme.server;
 
+import at.einspiel.db.*;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -8,8 +9,8 @@ import junit.framework.TestSuite;
  * 
  * @author kariem
  */
-public class ServerTestSuite {
-	private ServerTestSuite() {
+public class SimmeServerTestSuite {
+	private SimmeServerTestSuite() {
 		// private constructor for test class
 	}
 

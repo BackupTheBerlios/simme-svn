@@ -1,4 +1,4 @@
-package at.einspiel.simme.server.base;
+package at.einspiel.base;
 
 /**
  * General Exception when using users. This class should be subclassed to

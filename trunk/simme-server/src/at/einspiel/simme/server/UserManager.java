@@ -1,12 +1,6 @@
-package at.einspiel.simme.server.management;
+package at.einspiel.simme.server;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Manages the users. This class is used by {@linkplain SessionManager}.

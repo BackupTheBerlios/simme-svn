@@ -1,9 +1,7 @@
 package at.einspiel.simme.server;
 
-import at.einspiel.simme.server.base.User;
-import at.einspiel.simme.server.base.UserException;
-import at.einspiel.simme.server.management.ManagedUser;
-import at.einspiel.simme.server.management.SessionManager;
+import at.einspiel.base.User;
+import at.einspiel.base.UserException;
 import junit.framework.TestCase;
 
 /**

@@ -1,4 +1,4 @@
-package at.einspiel.simme.server.base;
+package at.einspiel.base;
 
 /**
  * Is thrown when a user cannot be found.

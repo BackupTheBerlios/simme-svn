@@ -21,13 +21,9 @@
  *  3. This notice may not be removed or altered from any source distribution.
  *****************************************************************************/
 
-package at.einspiel.simme.server.messaging;
+package at.einspiel.messaging;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,10 +32,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.xerces.parsers.DOMParser;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -155,15 +148,13 @@ public class XmlParser {
     * compared to the method {@link #loadDocument(String)}.
     * @return Document An instance of the Document representing the contents
     * of the file.
-    * @throws ParserConfigurationException if the underlying XML implementation
-    * throws errors.
     * @throws SAXException if a parsing error has occured in the process of
     * reading the file.
     * @throws IOException if the file cannot be found, is not accessible or
     * cannot be read.
     */
    public static Document loadDocument(String filename, boolean validation)
-      throws ParserConfigurationException, SAXException, IOException {
+      throws SAXException, IOException {
       XmlParser p = new XmlParser(filename, validation);
       return p.getDocument();
    }

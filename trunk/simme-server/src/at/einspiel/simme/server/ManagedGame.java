@@ -1,7 +1,6 @@
-package at.einspiel.simme.server.management;
+package at.einspiel.simme.server;
 
-import at.einspiel.simme.server.base.ServerGame;
-import at.einspiel.simme.server.base.User;
+import at.einspiel.base.User;
 
 /**
  * Represents a game that is managed by the server.
@@ -19,6 +18,9 @@ public class ManagedGame extends ServerGame {
      */
     public ManagedGame(ManagedUser p1, ManagedUser p2) throws RuntimeException {
         super(p1, p2);
+        p1.setGame(this);
+        p2.setGame(this);
+        startGame();
     }
 
     /**

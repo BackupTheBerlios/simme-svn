@@ -1,9 +1,9 @@
 package at.einspiel.simme.server;
 
 import junit.framework.TestCase;
+import at.einspiel.base.IGame;
+import at.einspiel.base.User;
 import at.einspiel.simme.client.Move;
-import at.einspiel.simme.server.base.ServerGame;
-import at.einspiel.simme.server.base.User;
 
 /**
  * Class to test Server Game.
@@ -12,7 +12,7 @@ import at.einspiel.simme.server.base.User;
  */
 public class ServerGameTest extends TestCase {
 
-    ServerGame game;
+    IGame game;
     User player1;
     User player2;
     

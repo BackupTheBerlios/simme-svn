@@ -1,4 +1,4 @@
-package at.einspiel.simme.server.management;
+package at.einspiel.mgmt;
 
 /**
  * Is thrown if an error occured while changing states.

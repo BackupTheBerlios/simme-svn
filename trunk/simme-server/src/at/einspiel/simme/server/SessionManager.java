@@ -1,16 +1,11 @@
-package at.einspiel.simme.server.management;
+package at.einspiel.simme.server;
 
-import at.einspiel.simme.client.net.LoginResult;
-import at.einspiel.simme.server.base.User;
-import at.einspiel.simme.server.base.UserException;
-import at.einspiel.simme.server.messaging.SimpleClientMessage;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import at.einspiel.base.User;
+import at.einspiel.base.UserException;
+import at.einspiel.messaging.LoginResult;
+import at.einspiel.messaging.SimpleClientMessage;
 
 /**
  * This class is intended to be used for User management. Each user who

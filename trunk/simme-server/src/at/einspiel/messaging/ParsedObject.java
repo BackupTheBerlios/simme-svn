@@ -21,24 +21,16 @@
  *  3. This notice may not be removed or altered from any source distribution.
  *****************************************************************************/
 
-package at.einspiel.simme.server.messaging;
+package at.einspiel.messaging;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 /**
@@ -113,7 +105,7 @@ public class ParsedObject {
       // read child elements and add them as ParsedObjects
       List childElements = XmlParser.getAllChildElements(element);
       if (childElements.size() > 0) {
-         for (Iterator i = childElements.iterator(); i.hasNext();) {
+         for (Iterator i = childElements.iterator(); i.hasNext(); ) {
             Element child = (Element) i.next();
             children.add(new ParsedObject(this, child));
          }
@@ -162,11 +154,9 @@ public class ParsedObject {
     * configuration
     */
    public ParsedObject(String objectName, boolean reuseOldDocument)
-      throws ParserConfigurationException {
-      this(
-         null,
-         reuseOldDocument ? XmlParser.getReuseDocument() : XmlParser.newDocument(),
-         objectName);
+         throws ParserConfigurationException {
+      this(null, reuseOldDocument ? XmlParser.getReuseDocument() : XmlParser
+            .newDocument(), objectName);
    }
 
    /**
@@ -176,7 +166,8 @@ public class ParsedObject {
     * @param ownerDocument The document in which this instance is included
     * @param objectName The name of this object.
     */
-   private ParsedObject(ParsedObject parentObject, Document ownerDocument, String objectName) {
+   private ParsedObject(ParsedObject parentObject, Document ownerDocument,
+         String objectName) {
       init(parentObject);
       document = ownerDocument;
       this.name = objectName;
@@ -198,9 +189,10 @@ public class ParsedObject {
     * @see #createNewInstance(String, boolean)
     */
    public static ParsedObject createNewInstance(String filename)
-      throws SAXException, ParserConfigurationException, IOException {
+         throws SAXException, ParserConfigurationException, IOException {
 
-      return new ParsedObject(XmlParser.loadDocument(filename).getDocumentElement());
+      return new ParsedObject(XmlParser.loadDocument(filename)
+            .getDocumentElement());
    }
 
    /**
@@ -218,23 +210,22 @@ public class ParsedObject {
    /**
     * Creates a new <code>ParsedObject</code> from the information found in an
     * XML file.
+    * 
     * @param filename The filename that contains the information for the new
-    * instance.
+    *         instance.
     * @param validation Indicates, if the content should be validated 
     * @return A newly created <code>Object</code> representing the
-    * same information found in the given XML file.
+    *          same information found in the given XML file.
     * @throws SAXException If the XML data contains syntactic or semantic
-    * errors. These are related to non-wellformedness, because validation is
-    * disabled for this method.
-    * @throws ParserConfigurationException If the underlying XML implementation
-    * and/or configuration throws errors.
+    *          errors. These are related to non-wellformedness, because 
+    *          validation is disabled for this method.
     * @throws IOException If the file does not exist or is not readable.
     */
-   public static ParsedObject createNewInstance(String filename, boolean validation)
-      throws SAXException, ParserConfigurationException, IOException {
+   public static ParsedObject createNewInstance(String filename,
+         boolean validation) throws SAXException, IOException {
 
-      return new ParsedObject(
-         XmlParser.loadDocument(filename, validation).getDocumentElement());
+      return new ParsedObject(XmlParser.loadDocument(filename, validation)
+            .getDocumentElement());
    }
 
    /**
@@ -253,8 +244,8 @@ public class ParsedObject {
     * 
     * @see #parse(InputStream)
     */
-   public static ParsedObject parse(String string)
-      throws SAXException, IOException, ParserConfigurationException {
+   public static ParsedObject parse(String string) throws SAXException,
+         IOException, ParserConfigurationException {
       InputStream is = new ByteArrayInputStream(string.getBytes());
       return parse(is);
    }
@@ -273,8 +264,8 @@ public class ParsedObject {
     *         and/or configuration throws errors.
     * @throws IOException If the file does not exist or is not readable.
     */
-   public static ParsedObject parse(InputStream is)
-      throws SAXException, IOException, ParserConfigurationException {
+   public static ParsedObject parse(InputStream is) throws SAXException,
+         IOException, ParserConfigurationException {
       return new ParsedObject(XmlParser.loadDocument(is).getDocumentElement());
    }
 
@@ -377,12 +368,12 @@ public class ParsedObject {
       Element e = d.createElement(o.getName());
       Map attrs = o.getAttributes();
       // set attributes
-      for (Iterator i = attrs.entrySet().iterator(); i.hasNext();) {
+      for (Iterator i = attrs.entrySet().iterator(); i.hasNext(); ) {
          Map.Entry entry = (Map.Entry) i.next();
          e.setAttribute((String) entry.getKey(), (String) entry.getValue());
       }
       // set children
-      for (Iterator i = o.getChildren().iterator(); i.hasNext();) {
+      for (Iterator i = o.getChildren().iterator(); i.hasNext(); ) {
          ParsedObject child = (ParsedObject) i.next();
          e.appendChild(createXml(child, d));
       }
@@ -512,14 +503,14 @@ public class ParsedObject {
    private String toString(String prefix) {
       StringBuffer b = new StringBuffer(prefix + "<" + name);
       if (attributes.size() > 0) {
-         for (Iterator i = attributes.keySet().iterator(); i.hasNext();) {
+         for (Iterator i = attributes.keySet().iterator(); i.hasNext(); ) {
             String key = (String) i.next();
             String value = (String) attributes.get(key);
             b.append(" " + key + "=\"" + value + "\"");
          }
       }
       b.append(">\n");
-      for (Iterator i = children.iterator(); i.hasNext();) {
+      for (Iterator i = children.iterator(); i.hasNext(); ) {
          ParsedObject p = (ParsedObject) i.next();
          b.append(p.toString(prefix + "\t"));
       }

@@ -1,7 +1,7 @@
-package at.einspiel.simme.server;
+package at.einspiel.db;
 
-import at.einspiel.simme.server.base.User;
-import at.einspiel.simme.server.base.UserException;
+import at.einspiel.base.User;
+import at.einspiel.base.UserException;
 
 import java.sql.SQLException;
 
