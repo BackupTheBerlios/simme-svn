@@ -130,5 +130,49 @@ public class GameTest extends TestCase {
 		// 0-3 owned by P1
 		assertEquals(Game.PLAYER1, g.getEdgeOwner(n0, n3));
    }
+   
+	/**
+	 * Tests winning conditions.
+	 */
+	public void testWin() {
+		// P1 selects 0-1
+		assertEquals(true, g.selectNode(n0));
+		assertEquals(true, g.selectNode(n1));
 
+		// P2 selects 0-2
+		assertEquals(true, g.selectNode(n0));
+		assertEquals(true, g.selectNode(n2));
+
+		// P1 selects 0-3
+		assertEquals(true, g.selectNode(n0));
+		assertEquals(true, g.selectNode(n3));
+
+		// P2 selects 0-4
+		assertEquals(true, g.selectNode(n0));
+		assertEquals(true, g.selectNode(n4));
+
+		// P1 selects 1-3
+		assertEquals(true, g.selectNode(n1));
+		assertEquals(true, g.selectNode(n3));
+		
+		// game is over
+		assertEquals(true, g.isGameOver());
+		
+		// P2 is winner
+		assertEquals(Game.PLAYER2, g.getWinner());
+
+		// Selecting a node is not possible
+		assertEquals(false, g.selectNode(n5));
+	}
+
+	/**
+	 * Tests possibility of restarting games.
+	 */
+	public void testRestartGame() {
+		testWin();
+		g.start();
+		testWin();
+		g.start();
+		testWin();
+	}
 }

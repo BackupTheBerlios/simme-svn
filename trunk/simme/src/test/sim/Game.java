@@ -24,10 +24,24 @@ public class Game {
    /** Indicates the currently active node */
    byte activeNode;
 
-   /** Indicates the currently active player true=p1, false=p2*/
+   /** Indicates the currently active player p1=true, p2=false */
    private boolean currentPlayer;
-   
+
+   /** Indicates if the game is over */
+   private boolean gameOver;
+
+   /**
+    * Initializes a new game and starts it.
+    * @see #start()
+    */
    public Game() {
+      start();
+   }
+
+   /**
+    * May be used to start/restart the game.
+    */
+   public void start() {
       nodes = new Node[6];
       for (byte i = 0; i < 6; i++) {
          nodes[i] = new Node();
@@ -36,20 +50,24 @@ public class Game {
       edges = new byte[15];
 
       activeNode = -1; // value, if there is no active node
-      currentPlayer = false;
+      currentPlayer = true; // p1 is currentPlayer
+      gameOver = false;
    }
 
    /**
     * Selects a single node within the game. A node which is deactivated will
     * be activated. If the node is already activated, it will be deactivated.
-    * @param index Should be in range of 0-5 (including). Indicates the node
-    * to be selected.
+    * @param index Should be in range of 0-5 (including), or this method will
+    * throw an <code>ArrayIndexOutOfBoundsException</code>. It indicates the
+    * node to be selected.
     * @return <code>true</code>, if the operation suceeded (e.g. node was
     * activated/deactivated, edge was coloured). <code>false</code>, if no
     * changes have been made to the current game state.
     */
    public boolean selectNode(byte index) {
       if ((index < 0) || index > 5)
+         return false;
+      if (gameOver)
          return false;
 
       Node nodeAtIndex = nodes[index];
@@ -71,6 +89,9 @@ public class Game {
          if (getEdgeOwner(activeNode, index) == NEUTRAL) {
             setEdgeOwner(activeNode, index, currentPlayer);
 
+            // switch players and see if someone has won
+            endTurn(activeNode, index);
+
             // deselect active node
             nodes[activeNode].activated = false;
             activeNode = -1;
@@ -78,8 +99,6 @@ public class Game {
             // disable node to be disabled
             disableNodes();
 
-            // switch players
-            endTurn();
             return true;
          }
       }
@@ -113,9 +132,26 @@ public class Game {
    }
 
    /**
-    * Ends a turn for this game. The other player may make his move.
+    * Ends a turn for this game. Connected edges are searched for a win
+    * condition. The other player may make his move.
+    * @param a First node of last edge drawn.
+    * @param b Second node of last edge drawn.
     */
-   private void endTurn() {
+   private void endTurn(byte a, byte b) {
+      // only the player who just did his move may lose.
+      byte player = currentPlayer ? PLAYER1 : PLAYER2;
+
+      // if someone has lost, last edge drawn was deciding
+      for (byte c = 0; c < 6; c++) {
+         if ((c != a) && (c != b)) {
+            // find triangle
+            if ((getEdgeOwner(a, c) == player) && (getEdgeOwner(b, c) == player)) {
+               gameOver = true;
+               return;
+            }
+         }
+      }
+      
       currentPlayer = !currentPlayer;
    }
 
@@ -131,10 +167,21 @@ public class Game {
       return nodes[index].disabled;
    }
 
-	private void setEdgeOwner(byte nodeA, byte nodeB, boolean player) {
-		byte index = nodeA<nodeB ? getIndex(nodeA, nodeB) : getIndex(nodeB, nodeA);
-		edges[index] = player ? PLAYER2 : PLAYER1;
+	public boolean isGameOver() {
+		return gameOver;
 	}
+
+	public byte getWinner() {
+		if (!gameOver) {
+			return NEUTRAL;
+		}
+		return currentPlayer ? PLAYER2 : PLAYER1;
+	}
+
+   private void setEdgeOwner(byte nodeA, byte nodeB, boolean player) {
+      byte index = nodeA < nodeB ? getIndex(nodeA, nodeB) : getIndex(nodeB, nodeA);
+      edges[index] = player ? PLAYER1 : PLAYER2;
+   }
 
    /**
     * Returns the owner of the edge between <code>nodeA</code> and
@@ -152,31 +199,31 @@ public class Game {
       return owner;
    }
 
-	/**
-	 * Returns the index within the edgelist containing the owner of the edge
-	 * between <code>smaller</code> and <code>bigger</code>.
-	 * @param smaller The smaller node index.
-	 * @param bigger The bigger node index.
-	 * @return The index of the edge within the edge list containing the edge
-	 * between <code>smaller</code> and <code>bigger</code>.
-	 */
+   /**
+    * Returns the index within the edgelist containing the owner of the edge
+    * between <code>smaller</code> and <code>bigger</code>.
+    * @param smaller The smaller node index.
+    * @param bigger The bigger node index.
+    * @return The index of the edge within the edge list containing the edge
+    * between <code>smaller</code> and <code>bigger</code>.
+    */
    private byte getIndex(byte smaller, byte bigger) {
-		byte add = 0;
-		switch (smaller) {
-			case 1 :
-				add = 5;
-				break;
-			case 2 :
-				add = 9;
-				break;
-			case 3 :
-				add = 12;
-				break;
-			case 4 :
-				add = 14;
-				break;
-		}
-		return new Integer(add + bigger - smaller - 1).byteValue();
+      byte add = 0;
+      switch (smaller) {
+         case 1 :
+            add = 5;
+            break;
+         case 2 :
+            add = 9;
+            break;
+         case 3 :
+            add = 12;
+            break;
+         case 4 :
+            add = 14;
+            break;
+      }
+      return new Integer(add + bigger - smaller - 1).byteValue();
    }
 
    class Node {
