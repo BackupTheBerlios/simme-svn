@@ -1,4 +1,6 @@
 package test.sim;
+import java.util.Random;
+
 
 import java.util.Stack;
 
@@ -12,6 +14,10 @@ import java.util.Stack;
  */
 public class Game
 {
+
+ /** Number of Nodes */
+  public static final byte NUMBER_OF_NODES = 6;
+
   /** No owner */
   public static final byte NEUTRAL = 0;
 
@@ -178,13 +184,32 @@ public class Game
         // switch players and see if someone has won
         endTurn(activeNode, index);
 
+ performComputerMove();
+
         // deselect active node
         nodes[activeNode].activated = false;
         activeNode = -1;
 
         // disable node to be disabled
         disableNodes();
+
         moveMessage = "";
+
+        if (gameOver) 
+	    {
+		if (currentPlayer)
+		    {
+			moveMessage = "I am sorry, you lost.";
+		    }
+		else
+		    {
+			moveMessage = "You win!";
+		    }
+	    }
+
+			
+
+       
 
         return true;
       }
@@ -196,6 +221,34 @@ public class Game
       }
     }
   }
+
+
+ /**
+     * Performs a randomly choosen computer move
+     */  
+    //-------------------------------------------------------------
+    protected void performComputerMove()
+    {
+
+	Random random_generator = new Random();
+	byte  first_node = (byte) java.lang.Math.abs((random_generator.nextInt() % NUMBER_OF_NODES));
+	byte  second_node = (byte) java.lang.Math.abs((random_generator.nextInt() % NUMBER_OF_NODES));
+	if (!gameOver)
+	    {
+		while ( (getEdgeOwner(first_node, second_node) != NEUTRAL) || (first_node == second_node) )
+		    {
+			first_node = (byte) java.lang.Math.abs((random_generator.nextInt() % NUMBER_OF_NODES));
+			second_node = (byte) java.lang.Math.abs((random_generator.nextInt() % NUMBER_OF_NODES));
+		    }
+  			  			    
+		setEdgeOwner(first_node, second_node, currentPlayer);
+  			
+		// switch players and see if someone has won
+		endTurn(first_node, second_node);
+	    }
+    }
+
+
 
   /**
    * Searches for nodes to be disabled and sets them accordingly.
