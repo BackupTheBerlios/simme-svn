@@ -48,7 +48,7 @@
             Compiles the sources and copies the classes to the web module's
             WEB-INF/classes directory.
         </description>
-        <javac srcdir="${src}" destdir="${cls}" source="1.4">
+        <javac srcdir="${src}" debug="${debug}" destdir="${cls}" source="1.4">
             <classpath refid="project.class.path"/>
         </javac>
         <copy todir="${web-inf.classes}">
