@@ -2,7 +2,7 @@
 //[Simme]
 //    Java Source File: PrefForm.java
 //               $Date: 2004/09/22 18:23:58 $
-//           $Revision: 1.8 $
+//           $Revision$
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -100,14 +100,15 @@ public class PrefForm extends List implements CommandListener {
 		frmPrefs.append(tfInfo);
 		frmPrefs.append(siPlatform);
 		frmPrefs.append(new StringItem("Version: ", Sim.getProperty("MIDlet-Version")));
+		frmPrefs.append(new StringItem("Locale: ", System.getProperty("microedition.locale")));
 
 		// command handling
-		frmPrefs.addCommand(new Command("Abbrechen", Command.CANCEL, 0));
-		frmPrefs.addCommand(new Command("Speichern", Command.OK, 0));
+		frmPrefs.addCommand(UIUtils.CMD_CANCEL);
+		frmPrefs.addCommand(UIUtils.CMD_OK);
 
 		frmPrefs.setCommandListener(new CommandListener() {
 			public void commandAction(Command c, Displayable d) {
-				if (c.getCommandType() == Command.OK) {
+				if (c == UIUtils.CMD_OK) {
 					String[] newData = {tfNick.getString(), tfPass.getString(),
 							tfInfo.getString(), siPlatform.getText()};
 					prefs.setSavedData(newData);

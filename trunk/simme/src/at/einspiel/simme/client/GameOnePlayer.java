@@ -2,10 +2,11 @@
 // [Simme]
 //       Java Source File: GameSinglePlayer.java
 //                  $Date: 2004/09/14 22:29:49 $
-//              $Revision: 1.5 $
+//              $Revision$
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client;
 
+import at.einspiel.simme.client.messages.Messages;
 import at.einspiel.simme.nanoxml.XMLElement;
 
 /**
@@ -77,7 +78,7 @@ public abstract class GameOnePlayer extends Game {
 	 */
 	public boolean selectNode(byte index) {
 		if (getPlayersTurn() != controlledPlayer) {
-			setMoveMessage("Gegner ist am Zug.");
+			setMoveMessage(Messages.getString("game.move-opponent"));
 			return false;
 		}
 		return super.selectNode(index);
@@ -94,11 +95,11 @@ public abstract class GameOnePlayer extends Game {
 	protected final void doMove(byte edgeIndex) {
 		super.doMove(edgeIndex);
 		// send move to opponent
-		setMoveMessage("Sende Zug an Gegner");
+		setMoveMessage(Messages.getString("game.move-send"));
 		informOtherPlayer(edgeIndex);
 		if (!gameOver) {
 			// receive move from opponent
-			setMoveMessage("Warte auf Gegner");
+			setMoveMessage(Messages.getString("game.move-receive"));
 			doOtherPlayersMove();
 		}
 	}

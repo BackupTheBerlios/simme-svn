@@ -2,7 +2,7 @@
 //[Simme]
 //    Java Source File: GameModeForm.java
 //               $Date: 2004/09/22 18:25:42 $
-//           $Revision: 1.16 $
+//           $Revision$
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -19,6 +19,7 @@ import at.einspiel.midp.ui.ICommandManager;
 import at.einspiel.simme.client.GameRandomAI;
 import at.einspiel.simme.client.GameUndoable;
 import at.einspiel.simme.client.Sim;
+import at.einspiel.simme.client.messages.Messages;
 import at.einspiel.simme.client.util.PersonalPrefs;
 import at.einspiel.simme.client.util.PrefsException;
 import at.einspiel.simme.client.util.UIUtils;
@@ -43,7 +44,8 @@ import at.einspiel.simme.client.util.UIUtils;
  */
 public class GameModeForm extends List implements CommandListener {
 
-	private static final Command CMD_CANCEL = new Command("Beenden", Command.BACK, 1);
+	private static final Command CMD_CANCEL = new Command(Messages.getString("cmd.quit"),
+			Command.BACK, 1);
 
 	private static final String[] CHOICES = {"Internet Spiel", "vs Human", "vs Computer"};
 
@@ -73,10 +75,11 @@ public class GameModeForm extends List implements CommandListener {
 						String[] personalInfo = PersonalPrefs.getPlayerInfo();
 						connect(personalInfo);
 						/*
-						ConnectionAlert connectionAlert = new ConnectionAlert(personalInfo);
-						d.setCurrent(connectionAlert);
-						connectionAlert.startConnection(d);
-						*/
+						 * ConnectionAlert connectionAlert = new
+						 * ConnectionAlert(personalInfo);
+						 * d.setCurrent(connectionAlert);
+						 * connectionAlert.startConnection(d);
+						 */
 						break;
 
 					} catch (PrefsException pex) {
@@ -113,7 +116,8 @@ public class GameModeForm extends List implements CommandListener {
 
 	/**
 	 * Connects to the server with the given data as login information.
-	 * @param loginData the login information.
+	 * @param loginData
+	 *            the login information.
 	 */
 	private void connect(final String[] loginData) {
 		Runnable r = new Runnable() {
@@ -132,7 +136,8 @@ public class GameModeForm extends List implements CommandListener {
 						npe.printStackTrace();
 					}
 
-					ConnectionScreen cs = new ConnectionScreen("SimME Online", GameModeForm.this);
+					ConnectionScreen cs = new ConnectionScreen("SimME Online",
+							GameModeForm.this);
 					cs.setDescription("Verbinde mit SimME Online");
 					cs.setRequest(loginMsg);
 					cs.go(Sim.getProperty("simme.page.login"));
@@ -159,8 +164,10 @@ public class GameModeForm extends List implements CommandListener {
 
 	/**
 	 * Handles the result of the LoginMessage.
-	 * @param nick the nick name.
-	 * @param result the login result.
+	 * @param nick
+	 *            the nick name.
+	 * @param result
+	 *            the login result.
 	 */
 	private void handleResult(String nick, LoginMessage result) {
 		if (result.isSuccess()) {
@@ -169,19 +176,15 @@ public class GameModeForm extends List implements CommandListener {
 			// easily accessible without using prefs
 			Sim.setNick(nick);
 
-			DynamicUI dUI = new DynamicUI("SimME online", result.getMessage(),
-					url);
+			DynamicUI dUI = new DynamicUI("SimME online", result.getMessage(), url);
 
 			dUI.updateDisplay();
 
 		} else {
 			// no success => show cause
-			AlertType type = result.isSuccess()
-					? AlertType.INFO
-					: AlertType.ERROR;
+			AlertType type = result.isSuccess() ? AlertType.INFO : AlertType.ERROR;
 			final String errorMessage = result.getMessage();
-			Alert loginAlert = new Alert("Fehler beim Einloggen", errorMessage,
-					null, type);
+			Alert loginAlert = new Alert("Fehler beim Einloggen", errorMessage, null, type);
 			loginAlert.setTimeout(Alert.FOREVER);
 			Logger.warn("login error: " + errorMessage);
 			Display d = Sim.getDisplay();
@@ -191,7 +194,8 @@ public class GameModeForm extends List implements CommandListener {
 
 	/**
 	 * Handles a possible error.
-	 * @param err the exception that caused this error.
+	 * @param err
+	 *            the exception that caused this error.
 	 */
 	private void handleError(IOException err) {
 		Logger.warn("connection error");

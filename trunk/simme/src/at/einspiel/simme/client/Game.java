@@ -2,13 +2,14 @@
 //[Simme]
 //    Java Source File: Game.java
 //               $Date: 2004/09/22 18:25:42 $
-//           $Revision: 1.13 $
+//           $Revision$
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client;
 
 import java.util.Random;
 
 import at.einspiel.midp.ui.IDynamicUI;
+import at.einspiel.simme.client.messages.Messages;
 import at.einspiel.simme.nanoxml.XMLElement;
 
 /**
@@ -150,7 +151,7 @@ public abstract class Game {
 			return;
 		}
 
-		moveMessage = playerName + " ist am Zug";
+		moveMessage = playerName + Messages.getString("game.on-turn");
 	}
 
 	/**
