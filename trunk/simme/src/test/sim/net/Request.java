@@ -10,6 +10,8 @@ import java.util.Hashtable;
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
 
+import test.sim.Sim;
+
 /**
  * Represents a request sent to the server.
  * 
@@ -21,7 +23,7 @@ public class Request {
    public static final int DEFAULT_TIMEOUT = 5000;
 
    /** The base url where <code>Request</code>s are sent to. */
-   public static final String URL_BASE = "http://www.einspiel.at/simme/";
+   public static final String URL_BASE = Sim.getProperty("server.base");
 
    private static final int RESPONSE_INITIAL_SIZE = 1024;
    private static final int RESPONSE_GROWTH_FACTOR = 512;
@@ -253,9 +255,13 @@ public class Request {
             c = getHttpConnection(url.toString());
 
             // set user agent
-            c.setRequestProperty("User-Agent", "Profile/MIDP-1.0 Configuration/CLDC-1.0");
+            c.setRequestProperty(
+               "User-Agent",
+               "Profile/MIDP-1.0 Configuration/CLDC-1.0");
             // set encoding to device encoding
-            c.setRequestProperty("Content-Language", System.getProperty("microedition.encoding"));
+            c.setRequestProperty(
+               "Content-Language",
+               System.getProperty("microedition.encoding"));
 
             if (post) {
                c.setRequestMethod(HttpConnection.POST);
@@ -288,7 +294,8 @@ public class Request {
             while ((current = (byte) is.read()) != -1) {
                if (counter > length - 1) {
                   // update length and copy current contents into bigger array
-                  byte[] responseCopy = new byte[length + RESPONSE_GROWTH_FACTOR];
+                  byte[] responseCopy =
+                     new byte[length + RESPONSE_GROWTH_FACTOR];
                   System.arraycopy(localResponse, 0, responseCopy, 0, length);
                   localResponse = responseCopy;
                   length += RESPONSE_GROWTH_FACTOR;

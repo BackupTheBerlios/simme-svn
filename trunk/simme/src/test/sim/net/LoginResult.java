@@ -37,7 +37,7 @@ public class LoginResult {
          setMessage((String) element.getAttribute("msg"));
       } catch (XMLParseException xex) {
          setSucceed(false);
-         setMessage("Nachricht enthielt Fehler."); 
+         setMessage("Nachricht enthielt Fehler.");
       }
    }
 

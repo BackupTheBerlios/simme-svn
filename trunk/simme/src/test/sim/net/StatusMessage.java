@@ -24,7 +24,7 @@ public class StatusMessage extends XmlMessage {
     *
     * @return the string that this message contained.
     */
-   public String getString() {
+   public String getStatus() {
       String message = (String) xmlElement.getAttribute("msg");
       return message;
    }

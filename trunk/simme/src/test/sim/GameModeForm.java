@@ -2,13 +2,7 @@ package test.sim;
 
 import java.io.IOException;
 
-import javax.microedition.lcdui.Alert;
-import javax.microedition.lcdui.AlertType;
-import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.CommandListener;
-import javax.microedition.lcdui.Display;
-import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.List;
+import javax.microedition.lcdui.*;
 
 import test.sim.net.LoginMessage;
 import test.sim.net.LoginResult;
@@ -20,7 +14,8 @@ import test.sim.util.PrefsException;
  */
 public class GameModeForm extends List implements CommandListener {
 
-   private static final String[] CHOICES = { "Internet Spiel", "Lokales Spiel" };
+   private static final String[] CHOICES =
+      { "Internet Spiel", "Lokales Spiel" };
 
    private Zeichenblatt zeichenblatt;
 
@@ -93,42 +88,64 @@ public class GameModeForm extends List implements CommandListener {
                      }
                      prefs.load();
                   } catch (PrefsException pex) {
-                     Alert errorAlert = new Alert("Fehler", pex.getMessage(), null, AlertType.ERROR);
+                     // error occurred while loading
+                     Alert errorAlert =
+                        new Alert(
+                           "Fehler",
+                           pex.getMessage(),
+                           null,
+                           AlertType.ERROR);
                      errorAlert.setTimeout(FOREVER);
                      d.setCurrent(errorAlert);
                      return;
                   }
+                  // construct login message
                   String[] loginData = prefs.getSavedData();
-                  LoginMessage loginMsg = new LoginMessage(loginData[0], loginData[1], loginData[3], "0.01");
+                  String version = Sim.getProperty("MIDlet-Version");
+                  LoginMessage loginMsg =
+                     new LoginMessage(
+                        loginData[0],
+                        loginData[1],
+                        loginData[3],
+                        version);
+
                   //loginMsg.sendRequest("doLogin.jsp");
-                  loginMsg.sendRequest("http://localhost:8080/simme/", "doLogin.jsp");
-                  
+                  loginMsg.sendRequest("doLogin.jsp");
+
                   // get response
                   String response = new String(loginMsg.getResponse());
-                  
+
                   // use response to build result
                   LoginResult result = new LoginResult(response);
-                  
+
                   System.out.println("result: " + result);
-                  
+
                   if (result.isSucceed()) {
-                     DynamicUI dUI = new DynamicUI(result.getMessage());
-                     d.setCurrent(dUI.getDisplayable());
+                     //DynamicUI dUI = new DynamicUI(result.getMessage());
+                     //d.setCurrent(dUI.getDisplayable());
+                     d.setCurrent(new OnlineForm());
                   } else {
                      // no success => show info
-                     AlertType type = result.isSucceed() ? AlertType.INFO : AlertType.ERROR;
-                     Alert loginAlert = new Alert("Fehler bei Login", result.getMessage(), null, type);
+                     AlertType type =
+                        result.isSucceed() ? AlertType.INFO : AlertType.ERROR;
+                     Alert loginAlert =
+                        new Alert(
+                           "Fehler bei Login",
+                           result.getMessage(),
+                           null,
+                           type);
                      loginAlert.setTimeout(FOREVER);
                      d.setCurrent(loginAlert);
                   }
-                  
+
                } catch (IOException ioex) {
                   String errorMsg = ioex.getMessage();
                   // if errorMsg doesn't contain any information, show some standard text
                   if ((errorMsg == null) || (errorMsg.length() == 0)) {
                      errorMsg = "Es konnte keine Verbindung hergestellt werden";
                   }
-                  Alert errorAlert = new Alert("Fehler", errorMsg, null, AlertType.ERROR);
+                  Alert errorAlert =
+                     new Alert("Fehler", errorMsg, null, AlertType.ERROR);
                   errorAlert.setTimeout(FOREVER);
                   d.setCurrent(errorAlert);
                }

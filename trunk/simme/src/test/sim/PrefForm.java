@@ -1,16 +1,6 @@
 package test.sim;
 
-import javax.microedition.lcdui.Alert;
-import javax.microedition.lcdui.AlertType;
-import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.CommandListener;
-import javax.microedition.lcdui.Display;
-import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.Form;
-import javax.microedition.lcdui.List;
-import javax.microedition.lcdui.Screen;
-import javax.microedition.lcdui.StringItem;
-import javax.microedition.lcdui.TextField;
+import javax.microedition.lcdui.*;
 
 import test.sim.util.PersonalPrefs;
 import test.sim.util.PrefsException;
@@ -76,9 +66,12 @@ public class PrefForm extends List implements CommandListener {
       }
 
       // set for this Form accordingly
-      final TextField tfNick = new TextField("Nick Name: ", data[0], 10, TextField.ANY);
-      final TextField tfPass = new TextField("Passwort: ", data[1], 10, TextField.ANY);
-      final TextField tfInfo = new TextField("Info (optional): ", data[2], 40, TextField.ANY);
+      final TextField tfNick =
+         new TextField("Nick Name: ", data[0], 10, TextField.ANY);
+      final TextField tfPass =
+         new TextField("Passwort: ", data[1], 10, TextField.ANY);
+      final TextField tfInfo =
+         new TextField("Info (optional): ", data[2], 40, TextField.ANY);
       final StringItem siPlatform = new StringItem("Client Model: ", data[3]);
 
       // add items to form
@@ -86,6 +79,8 @@ public class PrefForm extends List implements CommandListener {
       frmPrefs.append(tfPass);
       frmPrefs.append(tfInfo);
       frmPrefs.append(siPlatform);
+      frmPrefs.append(
+         new StringItem("Version: ", Sim.getProperty("MIDlet-Version")));
 
       // command handling
       frmPrefs.addCommand(new Command("Speichern", Command.BACK, 1));
@@ -94,9 +89,12 @@ public class PrefForm extends List implements CommandListener {
       frmPrefs.setCommandListener(new CommandListener() {
          public void commandAction(Command c, Displayable d) {
             if (c.getCommandType() == Command.BACK) {
-               String[] newData = { tfNick.getString(), tfPass.getString(),
-                  tfInfo.getString(),
-                  siPlatform.getText()};
+               String[] newData =
+                  {
+                     tfNick.getString(),
+                     tfPass.getString(),
+                     tfInfo.getString(),
+                     siPlatform.getText()};
                prefs.setSavedData(newData);
 
                try {
@@ -134,7 +132,8 @@ public class PrefForm extends List implements CommandListener {
          d.setCurrent(Sim.getMainScreen());
       }
 
-      if ((cmd == List.SELECT_COMMAND) || (cmd.getCommandType() == Command.OK)) {
+      if ((cmd == List.SELECT_COMMAND)
+         || (cmd.getCommandType() == Command.OK)) {
          Screen s = null;
 
          switch (getSelectedIndex()) {

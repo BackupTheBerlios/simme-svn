@@ -85,14 +85,14 @@ public class PersonalPrefs extends Prefs {
     */
    public void load() throws PrefsException {
       try {
-         System.out.println("loading");
+         //System.out.println("loading");
 
          byte[] b = readNext();
          DataInputStream dis = new DataInputStream(new ByteArrayInputStream(b));
 
          for (int i = 0; i < savedData.length; i++) {
             savedData[i] = dis.readUTF();
-            System.out.println("loaded: " + savedData[i]);
+            //System.out.println("loaded: " + savedData[i]);
          }
       } catch (IOException e) {
          throw new PrefsException(e.getMessage());

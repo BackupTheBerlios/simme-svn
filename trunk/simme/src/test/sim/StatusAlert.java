@@ -22,7 +22,7 @@ public class StatusAlert extends Alert {
     * @param d <code>Display</code> to use for showing this alert.
     */
    public StatusAlert(StatusMessage statusMsg, Display d) {
-      super("Info", statusMsg.getString(), null, AlertType.INFO);
+      super("Info", statusMsg.getStatus(), null, AlertType.INFO);
       setTimeout(3000);
       d.setCurrent(this);
    }

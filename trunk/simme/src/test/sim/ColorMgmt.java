@@ -34,37 +34,37 @@ public class ColorMgmt {
       { 0x00FFFFFF, 0, 0x00111111, 0, 0x00888888, 0, 0x00888888, 0, 0x00AAAAAA, 0, 0x00444444, 0x00888888, 0xDDDDDD };
 
    /** Inner and outer colors of player1's lines */
-   public static int p1c1;
+   protected static int p1c1;
    /** Inner and outer colors of player1's lines */
-   public static int p1c2;
+   protected static int p1c2;
 
    /** Inner and outer colors of player2's lines */
-   public static int p2c1;
+   protected static int p2c1;
    /** Inner and outer colors of player2's lines */
-   public static int p2c2;
+   protected static int p2c2;
 
    /** Inner and outer colors of neutral lines */
-   public static int nc1;
+   protected static int nc1;
    /** Inner and outer colors of neutral lines */
-   public static int nc2;
+   protected static int nc2;
 
    /** Inner and outer colors of a normal node */
-   public static int nnc1;
+   protected static int nnc1;
    /** Inner and outer colors of a normal node */
-   public static int nnc2;
+   protected static int nnc2;
 
    /** Inner and outer colors of a selected node */
-   public static int nsc1;
+   protected static int nsc1;
    /** Inner and outer colors of a selected node */
-   public static int nsc2;
+   protected static int nsc2;
 
    /** Inner and outer colors of a disabled node */
-   public static int ndc1;
+   protected static int ndc1;
    /** Inner and outer colors of a disabled node */
-   public static int ndc2;
+   protected static int ndc2;
 
    /** background */
-   public static int bg;
+   protected static int bg;
 
    /**
     * Sets the color values according to properties of the given

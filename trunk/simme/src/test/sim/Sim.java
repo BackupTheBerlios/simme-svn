@@ -40,7 +40,6 @@ public class Sim extends MIDlet {
    protected void startApp() throws MIDletStateChangeException {
       Display d = Display.getDisplay(this);
       main = new StartForm(this);
-
       //SplashScreen splashScreen = new SplashScreen(this);
       d.setCurrent(main);
    }
@@ -68,6 +67,14 @@ public class Sim extends MIDlet {
     */
    public static Display getDisplay() {
       return Display.getDisplay(instance);
+   }
+
+   /**
+    * Returns the MIDlets application property. 
+    * @see MIDlet#getAppProperty(String)
+    */
+   public static String getProperty(String key) {
+      return instance.getAppProperty(key);
    }
 
 }

@@ -2,13 +2,7 @@ package test.sim;
 
 import java.util.Enumeration;
 
-import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.CommandListener;
-import javax.microedition.lcdui.Display;
-import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.Form;
-import javax.microedition.lcdui.List;
-import javax.microedition.lcdui.StringItem;
+import javax.microedition.lcdui.*;
 
 import nanoxml.XMLElement;
 import nanoxml.XMLParseException;
@@ -20,6 +14,8 @@ import nanoxml.XMLParseException;
  * @author jorge
  */
 public class DynamicUI implements CommandListener {
+
+   //private static final String COMM_URL = "dynamicState.jsp";
 
    String title;
    private Displayable displayable;
@@ -46,6 +42,18 @@ public class DynamicUI implements CommandListener {
       displayable.setCommandListener(this);
    }
 
+   /**
+    * Creates a displayable from an xml string.
+    * 
+    * @param xml a string of the form:
+    * <pre>
+    *    &lt;element title="Title"&gt;
+    *        &lt;child name="Name1" /&gt;
+    *        &lt;child name="Name2" /&gt;
+    *        &lt;child name="Name3" /&gt;
+    *    /&gt;
+    * </pre>
+    */
    private void makeXmlDisplayable(XMLElement xml) {
       System.out.println("xmlling");
       title = xml.getAttribute("title", "Auswahl");
