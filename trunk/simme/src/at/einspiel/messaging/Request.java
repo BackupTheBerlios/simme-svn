@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: Request.java
-//               $Date: 2004/09/14 22:29:16 $
-//           $Revision: 1.8 $
+//               $Date: 2004/09/16 08:30:07 $
+//           $Revision: 1.9 $
 //----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
@@ -368,7 +368,7 @@ public class Request {
 
 				int rc = c.getResponseCode();
 				if (rc != HttpConnection.HTTP_OK) {
-					throw new IOException("Response: " + rc);
+					throw new IOException("Response: " + rc + "\nrequested URL: " + url + "\n\nPlease report this error.");
 				}
 				if (cancelled) {
 					throw new IOException("Request cancelled");
