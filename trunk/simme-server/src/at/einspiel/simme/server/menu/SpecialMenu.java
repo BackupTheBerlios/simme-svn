@@ -1,14 +1,12 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: SpecialMenu.java
-//                  $Date: 2004/09/07 13:30:36 $
-//              $Revision: 1.5 $
+//                  $Date: 2004/09/13 15:11:53 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
 import org.w3c.dom.Element;
-
-import at.einspiel.base.User;
 
 /**
  * Is used to deliver specialised menu information. This includes means to start
@@ -24,7 +22,7 @@ class SpecialMenu extends AbstractUserMenu {
 	private static final String SPECIAL_START = "start";
 	private static final String SPECIAL_READY = "ready";
 
-	private final IRequestHandler handler;
+	private final IReqHandler handler;
 
 	/**
 	 * The given element should contain a type attribute, which can be one of
@@ -37,60 +35,20 @@ class SpecialMenu extends AbstractUserMenu {
 		super(e);
 
 		String type = e.getAttribute(ATTR_TYPE);
+		String idNext = e.getAttribute(ATTR_NEXT);
 
 		if (type.equals(SPECIAL_WAIT)) {
-			handler = new WaitRequestHandler();
+			handler = new ReqHandlerWait(idNext);
 		} else if (type.equals(SPECIAL_START)) {
-			handler = new StartRequestHandler();
+			handler = new ReqHandlerStart(id, idNext);
 		} else {
 			assert type.equals(SPECIAL_READY) : "Wrong type specified: " + type;
-			handler = new ReadyRequestHandler();
+			handler = new ReqHandlerReady();
 		}
 	}
 
 	/** @see IMenu#getXml() */
 	public String getXml() {
-		return handler.answer(u);
-	}
-
-	interface IRequestHandler {
-		/**
-		 * Answers the given user.
-		 * 
-		 * @param u
-		 *            the user, which will be the recipient of the message.
-		 * @return a String that can be interpreted by the user.
-		 */
-		String answer(User u);
-	}
-
-	class WaitRequestHandler implements IRequestHandler {
-
-		/** @see IRequestHandler#answer(User) */
-		public String answer(User u) {
-			// TODO Auto-generated method stub (kariem)
-			return null;
-		}
-
-	}
-	
-	class StartRequestHandler implements IRequestHandler {
-
-		/** @see IRequestHandler#answer(User) */
-		public String answer(User u) {
-			// TODO Auto-generated method stub (kariem)
-			return null;
-		}
-		
-	}
-	
-	class ReadyRequestHandler implements IRequestHandler {
-
-		/** @see IRequestHandler#answer(User) */
-		public String answer(User u) {
-			// TODO Auto-generated method stub (kariem)
-			return null;
-		}
-		
+		return handler.answer(mu);
 	}
 }

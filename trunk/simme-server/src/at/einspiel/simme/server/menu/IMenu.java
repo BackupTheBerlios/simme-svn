@@ -1,16 +1,16 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: IMenu.java
-//                  $Date: 2004/09/07 13:30:36 $
-//              $Revision: 1.6 $
+//                  $Date: 2004/09/13 15:11:53 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
-import at.einspiel.base.User;
+import at.einspiel.simme.server.ManagedUser;
 
 /**
  * Used to model a server-side menu. The contents of menus are sent to the
- * client, via the methods {@link #getXml()} and {@link #getXml(String)}.
+ * client, via the methods {@link #getXml()}and {@link #getXml(String)}.
  * 
  * @author kariem
  */
@@ -22,10 +22,15 @@ public interface IMenu extends Cloneable {
 	/**
 	 * The type attribute, which may be used for different instances of the same
 	 * class.
-	 * @see GenerateMenu
-	 * @see SpecialMenu
 	 */
 	String ATTR_TYPE = "type";
+
+	/**
+	 * The value of this attribute shows the next id to be used. The client
+	 * usually receives a component with auto-update capabilities and will be
+	 * redirected to the menu with the ID indicated by this attribute.
+	 */
+	String ATTR_NEXT = "next";
 
 	/**
 	 * Returns the title.
@@ -42,15 +47,19 @@ public interface IMenu extends Cloneable {
 	String getId();
 
 	/**
-	 * Returns an xml representation. This representation is sent to the client.
+	 * Returns an xml representation, which can be sent to the client.
 	 * 
 	 * @return an xml representation.
-	 * @see #getXml(User)
+	 * @see #getXml(String)
 	 */
 	String getXml();
 
 	/**
-	 * Returns an xml representation with the additional meta parameter.
+	 * Returns an xml representation that may be distinct from the result of
+	 * {@link #getXml()}. The additional parameter is used to generate a
+	 * different output. The menu ignores the parameter, if no meta attributes
+	 * are set.
+	 * 
 	 * @param meta
 	 *            the meta information.
 	 * @return an xml representation.
@@ -59,28 +68,34 @@ public interface IMenu extends Cloneable {
 
 	/**
 	 * Sets the user for this menu. A subsequent call to {@linkplain #getXml()}
-	 * should then return the same result as a call to
-	 * {@linkplain #getXml(User)}, if the user is the same.
+	 * can result in a different behaviour compared to the result without a
+	 * prior call to this method. Especially, if the menu is designed to be user
+	 * specific.
 	 * 
-	 * @param u
+	 * @param mu
 	 *            the user.
 	 */
-	void setUser(User u);
+	void setUser(ManagedUser mu);
 
 	/**
-	 * Returns the options for a selection on this menu.
+	 * Returns the options for a selection on this menu. The associated id of
+	 * the selected menu can be accessed by {@link #getIdFor(String)}with one
+	 * of the options as parameter.
 	 * 
-	 * @return the possible selections on this menu.
+	 * @return all possible selections on this menu.
+	 * @see #getIdFor(String)
 	 */
 	String[] getOptions();
 
 	/**
-	 * Returns the id for the corresponding selection
+	 * Returns the menu id for the corresponding selection. The selection should
+	 * be one of the results of a call to {@link #getOptions()}.
 	 * 
 	 * @param selection
 	 *            the user's selection.
 	 * @return the id of the menu that correspond's to the user's selection for
 	 *         this menu.
+	 * @see #getOptions()
 	 */
 	String getIdFor(String selection);
 

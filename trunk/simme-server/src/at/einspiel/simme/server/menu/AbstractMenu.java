@@ -1,16 +1,16 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: AbstractMenu.java
-//                  $Date: 2004/09/07 13:30:36 $
-//              $Revision: 1.4 $
+//                  $Date: 2004/09/13 15:11:53 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
 import org.w3c.dom.Element;
 
-import at.einspiel.base.User;
 import at.einspiel.messaging.ISimpleInfo;
-import at.einspiel.simme.nanoxml.XMLElement;
+import at.einspiel.simme.server.ManagedUser;
+import at.einspiel.util.XMLUtils;
 
 /**
  * <p>
@@ -74,7 +74,11 @@ abstract class AbstractMenu implements IMenu {
 		return DEFAULT_ID;
 	}
 
-	/** @see at.einspiel.simme.server.menu.IMenu#getOptions() */
+	/**
+	 * Always returns an array containing only one element:
+	 * {@link IMenu#DEFAULT_ID}.
+	 * @see at.einspiel.simme.server.menu.IMenu#getOptions()
+	 */
 	public String[] getOptions() {
 		return new String[]{DEFAULT_ID};
 	}
@@ -94,9 +98,9 @@ abstract class AbstractMenu implements IMenu {
 	 * As menus are by default not user specific, this method does not do
 	 * anything. Implementation has to be done in subclasses.
 	 * 
-	 * @see at.einspiel.simme.server.menu.IMenu#setUser(at.einspiel.base.User)
+	 * @see at.einspiel.simme.server.menu.IMenu#setUser(ManagedUser)
 	 */
-	public void setUser(User u) {
+	public void setUser(ManagedUser mu) {
 		// does not do anything.
 	}
 
@@ -108,54 +112,12 @@ abstract class AbstractMenu implements IMenu {
 	 *            the tag name of the returned xml snippet.
 	 * @param list
 	 *            whether this string is used to show a list.
-	 * @return the start of the xml representation for this object. This will
-	 *         look like
-	 *         <code>&lt;$elementName title="$title" id="$id" [list="true"]</code>.
-	 *         Note that the opening tag is not closed by <code>&gt;</code>.
-	 *         The attribute <i>list </i> will only be added to the string if
-	 *         the parameter <code>list</code> is <code>true</code>.
+	 * @return the start of the xml representation for this object. 
+	 * 
+	 * @see XMLUtils#createXmlStart(String, String, String, boolean)
 	 */
 	protected String createXMLStart(String elementName, boolean list) {
-		return createXmlStart(title, id, elementName, list);
-	}
-
-	static String createXmlStart(String title, String id, String elementName, boolean list) {
-		StringBuffer xml = new StringBuffer("<");
-		xml.append(elementName);
-
-		addAttrToBuf(ISimpleInfo.ATTR_TITLE, title, xml);
-		addAttrToBuf(ISimpleInfo.ATTR_ID, id, xml);
-		// obey to client's limitation and use XMLElement implementation instead
-		// of Boolean.toString(bool).
-		if (list) {
-			addAttrToBuf(ISimpleInfo.ATTR_LIST, XMLElement.TRUE, xml);
-		}
-
-		return xml.toString();
-	}
-
-	/**
-	 * Adds an attribute to the given string buffer object. Effectively this
-	 * method appends a string in the following format to the buffer, prepended
-	 * by a single space (" "):
-	 * 
-	 * <code>$paramName="$paramValue"</code>
-	 * 
-	 * @param paramName
-	 *            the attribute's name.
-	 * @param paramValue
-	 *            the attribute's value.
-	 * @param buf
-	 *            the buffer.
-	 */
-	protected static void addAttrToBuf(String paramName, String paramValue, StringBuffer buf) {
-		// single space
-		buf.append(" ");
-		// name="value"
-		buf.append(paramName);
-		buf.append("=\"");
-		buf.append(paramValue);
-		buf.append("\"");
+		return XMLUtils.createXmlStart(title, id, elementName, list);
 	}
 
 	/**

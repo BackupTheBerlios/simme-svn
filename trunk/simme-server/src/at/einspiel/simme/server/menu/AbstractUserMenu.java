@@ -1,14 +1,14 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: AbstractUserMenu.java
-//                  $Date: 2004/09/02 10:21:49 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/09/13 15:11:53 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
 import org.w3c.dom.Element;
 
-import at.einspiel.base.User;
+import at.einspiel.simme.server.ManagedUser;
 
 /**
  * This class is used to create menus, that can be configured for specific
@@ -19,7 +19,7 @@ import at.einspiel.base.User;
  */
 abstract class AbstractUserMenu extends AbstractMenu {
 
-    User u;
+    ManagedUser mu;
     
     /** @see AbstractMenu#AbstractMenu(String, String) */
     public AbstractUserMenu(String title, String id) {
@@ -31,9 +31,9 @@ abstract class AbstractUserMenu extends AbstractMenu {
         super(e);
     }
     
-    /** @see at.einspiel.simme.server.menu.AbstractMenu#setUser(at.einspiel.base.User) */
-    public void setUser(User u) {
-        this.u = u;
+    /** @see at.einspiel.simme.server.menu.AbstractMenu#setUser(ManagedUser) */
+    public void setUser(ManagedUser mu) {
+        this.mu = mu;
     }
     
     /**

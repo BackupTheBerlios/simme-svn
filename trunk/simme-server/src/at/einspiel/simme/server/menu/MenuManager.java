@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: MenuManager.java
-//                  $Date: 2004/09/07 13:30:36 $
-//              $Revision: 1.8 $
+//                  $Date: 2004/09/13 15:11:53 $
+//              $Revision: 1.9 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
@@ -18,7 +18,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import at.einspiel.base.User;
+import at.einspiel.simme.server.ManagedUser;
 import at.einspiel.util.XMLUtils;
 
 /**
@@ -187,7 +187,7 @@ public class MenuManager {
 	 * @return the menu associated with <code>id</code>, or <code>null</code>,
 	 *         if no such menu exists.
 	 * 
-	 * @see #getMenu(String, User)
+	 * @see #getMenu(String, ManagedUser)
 	 */
 	public IMenu getMenu(String id) {
 		if (id == null) {
@@ -214,7 +214,7 @@ public class MenuManager {
 	 * 
 	 * @see #getMenu(String)
 	 */
-	public IMenu getMenu(String id, User u) {
+	public IMenu getMenu(String id, ManagedUser u) {
 		IMenu currentMenu = getMenu(id);
 		if (u != null && currentMenu != null) {
 			// clone menu and set specific user
@@ -239,7 +239,7 @@ public class MenuManager {
 	 *            <code>selectedPosition</code>.
 	 * @return a corresponding menu.
 	 */
-	public IMenu getMenu(String menuId, int selectedPosition, User u) {
+	public IMenu getMenu(String menuId, int selectedPosition, ManagedUser u) {
 		IMenu menu = getMenu(menuId);
 		String[] options = menu.getOptions();
 		if (selectedPosition >= options.length) {

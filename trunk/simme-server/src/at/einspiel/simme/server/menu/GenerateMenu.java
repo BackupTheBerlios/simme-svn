@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: GenerateMenu.java
-//                  $Date: 2004/09/07 13:30:36 $
-//              $Revision: 1.5 $
+//                  $Date: 2004/09/13 15:11:53 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
@@ -16,7 +16,9 @@ import at.einspiel.base.UserException;
 import at.einspiel.db.UserDB;
 import at.einspiel.messaging.ISimpleInfo;
 import at.einspiel.simme.nanoxml.XMLElement;
+import at.einspiel.simme.server.ManagedUser;
 import at.einspiel.simme.server.SessionManager;
+import at.einspiel.util.XMLUtils;
 
 /**
  * A menu that generates its contents from the database.
@@ -31,20 +33,20 @@ class GenerateMenu extends AbstractListMenu {
 	static final String USERS_ALL = "all";
 	/**
 	 * Shows all users currently not playing a game. The user calling this menu
-	 * via {@link #setUser(User)}is not in the result list.
+	 * via {@link #setUser(ManagedUser)}is not in the result list.
 	 */
 	static final String USERS_WAITING = "waiting";
 	/**
 	 * Shows all users currently online, i.e. either playing a game, browsing
 	 * the tables or waiting for the next game. The user calling this menu via
-	 * {@link #setUser(User)}is not in the result list.
+	 * {@link #setUser(ManagedUser)}is not in the result list.
 	 */
 	static final String USERS_ONLINE = "online";
 
 	private final String prefix, suffix;
 
 	private String type;
-	private User u;
+	private ManagedUser u;
 
 	/**
 	 * Creates a new instance of <code>GenerateMenu</code>.
@@ -68,7 +70,7 @@ class GenerateMenu extends AbstractListMenu {
 		// prefix
 		buf.append(createXMLStart(TAG_NAME, true));
 		// meta-info
-		addAttrToBuf(ISimpleInfo.ATTR_METAINFO, XMLElement.TRUE, buf);
+		XMLUtils.addAttrToBuf(ISimpleInfo.ATTR_METAINFO, XMLElement.TRUE, buf);
 		// end of start tag
 		buf.append('>');
 		prefix = buf.toString();
@@ -144,7 +146,7 @@ class GenerateMenu extends AbstractListMenu {
 				// append user information to string buffer
 				foundUser.toString(info);
 				// create short textual info
-				return TextMenu.createTextXml(messageTitle, id, info.toString(), true);
+				return TextXml.createTextXml(messageTitle, id, info.toString(), true);
 			} catch (NoSuchUserException e) {
 				e.printStackTrace();
 			}
@@ -173,9 +175,9 @@ class GenerateMenu extends AbstractListMenu {
 	// UserMenu implementation
 	// 
 
-	/** @see AbstractMenu#setUser(User) */
-	public void setUser(User u) {
-		this.u = u;
+	/** @see AbstractMenu#setUser(ManagedUser) */
+	public void setUser(ManagedUser mu) {
+		this.u = mu;
 	}
 
 	/**
