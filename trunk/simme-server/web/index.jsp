@@ -1,10 +1,10 @@
 <%@page contentType="text/html"%>
 <html>
-<head><title>Simme HTML</title></head>
+<head><title>main entry page</title></head>
 <body>
-<H1>Simme</H1>
+<H1>Servas</H1>
 
-From <A href='showOnline.jsp'>here</A> you can see the online users.
+from <A href='showOnline.jsp'>here</A> you can see the online users.
 
 </body>
 </html>
