@@ -1,17 +1,11 @@
 package at.einspiel.simme.client.ui;
 
+import javax.microedition.lcdui.*;
+
 import at.einspiel.simme.client.Game;
 import at.einspiel.simme.client.GameRandomAI;
 import at.einspiel.simme.client.Sim;
 import at.einspiel.simme.client.util.DrawUtils;
-
-import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.CommandListener;
-import javax.microedition.lcdui.Display;
-import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.Font;
-import javax.microedition.lcdui.Graphics;
 
 class Zeichenblatt extends Canvas implements CommandListener {
 
@@ -21,7 +15,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
     private static byte linewidth;
     private static final Command CMD_CANCEL = new Command("Abbruch", Command.CANCEL, 1);
     private static final Command CMD_NEWGAME = new Command("Neu", Command.OK, 1);
-    private static final Command CMD_NEWGAME2 = new Command("Neu", Command.OK, 1);
+    private static final Command CMD_NEWGAME_SINGLE = new Command("Neu", Command.OK, 1);
 
     /** Inner and outer colors of player1's lines */
     private static int p1c1, p1c2;
@@ -46,7 +40,6 @@ class Zeichenblatt extends Canvas implements CommandListener {
 
     /** game */
     private Game game;
-    private Zeichenblatt zeichenblatt;
     int[][] node = new int[NB_NODES][2];
 
     static final String[] NODE_LABELS = { "1", "2", "3", "4", "5", "6" };
@@ -146,7 +139,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
 
         if (game.getWinner() != 0) {
             if (!single) {
-                addCommand(CMD_NEWGAME2);
+                addCommand(CMD_NEWGAME_SINGLE);
             } else {
                 addCommand(CMD_NEWGAME);
             }
@@ -324,14 +317,17 @@ class Zeichenblatt extends Canvas implements CommandListener {
     public void commandAction(Command c, Displayable d) {
         Display display = Sim.getDisplay();
 
+        Displayable displayable = null;
         if (c == CMD_CANCEL) {
-            display.setCurrent(Sim.getMainScreen());
+            displayable = Sim.getMainScreen();
         } else if (c == CMD_NEWGAME) {
-            zeichenblatt = new Zeichenblatt();
-            display.setCurrent(zeichenblatt);
-        } else if (c == CMD_NEWGAME2) {
-            zeichenblatt = new Zeichenblatt(true);
-            display.setCurrent(zeichenblatt);
+            displayable = new Zeichenblatt();
+        } else if (c == CMD_NEWGAME_SINGLE) {
+            displayable = new Zeichenblatt(true);
+        }
+        
+        if (displayable != null) {
+            display.setCurrent(displayable);
         }
     }
 }
