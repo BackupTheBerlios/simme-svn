@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: Logger.java
-//                  $Date: 2004/09/13 15:19:26 $
-//              $Revision: 1.4 $
+//                  $Date: 2004/09/13 23:38:01 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package at.einspiel.logging;
 
@@ -123,7 +123,7 @@ public class Logger {
 	private static String addClassInfo(String message, Class c) {
 		String name = c.getName();
 		int dotPos = name.lastIndexOf('.');
-		return "#" + name.substring(dotPos + 1) + "# " + message;
+		return "[" + Thread.currentThread()  + "] #" + name.substring(dotPos + 1) + "# " + message;
 		//+ " \t_" + Thread.currentThread();
 	}
 
