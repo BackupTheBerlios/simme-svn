@@ -36,6 +36,20 @@
 
     </section>
 
+	<section><title>Development Releases</title>
+
+		<p>Here is a list of recent development files. These are only packaged
+		versions of the current SVN revision. The bundled release notes and
+		changelog are not up to date.</p>
+
+		<ul>
+			<li>SimME (MIDlet) -&gt; <a href="simmeclient-src-0.0.7pre.tar.gz">0.0.7pre</a></li>
+			<li>SimME Server -&gt; <a href="simmeserver-src-0.0.7pre.tar.gz">0.0.7pre</a></li>
+		</ul>
+
+
+	</section>
+
   </section>
 </body>
 </page>

@@ -47,6 +47,12 @@
 											<xsl:with-param name="name">Files</xsl:with-param>
 										</xsl:call-template>
 									</tr>
+									<tr>
+										<xsl:call-template name="menu">
+											<xsl:with-param name="page">links.html</xsl:with-param>
+											<xsl:with-param name="name">Links</xsl:with-param>
+										</xsl:call-template>
+									</tr>
 								</table>
 							</td>
 							<td width="100%">

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="website.xsl"?>
+<page id="links">
+	<meta>
+		<title>SimME - Links</title>
+	</meta>
+
+<body>
+	<section><title>SimME - Links</title>
+
+		<p>A collection of the most important links.</p>
+
+
+		<section><title>Websites and Public Info</title>
+
+			<table>
+				<tr>
+					<td>
+						<a href="http://simme.berlios.de/">simme.berlios.de</a>
+					</td>
+					<td>
+						The main page of the site you are currently visiting.
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="http://www.einspiel.at/">einspiel.at</a>
+					</td>
+					<td>
+						The site that will feature the game portal.
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="http://openfacts.berlios.de/index-en.phtml?title=SimME">SimME Wiki</a>
+					</td>
+					<td>
+						The wiki for SimME.
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="http://developer.berlios.de/project/showfiles.php?group_id=730">File Releases</a>
+					</td>
+					<td>
+						SimME's file releases.
+					</td>
+				</tr>
+			</table>
+
+		</section>
+
+
+		<section><title>Development Info</title>
+
+			<table>
+				<tr>
+					<td>
+						<a href="http://openfacts.berlios.de/index-en.phtml?title=SimME/DevDocs/SVN">SVN access</a>
+					</td>
+					<td>
+						Information about the SVN access in our wiki.
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="http://developer.berlios.de/projects/simme/">Project Page</a>
+					</td>
+					<td>
+						The project page hosted by Berlios.
+					</td>
+				</tr>
+			</table>
+
+		</section>
+
+		<section><title>Development Environment</title>
+
+			<table>
+				<tr>
+					<td>
+						<a href="http://www.eclipse.org/">Eclipse IDE</a>
+					</td>
+					<td>
+						The IDE used by the development team.
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="http://www.tortoisesvn.org/">Tortoise SVN</a>
+					</td>
+					<td>
+						Subversion client for Windows.
+					</td>
+				</tr>
+			</table>
+
+		</section>
+
+
+	</section>
+</body>
+</page>
