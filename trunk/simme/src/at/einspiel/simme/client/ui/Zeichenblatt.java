@@ -1,13 +1,14 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: Zeichenblatt.java
-//               $Date: 2004/06/07 09:27:25 $
-//           $Revision: 1.7 $
+//               $Date: 2004/08/12 21:58:37 $
+//           $Revision: 1.8 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
 import javax.microedition.lcdui.*;
 
+import at.einspiel.logging.Logger;
 import at.einspiel.simme.client.*;
 import at.einspiel.simme.client.Game;
 import at.einspiel.simme.client.GameRandomAI;
@@ -101,7 +102,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
 
         width = getWidth();
         height = getHeight();
-        System.out.println("pointer events :" + hasPointerEvents()); 
+        Logger.debug("pointer events :" + hasPointerEvents()); 
         setDisplayParameters(false);
     }
 
@@ -317,7 +318,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
             node[5] = new int[] { col1, row2 };
         }
 
-        System.out.println("Diameter: " + diameter);
+        Logger.debug("Diameter: " + diameter);
 
     }
 
