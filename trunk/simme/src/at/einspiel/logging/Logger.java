@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: Logger.java
-//                  $Date: 2004/09/02 10:17:05 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/09/07 13:21:08 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.logging;
 
@@ -36,11 +36,13 @@ public class Logger {
 	 * the verbose level is high enough, the message will be printed to stdout.
 	 * Otherwise stderr is used.
 	 * </p>
-	 * 
 	 * <p>
 	 * Irrespective the verbose level all messages will be appended to the
 	 * current log.
 	 * </p>
+	 * 
+	 * @param c
+	 *            the class which has called the log method.
 	 * 
 	 * @param message
 	 *            the message.
@@ -98,7 +100,8 @@ public class Logger {
 	private static String addClassInfo(String message, Class c) {
 		String name = c.getName();
 		int dotPos = name.lastIndexOf('.');
-		return "#" + name.substring(dotPos + 1) + "# " + message;
+		return "#" + name.substring(dotPos + 1) + "# " + message + "  \t_"
+				+ Thread.currentThread();
 	}
 
 	/**
