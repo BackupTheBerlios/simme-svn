@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: GameSinglePlayer.java
-//                  $Date: 2004/09/13 15:26:53 $
-//              $Revision: 1.4 $
+//                  $Date: 2004/09/14 22:29:49 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client;
 
@@ -62,6 +62,25 @@ public abstract class GameOnePlayer extends Game {
 		if (getPlayersTurn() != controlledPlayer) {
 			doOtherPlayersMove();
 		}
+	}
+
+	/**
+	 * Selects the node after verifiying, that the current user may select this
+	 * node.
+	 * 
+	 * @param index
+	 *            the node index to be selected
+	 * @return whether the selection was successfull. Will return
+	 *         <code>false</code>, if the controlled player is not currently
+	 *         on turn.
+	 * @see at.einspiel.simme.client.Game#selectNode(byte)
+	 */
+	public boolean selectNode(byte index) {
+		if (getPlayersTurn() != controlledPlayer) {
+			setMoveMessage("Gegner ist am Zug.");
+			return false;
+		}
+		return super.selectNode(index);
 	}
 
 	/**
