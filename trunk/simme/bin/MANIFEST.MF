@@ -1,0 +1,7 @@
+MIDlet-1: SimME, /icons/SimME.png, test.sim.Sim
+MIDlet-Description: 
+MIDlet-Name: SimME
+MIDlet-Vendor: Georg Spielmann & Kariem Hussein
+MIDlet-Version: 1.0
+MicroEdition-Configuration: CLDC-1.0
+MicroEdition-Profile: MIDP-1.0

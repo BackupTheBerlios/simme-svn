@@ -1,0 +1,7 @@
+MIDlet-1: SimME, /icons/SimME.png, test.sim.Sim
+MIDlet-Description: 
+MIDlet-Jar-Size: 22115
+MIDlet-Jar-URL: SimME.jar
+MIDlet-Name: SimME
+MIDlet-Vendor: Georg Spielmann & Kariem Hussein
+MIDlet-Version: 1.0
