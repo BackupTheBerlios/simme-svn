@@ -191,7 +191,6 @@ class Zeichenblatt extends Canvas implements CommandListener {
       // Punkte zeichnen
       for (i = 0; i < 6; i++) {
          if (game.isDisabled(i)) {
-         	System.out.println("disabled");
             c1 = ndc1;
             c2 = ndc2;
          } else if (game.isActivated(i)) {
