@@ -138,7 +138,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
       int margin = ((width + height) / 2) / 5;
       if (width <= (4 * height) / 3) {
          xoff = (width - margin) / 3;
-         yoff = (height - margin) / 3;
+         yoff = (width - margin) / 3;
 
          margin /= 2;
          node[0][0] = xoff + margin;
