@@ -2,11 +2,11 @@
 <!--
    [Simme-Server]
           Java ServerPage: doLogin.jsp
-                    $Date: 2003/12/28 18:21:42 $
-                $Revision: 1.4 $
+                    $Date: 2004/08/25 15:44:04 $
+                $Revision: 1.5 $
 -->
 
-<%@page import="at.einspiel.simme.server.management.ManagedUser"%>
+<%@page import="at.einspiel.simme.server.*"%>
 
 <%@taglib prefix="c" uri="/WEB-INF/tlds/c.tld"%>
 <%@taglib prefix="x" uri="/WEB-INF/tlds/x.tld"%>
@@ -32,12 +32,10 @@
         </jsp:useBean>
 
         <%
-            // retrieve the user from the session's context
-            ManagedUser u = (ManagedUser) session.getAttribute("user");
             // login
-            out.print(u.login((String) pageContext.getAttribute("version")).toString());
+            out.print(user.login((String) pageContext.getAttribute("version")).toString());
             // print user to console
-            System.out.println(request.getParameter("user"));
+            System.out.println("Login request by user: " + request.getParameter("user"));
         %>
     </c:otherwise>
 </c:choose>
