@@ -1,11 +1,11 @@
 <%@ page contentType="text/xml; charset=UTF-8"%>
-<%@ page import="at.einspiel.simme.server.*"%>
+<%@ page language="java" import="at.einspiel.simme.server.*"%>
 <%@ taglib prefix="c" uri="/WEB-INF/tlds/c.tld" %>
 <%/*
    [Simme-Server]
           Java ServerPage: doLogin.jsp
-                    $Date: 2004/09/07 13:19:21 $
-                $Revision: 1.7 $
+                    $Date: 2004/09/13 15:17:19 $
+                $Revision: 1.8 $
 */%>
 <c:choose>
     <c:when test="${(empty param.user) || (empty param.pwd)}">
