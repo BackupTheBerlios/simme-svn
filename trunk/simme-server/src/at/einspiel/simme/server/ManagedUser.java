@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: ManagedUser.java
-//                  $Date: 2004/09/13 15:15:00 $
-//              $Revision: 1.9 $
+//                  $Date: 2004/09/13 23:43:48 $
+//              $Revision: 1.10 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
@@ -121,14 +121,6 @@ public class ManagedUser extends User implements IChangeSupport, IStateListener 
 		return SessionManager.getInstance().addUser(this, version);
 	}
 
-	/** Starts a game against the first available opponent. */
-	public void startGame() {
-		// first set the user to waiting
-		this.state.setStateCategory(UserState.STATE_WAITING);
-		// ... user manager will initialize the game, if possible
-
-	}
-
 	/**
 	 * Returns the current state of the user.
 	 * 
@@ -166,6 +158,13 @@ public class ManagedUser extends User implements IChangeSupport, IStateListener 
 		return state;
 	}
 
+	/** Makes the user start playing a game. */
+	public void startPlaying() {
+		if (game != null) {
+			state.startPlaying();
+		}
+	}
+	
 	/**
 	 * Returns whether the user is playing.
 	 * @return <code>true</code> if the user is playing, <code>false</code>
@@ -229,6 +228,7 @@ public class ManagedUser extends User implements IChangeSupport, IStateListener 
 	 *         <code>null</code> if the game is <code>null</code>.
 	 */
 	public Result makeMove(Move m) {
+		updateStatus();
 		if (game != null) {
 			if (!game.isRunning()) {
 				game.startGame();

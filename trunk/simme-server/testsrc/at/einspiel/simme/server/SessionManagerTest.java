@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: SessionManagerTest.java
-//                  $Date: 2004/09/13 15:10:28 $
-//              $Revision: 1.6 $
+//                  $Date: 2004/09/13 23:43:48 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
@@ -65,7 +65,7 @@ public class SessionManagerTest extends TestCase {
         assertEquals(NB_USERS, sMgr.getNumberOfUsers());
 
         // set "five" to WAITING
-        users[4].startGame();
+        users[4].waitForGame();
 
         // wait for more than a second
         try {

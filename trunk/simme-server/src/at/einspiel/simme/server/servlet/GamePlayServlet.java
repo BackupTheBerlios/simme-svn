@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: GamePlayServlet.java
-//                  $Date: 2004/09/13 15:11:27 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/09/13 23:43:48 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.servlet;
 
@@ -51,6 +51,11 @@ public class GamePlayServlet extends AbstractServlet {
 		if (game == null) {
 			out.print("User '" + u.getNick()
 					+ "does not seem to have a game running at the moment.");
+		}
+		
+		// if not set to playing, set the player's state to playing
+		if (!u.isPlaying()) {
+			u.startPlaying();
 		}
 
 		// move send or move receive?

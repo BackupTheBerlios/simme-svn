@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: ManagedGame.java
-//                  $Date: 2004/09/13 15:14:14 $
-//              $Revision: 1.6 $
+//                  $Date: 2004/09/13 23:43:48 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
@@ -12,8 +12,11 @@ import at.einspiel.mgmt.StateEvent;
 import at.einspiel.simme.server.net.MoveMessageXML;
 
 /**
- * Represents a game that is managed by the server.
- * 
+ * Represents a game that is managed by the server. The game will be started
+ * automatically, if both players' states are set to playing.
+ *
+ * @see at.einspiel.simme.server.ManagedUser#isPlaying()
+ *  
  * @author kariem
  */
 public class ManagedGame extends ServerGame implements IStateListener {
