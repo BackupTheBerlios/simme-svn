@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: MenuManager.java
-//                  $Date: 2004/02/23 10:55:39 $
-//              $Revision: 1.3 $
+//                  $Date: 2004/04/03 23:39:13 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
@@ -43,9 +43,9 @@ import at.einspiel.util.XMLUtils;
  * &lt;/menus&gt;
  * </pre>
  * 
- * The attribute <code>default</code> is optional. It defines the default menu
- * for the <code>MenuManager</code>. If omitted, {@linkplain IMenu#DEFAULT_ID}
- * is taken.
+ * The attribute <code>default</code> is optional. It defines the default menu,
+ * i.e. the first menu to be shown, for the <code>MenuManager</code>. If
+ * omitted, {@linkplain IMenu#DEFAULT_ID} is taken.
  * 
  * @author kariem
  */
@@ -184,4 +184,24 @@ public class MenuManager {
       }
       return (IMenu) menus.get(id);
    }
+
+   /**
+    * Returns the menu that results on a selection of the menu identified by the
+    * id <code>currentMenu</code> at the <code>selectedPosition</code>.
+    * @param currentMenu the id of the current menu.
+    * @param selectedPosition the selected position within this menu.
+    * @return a corresponding menu.
+    */
+   public IMenu getMenu(byte currentMenu, int selectedPosition) {
+       IMenu menu = getMenu(Byte.toString(currentMenu));
+       String[] options = menu.getOptions();
+       if (selectedPosition >= options.length) {
+           selectedPosition = 0;
+           // TODO error logging
+           System.err.println("menu selected position out of bounds");
+       }
+       String selection = menu.getOptions()[selectedPosition];
+       return getMenu(menu.getIdFor(selection));
+   }
+
 }

@@ -2,19 +2,19 @@
 <menus>
 
     <list title="Welcome" id="0" list="true">
-        <child name="First entry" id="1"/>
-        <child name="Second entry" id="2"/>
-        <child name="Third entry" id="3"/>
+        <child id="1">First entry</child>
+        <child id="2">Second entry</child>
+        <child id="3">Third entry</child>
     </list>
 
-    <text title="First" id="1" msg="testmessage1"/>
+    <text title="First" id="1" msg="testmessage 1"/>
 
-    <text title="Second" id="2" msg="testmessage1"/>
+    <text title="Second" id="2" msg="testmessage 2"/>
 
     <list title="Third" id="3" list="true">
-        <child name="Main screen - welcome" id="0"/>
-        <child name="First entry" id="1"/>
-        <child name="Second entry" id="2"/>
+        <child id="0">Main screen - welcome</child>
+        <child id="1">First entry</child>
+        <child id="2">Second entry</child>
     </list>
 
 </menus>

@@ -2,19 +2,19 @@
 <test>
     <menus>
         <list title="text" id="0">
-            <child name="text1" id="1"/>
-            <child name="text2" id="2"/>
+            <child id="1">text1</child>
+            <child id="2">text2</child>
         </list>
         <list title="Willkommen" id="0">
-            <child name="Sofort Spielen" id="1"/>
-            <child name="Gegner Wählen" id="4"/>
-            <child name="Wer ist online?" id="5"/>
-            <child name="Spielerliste" id="6"/>
-            <child name="Hilfe" id="7"/>
+            <child id="1">Sofort Spielen</child>
+            <child id="4">Gegner Wählen</child>
+            <child id="5">Wer ist online?</child>
+            <child id="6">Spielerliste</child>
+            <child id="7">Hilfe</child>
         </list>
     </menus>
     <results>
-        <list title="text" id="0" list="true"><child name="text1"/><child name="text2"/></list>
-        <list title="Willkommen" id="0" list="true"><child name="Sofort Spielen"/><child name="Gegner Wählen"/><child name="Wer ist online?"/><child name="Spielerliste"/><child name="Hilfe"/></list>
+        <list title="text" id="0" list="true"><child>text1</child><child>text2</child></list>
+        <list title="Willkommen" id="0" list="true"><child>Sofort Spielen</child><child>Gegner Wählen</child><child>Wer ist online?</child><child>Spielerliste</child><child>Hilfe</child></list>
     </results>
 </test>

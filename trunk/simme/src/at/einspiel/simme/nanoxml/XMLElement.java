@@ -1,7 +1,7 @@
 /* XMLElement.java
  *
- * $Revision: 1.3 $
- * $Date: 2003/12/27 19:53:12 $
+ * $Revision: 1.4 $
+ * $Date: 2004/04/03 23:39:26 $
  * $Name:  $
  *
  * This file is part of NanoXML 2 Lite.
@@ -121,9 +121,9 @@ import java.util.Vector;
 public class XMLElement {
 
     /** Represents true as a string */
-    public static final String TRUE = "1";
+    public static final String TRUE = Boolean.TRUE.toString();
     /** Represents false as a string */
-    public static final String FALSE = "0";
+    public static final String FALSE = Boolean.FALSE.toString();
 
     /**
      * The attributes given to the element.

@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: ListMenu.java
-//                  $Date: 2004/02/21 23:03:13 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/04/03 23:39:13 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
@@ -12,6 +12,8 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import at.einspiel.util.XMLUtils;
 
 /**
  * A simple list showing static entries.
@@ -90,7 +92,7 @@ class ListMenu extends AbstractMenu implements IMenu {
       String itemId;
 
       MenuItem(Element e) {
-         name = e.getAttribute("name");
+         name = XMLUtils.getText(e);
          itemId = e.getAttribute("id");
       }
 
@@ -99,9 +101,9 @@ class ListMenu extends AbstractMenu implements IMenu {
        * @param buf the buffer to append the information to.
        */
       void appendXmlTo(StringBuffer buf) {
-         buf.append("<child name=\"");
+         buf.append("<child>");
          buf.append(name);
-         buf.append("\"/>");
+         buf.append("</child>");
       }
    }
 
