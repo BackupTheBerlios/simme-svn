@@ -30,5 +30,4 @@ public class NoSuchUserException extends UserException {
    private static String buildNickMissing(String nick) {
       return ("Der Benutzer \"" + nick + "\" konnte nicht gefunden werden.");
    }
-
 }

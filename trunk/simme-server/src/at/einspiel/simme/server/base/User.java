@@ -285,7 +285,7 @@ public class User implements Comparable, Serializable {
         }
         return 1;
     }
-
+    
     /**
      * Inserts the current user into the database.
      *

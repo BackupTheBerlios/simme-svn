@@ -11,118 +11,133 @@ import test.sim.Game;
  */
 public class ServerGame {
 
-   /** date of game in seconds */
-   private int date;
-   private User player1;
-   private User player2;
-   private StopWatch stopwatch;
-   private Game game;
-   private boolean running;
-   private boolean gameover;
+    private static final int ACCURACY = 1000;
 
-   int moves;
-   User winner;
+    /** date of game in seconds */
+    private long date;
+    private StopWatch stopwatch;
+    private Game game;
+    private boolean running;
+    private boolean gameover;
 
-   /**
-    * Creates a new ServerGame object.
-    *
-    * @param p1 first player
-    * @param p2 second player
-    *
-    * @throws Exception if rules are broken.
-    */
-   public ServerGame(User p1, User p2) throws Exception {
-      if (p1.compareTo(p2) == 0) {
-         throw new Exception("Users have same nick names.");
-      }
+    /** first player */
+    protected User player1;
+    /** second player */
+    protected User player2;
 
-      this.player1 = p1;
-      this.player2 = p2;
-      game = new Game();
-      running = false;
-      gameover = false;
-   }
+    int moves;
+    User winner;
 
-   /**
-    * Starts the game
-    */
-   public void startGame() {
-      running = true;
-      game.start();
-      stopwatch.start();
-   }
+    /**
+     * Creates a new ServerGame object.
+     *
+     * @param p1 first player
+     * @param p2 second player
+     *
+     * @throws Exception if rules are broken.
+     */
+    public ServerGame(User p1, User p2) throws Exception {
+        if (p1.getNick().equals(p2.getNick())) {
+            throw new Exception("Users have same nick names.");
+        }
 
-   /**
-    * Stops the game
-    */
-   public void stopGame() {
-      stopwatch.stop();
-      running = false;
-      gameover = true;
-      moves = game.getMoveNr();
-   }
+        this.player1 = p1;
+        this.player2 = p2;
+        game = new Game();
+        running = false;
+        gameover = false;
+    }
 
-   /**
-    * Cancels this game.
-    */
-   public void cancelGame() {
-   }
+    /**
+     * Starts the game
+     */
+    public void startGame() {
+        running = true;
+        game.start();
+        stopwatch.start();
+    }
 
-   /**
-    * Returns the length of this game in ms
-    *
-    * @return The length of this game.
-    */
-   public long getLength() {
-      if (gameover) {
-         return stopwatch.getDuration();
-      }
+    /**
+     * Stops the game
+     */
+    public void stopGame() {
+        stopwatch.stop();
+        running = false;
+        gameover = true;
+        moves = game.getMoveNr();
+    }
 
-      return 0;
-   }
+    /**
+     * Cancels this game.
+     */
+    public void cancelGame() {
+    }
 
-   /**
-    * Returns the date of the game. The accuracy is in seconds.
-    * @return The date, of this game.
-    */
-   public Date getDate() {
-      return new Date(date * 1000);
-   }
+    /**
+     * Returns the length of this game in ms
+     *
+     * @return The length of this game.
+     */
+    public long getLength() {
+        if (gameover) {
+            return stopwatch.getDuration();
+        }
 
-   /**
-    * Sets the date of this game. All information more exact than seconds will
-    * be dropped.
-    * @param d The new date.
-    */
-   public void setDate(Date d) {
-      this.date = (int) (d.getTime() / 1000);
-   }
+        return 0;
+    }
 
-   /**
-    * Class that is used to stop the length of this game
-    */
-   class StopWatch {
-      private long startTime;
-      private long accumulatedTime;
-      private boolean running;
+    /**
+     * Returns the date of the game. The accuracy is in seconds.
+     * @return The date, of this game.
+     */
+    public Date getDate() {
+        return new Date(date - (date % ACCURACY));
+    }
 
-      public void start() {
-         startTime = System.currentTimeMillis();
-         accumulatedTime = 0;
-         running = true;
-      }
+    /**
+     * Sets the date of this game. All information more exact than seconds will
+     * be dropped.
+     * @param d The new date.
+     */
+    public void setDate(Date d) {
+        long time = d.getTime();
+        this.date = (time - (time % ACCURACY));
+    }
 
-      public void stop() {
-         accumulatedTime = System.currentTimeMillis() - startTime;
-         running = false;
-      }
+    /**
+     * Returns whether the game is currently running.
+     * 
+     * @return <code>true</code> if the game is running.
+     */
+    protected boolean isRunning() {
+        return running;
+    }
 
-      public long getDuration() {
-         if (running) {
-            return 0;
-         }
+    /**
+     * Class that is used to stop the length of this game
+     */
+    class StopWatch {
+        private long startTime;
+        private long accumulatedTime;
+        private boolean running;
 
-         return accumulatedTime;
-      }
-   }
+        public void start() {
+            startTime = System.currentTimeMillis();
+            accumulatedTime = 0;
+            running = true;
+        }
+
+        public void stop() {
+            accumulatedTime = System.currentTimeMillis() - startTime;
+            running = false;
+        }
+
+        public long getDuration() {
+            if (running) {
+                return 0;
+            }
+
+            return accumulatedTime;
+        }
+    }
 }

@@ -20,19 +20,11 @@ public class SimpleXmlMessage implements Message {
    public SimpleXmlMessage(String msg) {
       xml = new XMLElement();
       xml.setName("message");
+      xml.setAttribute("msg", msg);
    }
 
    /** @see at.einspiel.simme.server.messaging.Message#getMessage() */
    public String getMessage() {
       return xml.toString();
    }
-
-   /**
-    * Sets the message.
-    * @param string the message.
-    */
-   public void setMessage(String string) {
-      xml.setAttribute("msg", string);
-   }
-
 }

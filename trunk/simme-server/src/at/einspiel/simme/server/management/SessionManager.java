@@ -3,6 +3,7 @@ package at.einspiel.simme.server.management;
 import at.einspiel.simme.server.base.User;
 import at.einspiel.simme.server.base.UserException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -24,18 +25,10 @@ import test.sim.net.SendableUI;
  */
 public class SessionManager {
 
-    private static final int DEF_UPDATE_INTERVAL = 30000; // 30 seconds
-    private static final int DEF_SECONDS_IDLE = 300; // 5 minutes
-    private static final int DEF_SECONDS_WAITING = 600; // 10 minutes
-    
-
-    private static int updateInterval = DEF_UPDATE_INTERVAL; 
-    private static int maxSecondsIdle = DEF_SECONDS_IDLE; // 5 minutes
-    private static int maxSecondsWaiting = DEF_SECONDS_WAITING; // 10 minutes
     private static final String MGMT_PAGE = "sessionsMgr.jsp";
 
     SortedMap users;
-    Thread updater;
+    UserManager stMgr;
 
     private static SessionManager instance;
 
@@ -62,8 +55,8 @@ public class SessionManager {
     /** Initializes this object. */
     private void init() {
         users = Collections.synchronizedSortedMap(new TreeMap());
-        updater = new UserUpdater(users.values());
-        updater.start();
+        stMgr = new UserManager(users);
+        stMgr.manage();
     }
 
     /**
@@ -131,9 +124,7 @@ public class SessionManager {
      */
     public void addManagedUser(ManagedUser user) {
         System.out.println("[" + System.currentTimeMillis() + "] adding " + user.getNick());
-        synchronized (users) {
-            users.put(user.getNick(), user);
-        }
+        stMgr.addUser(user);
     }
 
     /**
@@ -146,9 +137,7 @@ public class SessionManager {
      */
     public boolean removeUser(String nick) {
         System.out.println("[" + System.currentTimeMillis() + "] removing " + nick);
-        synchronized (users) {
-            return users.remove(nick) != null;
-        }
+        return stMgr.removeUser(nick);
     }
 
     /**
@@ -180,81 +169,6 @@ public class SessionManager {
         return users.values().iterator();
     }
 
-    private class UserUpdater extends Thread {
-
-        private boolean running;
-        private Collection users;
-
-        /**
-         * Creates a new <code>UserUpdater</code> that updates the given users
-         * regularly.
-         * 
-         * @param userCollection list of users.
-         */
-        public UserUpdater(Collection userCollection) {
-            this.users = userCollection;
-            running = true;
-        }
-
-        /**
-         * Currently this method removes users after a certain amount of not
-         * responding according to their state.
-         * 
-         * @see Thread#run()
-         */
-        public void run() {
-            while (running) {
-                if (users.size() == 0) {
-                    try {
-                        sleep(getUpdateInterval());
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    continue;
-                }
-                long timeStarted = System.currentTimeMillis();
-                synchronized (users) {
-                    for (Iterator i = users.iterator(); i.hasNext();) {
-                        ManagedUser mu = (ManagedUser) i.next();
-                        switch (mu.getStateCategory()) {
-                            case UserState.STATE_IDLE :
-                                if (mu.secondsSinceLastUpdate() > getMaxSecondsIdle()) {
-                                    i.remove();
-                                }
-                                break;
-
-                            case UserState.STATE_WAITING :
-                                if (mu.secondsSinceLastUpdate() > getMaxSecondsWaiting()) {
-                                    i.remove();
-                                }
-                                break;
-
-                            case UserState.STATE_PLAYING :
-                                break;
-                            default :
-                                assert false : "No such state defined";
-                        }
-                    }
-                }
-
-                // see how much time was used for updates
-                long timeUsed = System.currentTimeMillis() - timeStarted;
-
-                // sleep for the rest of update interval
-                if (getUpdateInterval() - timeUsed > 0) {
-                    try {
-                        sleep(getUpdateInterval() - timeUsed);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        } /** @see Thread#destroy() */
-        public void destroy() {
-            running = false;
-        }
-    }
-
     //   // currently not needed
     //   private class UserStateComparator implements Comparator {
     //
@@ -268,71 +182,26 @@ public class SessionManager {
     //      }
     //   }
 
-    /**
-     * Returns the maximum time in seconds that idle users are allowed to not
-     * respond or update their status
-     * 
-     * @return Time in seconds.
-     */
-    public static int getMaxSecondsIdle() {
-        return maxSecondsIdle;
-    }
 
     /**
-     * Returns the maximum time in seconds that waiting users are allowed to not
-     * respond or update their status
-     * 
-     * @return Time in seconds.
-     */
-    public static int getMaxSecondsWaiting() {
-        return maxSecondsWaiting;
-    }
-
-    /**
-     * Returns the update interval in milliseconds. This is the interval in
-     * which the list of managed users is updated.
-     * 
-     * @return update interval.      
-     */
-    public static int getUpdateInterval() {
-        return updateInterval;
-    }
-
-    /**
-     * Sets the maximum time that idle users are allowed to not respond or update
-     * their status.
-     * 
-     * @param i Time in seconds.
-     */
-    public static void setMaxSecondsIdle(int i) {
-        maxSecondsIdle = i;
-    }
-
-    /**
-     * Sets the maximum time that waiting users are allowed to not respond or
-     * update their status.
-     *
-     * @param i Time in seconds.
-     */
-    public static void setMaxSecondsWaiting(int i) {
-        maxSecondsWaiting = i;
-    }
-
-    /**
-     * Set the update interval in milliseconds.
-     * 
-     * @param i Interval to update the managed users in milliseconds.
-     */
-    public static void setUpdateInterval(int i) {
-        updateInterval = i;
-    }
-
-    /**
-     * Returns the users.
+     * Returns a copy of the current users.
      * 
      * @return the users.
      */
-    public SortedMap getUsers() {
-        return users;
+    public Collection getUsers() {
+        return new ArrayList(users.values());
+    }
+
+    /**
+     * Sets the defaults for the user management.
+     * 
+     * @param secondsIdle the maximum amount of seconds a user may stay idle.
+     * @param secondsWaiting the maximum amount of seconds a user may wait.
+     * @param updtInterval the update intervall.
+     */
+    public static void setDefaults(int secondsIdle, int secondsWaiting, int updtInterval) {
+        UserManager.setMaxSecondsIdle(secondsIdle);
+        UserManager.setMaxSecondsWaiting(secondsWaiting);
+        UserManager.setUpdateInterval(updtInterval);
     }
 }

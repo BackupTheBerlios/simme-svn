@@ -10,6 +10,9 @@ import junit.framework.TestSuite;
  */
 public class ServerTestSuite {
 
+    private ServerTestSuite() {
+    }
+
    /**
     * Runs tests for SimME server
     * 
@@ -22,6 +25,4 @@ public class ServerTestSuite {
 
       return suite;
    }
-   
-   
 }

@@ -34,12 +34,6 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.xerces.parsers.DOMParser;
 import org.w3c.dom.Document;
@@ -64,8 +58,6 @@ public class XmlParser {
    private static Document reusableDocument;
    /** Globally reusable document builder */
    private static DocumentBuilder reusableDocBuilder;
-   /** Globally usable transformer */
-   private static Transformer transformer;
 
    /**
     * Constructor for this Parser.
@@ -195,37 +187,6 @@ public class XmlParser {
       public void fatalError(SAXParseException ex) {
          System.err.println(
             "Fatal Error: (line " + ex.getLineNumber() + ") " + ex.getMessage());
-      }
-   }
-
-   /**
-    * Writes a <code>List</code> of <code>ParsedObject</code>s to a file.
-    * @param o A <code>ParsedObject</code> that should be saved.
-    * @param filename The filename, where the information should be saved.
-    * @param rootName The name of the root element of the xml file.
-    * @throws IOException If there occured an error accessing the file system.
-    * @throws ParserConfigurationException If there is an error with the
-    * underlying XML configuration.
-    * @throws IOException
-    * @throws ParserConfigurationException
-    */
-   public static void writeParsedObject(ParsedObject o, String filename, String rootName)
-      throws IOException, ParserConfigurationException {
-      try {
-         if (transformer == null) {
-            transformer = TransformerFactory.newInstance().newTransformer();
-         }
-         if (reusableDocument == null) {
-            reusableDocument = newDocument();
-         }
-         Element root = o.getXmlRepresentation();
-         File f = new File(filename);
-         System.out.println("Saving to: " + f.getAbsolutePath());
-         transformer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
-         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-         transformer.transform(new DOMSource(root), new StreamResult(new File(filename)));
-      } catch (TransformerException e) {
-         throw new IOException(e.getMessage());
       }
    }
 
