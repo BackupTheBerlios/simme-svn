@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: SessionManager.java
-//                  $Date: 2004/09/07 13:30:36 $
-//              $Revision: 1.8 $
+//                  $Date: 2004/09/13 15:17:12 $
+//              $Revision: 1.9 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
@@ -31,7 +31,7 @@ import at.einspiel.simme.server.menu.MenuManager;
  */
 public class SessionManager {
 
-	private static final String MGMT_PAGE = "sessionMgr";
+	private static final String MGMT_PAGE = "SessionMgr";
 
 	/**
 	 * The set of users who are currently logged in. This set is shared with the
@@ -143,7 +143,7 @@ public class SessionManager {
 	 * 
 	 * @return a login result
 	 * 
-	 * @see #addUser(User, String)
+	 * @see #addUser(ManagedUser, String)
 	 */
 	public LoginMessage addUser(String nick, String pwd) {
 		try {
@@ -160,8 +160,9 @@ public class SessionManager {
 	 *            The user which is added.
 	 */
 	private void addManagedUser(ManagedUser user) {
-		// TODO log this 
-		// System.out.println(System.currentTimeMillis() + " adding " + user.getNick());
+		// TODO log this
+		// System.out.println(System.currentTimeMillis() + " adding " +
+		// user.getNick());
 		userManager.addUser(user); // adding to user manager
 	}
 
@@ -176,7 +177,8 @@ public class SessionManager {
 	 */
 	public boolean removeUser(String nick) {
 		// TODO log this
-		// System.out.println("[" + System.currentTimeMillis() + "] removing " + nick);
+		// System.out.println("[" + System.currentTimeMillis() + "] removing " +
+		// nick);
 		return userManager.removeUser(nick);
 	}
 
@@ -223,6 +225,31 @@ public class SessionManager {
 			}
 		}
 		return usersOnline;
+	}
+
+	/**
+	 * Returns the ManagedUser object with the specified nick, if the user is
+	 * online.
+	 * 
+	 * @param nick
+	 *            the user's nick name.
+	 * @return the user associated with the specified nick name, or
+	 *         <code>null</code> if the user does not exist or does not have
+	 *         an active session with the session manager.
+	 */
+	public ManagedUser getOnlineUser(String nick) {
+		return (ManagedUser) users.get(nick);
+	}
+
+	/**
+	 * Returns the game with the given game id.
+	 * @param gameId
+	 *            the game's identification.
+	 * @return the game identified by the given id, or <code>null</code> if no
+	 *         such game was found.
+	 */
+	public ManagedGame getGame(String gameId) {
+		return (ManagedGame) userManager.getGames().get(gameId);
 	}
 
 	/**
