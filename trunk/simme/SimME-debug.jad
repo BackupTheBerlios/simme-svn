@@ -7,4 +7,4 @@ MIDlet-Version: 0.3
 MicroEdition-Configuration: CLDC-1.0 
 MicroEdition-Profile: MIDP-1.0 
 simme.server.base: http://localhost:8080/simme/
-simme.page.login: doLogin.jsp
+simme.page.login: Login

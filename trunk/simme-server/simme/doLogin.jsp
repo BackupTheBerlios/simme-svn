@@ -1,15 +1,14 @@
-<%@page contentType="text/xml; charset=iso-8859-1"%>
+<%@ taglib prefix="c" uri="/WEB-INF/tlds/c.tld" %>
+<%@ page contentType="text/xml; charset=iso-8859-1"%>
+<%@ page import="at.einspiel.simme.server.*"%>
+
+
 <!--
    [Simme-Server]
           Java ServerPage: doLogin.jsp
-                    $Date: 2004/08/25 15:44:04 $
-                $Revision: 1.5 $
+                    $Date: 2004/09/02 10:15:30 $
+                $Revision: 1.6 $
 -->
-
-<%@page import="at.einspiel.simme.server.*"%>
-
-<%@taglib prefix="c" uri="/WEB-INF/tlds/c.tld"%>
-<%@taglib prefix="x" uri="/WEB-INF/tlds/x.tld"%>
 
 <c:choose>
     <c:when test="${(empty param.user) || (empty param.pwd)}">
@@ -25,7 +24,7 @@
         <c:set var="model" value="${param.model}" />
         <c:set var="version" value="${param.version}" />
 
-        <jsp:useBean id="user" class="at.einspiel.simme.server.management.ManagedUser" scope="session">
+        <jsp:useBean id="user" class="at.einspiel.simme.server.ManagedUser" scope="session">
             <jsp:setProperty name="user" property="nick" param="user" />
             <jsp:setProperty name="user" property="pwd" />
             <jsp:setProperty name="user" property="clientmodel" param="model" />
@@ -35,7 +34,8 @@
             // login
             out.print(user.login((String) pageContext.getAttribute("version")).toString());
             // print user to console
-            System.out.println("Login request by user: " + request.getParameter("user"));
+            // TODO log this 
+            log("Login request by user: " + request.getParameter("user"));
         %>
     </c:otherwise>
 </c:choose>
