@@ -29,9 +29,13 @@ class Zeichenblatt extends Canvas implements CommandListener {
 	/** game */
 	private Game game;
 
+	private Zeichenblatt zeichenblatt;
 	private final Sim sim;
 	private static final Command CMD_CANCEL =
 		new Command("Cancel", Command.CANCEL, 1);
+	
+	private static final Command CMD_NEWGAME =
+		new Command("New Game", Command.OK, 1);
 
 	static final byte diameter = 22;
 	static final byte linewidth = 5;
@@ -83,6 +87,9 @@ class Zeichenblatt extends Canvas implements CommandListener {
 		g.setColor(bg);
 		g.fillRect(0, 0, width, height);
 		addCommand(CMD_CANCEL);
+		if (game.getWinner() != 0) {
+			addCommand(CMD_NEWGAME);
+		}
 		setCommandListener(this);
 
 		// Kanten zeichnen
@@ -310,6 +317,10 @@ class Zeichenblatt extends Canvas implements CommandListener {
 	public void commandAction(Command c, Displayable d) {
 		if (c == CMD_CANCEL) {
 			Display.getDisplay(sim).setCurrent(sim.getMainScreen());
+		} else if (c == CMD_NEWGAME) {
+			
+			zeichenblatt = new Zeichenblatt(sim);
+               Display.getDisplay(sim).setCurrent(zeichenblatt);
 		}
 	}
 
