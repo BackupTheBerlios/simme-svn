@@ -271,8 +271,9 @@ public class User implements Comparable, Serializable {
 	public boolean equals(Object obj) {
 		if (obj instanceof User) {
 			User u = (User) obj;
-			boolean same = nick.equals(u.nick) && pwd.equals(pwd) && location.equals(location)
-					&& clientmodel.equals(clientmodel) && info.equals(info);
+			boolean same = nick.equals(u.nick) && pwd.equals(pwd);
+			// && location.equals(location) && clientmodel.equals(clientmodel)
+			// && info.equals(info);
 			return same;
 		}
 		return false;
