@@ -2,18 +2,14 @@
 // [Simme]
 //       Java Source File: ConnectionScreen.java
 //                  $Date: $
-//              $Revision: $
+//              $Revision$
 // ----------------------------------------------------------------------------
 package at.einspiel.midp.ui;
 
 import java.io.IOException;
 
 import javax.microedition.lcdui.*;
-import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.Form;
-import javax.microedition.lcdui.Gauge;
 
-import at.einspiel.logging.Logger;
 import at.einspiel.messaging.Request;
 import at.einspiel.simme.client.Sim;
 import at.einspiel.simme.client.util.UIUtils;
@@ -140,6 +136,7 @@ public class ConnectionScreen extends Form implements CommandListener {
 			// set the display correctly
 			Sim.setDisplay(ConnectionScreen.this);
 
+			
 			int pos = 1;
 			while (isRunning) {
 				try {
@@ -150,7 +147,6 @@ public class ConnectionScreen extends Form implements CommandListener {
 				pos++;
 				pos = pos % MAX_VAL;
 				itProgress.setValue(pos);
-				Logger.debug("running");
 			}
 		}
 
