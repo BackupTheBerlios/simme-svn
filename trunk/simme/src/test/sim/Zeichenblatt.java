@@ -178,21 +178,23 @@ class Zeichenblatt extends Canvas implements CommandListener {
       }
 
       g.setFont(fntPlayerInfo);
+
+      /*
       // Spielerbalken zeichnen
       g.setColor(p1c1);
       DrawUtils.drawLine(g, xPInfo1, yPInfo1middle, xPInfo2, yPInfo1middle, linewidththick);
       g.setColor(p2c1);
       DrawUtils.drawLine(g, xPInfo1, yPInfo2middle, xPInfo2, yPInfo2middle, linewidththick);
-
+      
       // Spielernamen zeichnen
       g.setColor(0);
       g.drawString(game.getP1Name(), xPInfo3, yPInfo1 + linewidththick / 2, 0);
       g.drawString(game.getP2Name(), xPInfo3, yPInfo2 + linewidththick / 2, 0);
-
+      
       // Spielerinfo zeichnen
       DrawUtils.drawStringWithBorder(g, game.getP1Info(), xPInfo5, yPInfo1 + linewidththick / 2, 0);
       DrawUtils.drawStringWithBorder(g, game.getP2Info(), xPInfo5, yPInfo2 + linewidththick / 2, 0);
-
+      
       // derzeitigen Spieler kennzeichnen
       g.setColor(0);
       if (game.getPlayersTurn() == Game.PLAYER1) {
@@ -211,11 +213,17 @@ class Zeichenblatt extends Canvas implements CommandListener {
             linewidththick - 2,
             0,
             360);
-      }
-
+      } 
+      
       // am Ende den jeweiligen Gewinner anzeigen
       if (game.isGameOver()) {
          drawWinner(g);
+      } */
+
+      if (game.getWinner() == Game.PLAYER1) {
+         g.drawString("Red wins", width / 3, height - height / 6, 0);
+      } else if (game.getWinner() == Game.PLAYER2) {
+			g.drawString("Green wins", width / 3, height - height / 6, 0);
       }
 
    }
@@ -223,6 +231,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
    /**
     * Draws "Winner" or "Loser" onto graphics context
     */
+
    private void drawWinner(Graphics g) {
       if (game.getWinner() == Game.PLAYER1) {
          g.drawString("WINNER", xPInfo1 + 2, yPInfo1 + linewidththick / 2, 0);
@@ -238,62 +247,57 @@ class Zeichenblatt extends Canvas implements CommandListener {
     */
 
    private void setDisplayParameters() {
-      if (width * 10 > height * 12) {
-         // landscape configuration
-      } else {
-         // portrait configuration
-         diameter = height / 10;
-         diameter += diameter % 2;
-         linewidth = new Integer(diameter / 4).byteValue();
-         linewidth += linewidth % 3;
-         linewidththick = new Integer(linewidth * 3).byteValue();
+      // portrait configuration
+      diameter = height / 10;
+      diameter += diameter % 2;
+      linewidth = new Integer(diameter / 4).byteValue();
+      linewidth += linewidth % 3;
+      linewidththick = new Integer(linewidth * 3).byteValue();
 
-         int col1 = width / 6;
-         int col2 = 2 * col1;
-         int col3 = 2 * col2;
-         int col4 = col3 + col1;
+      int col1 = width / 6;
+      int col2 = 2 * col1;
+      int col3 = 2 * col2;
+      int col4 = col3 + col1;
 
-         int row2 = height * 5 / 12;
-         int row1 = row2 - (height / 4 - diameter / 2);
-         int row3 = row2 + row2 - row1;
+      int row2 = height / 2;
+      int row1 = row2 - (height / 4 - diameter / 2);
+      int row3 = row2 + row2 - row1;
 
-         node[0] = new int[] { col2, row1 };
-         node[1] = new int[] { col3, row1 };
-         node[2] = new int[] { col4, row2 };
-         node[3] = new int[] { col3, row3 };
-         node[4] = new int[] { col2, row3 };
-         node[5] = new int[] { col1, row2 };
+      node[0] = new int[] { col2, row1 };
+      node[1] = new int[] { col3, row1 };
+      node[2] = new int[] { col4, row2 };
+      node[3] = new int[] { col3, row3 };
+      node[4] = new int[] { col2, row3 };
+      node[5] = new int[] { col1, row2 };
 
-         nodeNumber[0] = new String("1");
-         nodeNumber[1] = new String("2");
-         nodeNumber[2] = new String("3");
-         nodeNumber[3] = new String("4");
-         nodeNumber[4] = new String("5");
-         nodeNumber[5] = new String("6");
+      nodeNumber[0] = new String("1");
+      nodeNumber[1] = new String("2");
+      nodeNumber[2] = new String("3");
+      nodeNumber[3] = new String("4");
+      nodeNumber[4] = new String("5");
+      nodeNumber[5] = new String("6");
 
-         xPInfo1 = col1 - diameter / 2;
-         xPInfo2 = col2 + diameter / 2;
-         xPInfo3 = xPInfo2 + 5;
-         xPInfo4 = col3;
-         xPInfo5 = xPInfo4 + 5;
-         xPInfo6 = col4;
+      xPInfo1 = col1 - diameter / 2;
+      xPInfo2 = col2 + diameter / 2;
+      xPInfo3 = xPInfo2 + 5;
+      xPInfo4 = col3;
+      xPInfo5 = xPInfo4 + 5;
+      xPInfo6 = col4;
 
-         yPInfo1 = height - (height / 3) + 3;
-         yPInfo2 = yPInfo1 + (height / 6) - 3;
+      yPInfo1 = height - (height / 3) + 3;
+      yPInfo2 = yPInfo1 + (height / 6) - 3;
 
-         yPInfo1middle = yPInfo1 + (linewidththick);
-         yPInfo2middle = yPInfo2 + (linewidththick);
+      yPInfo1middle = yPInfo1 + (linewidththick);
+      yPInfo2middle = yPInfo2 + (linewidththick);
 
-         System.out.println("Diameter: " + diameter);
+      System.out.println("Diameter: " + diameter);
 
-         int size = diameter < 16 ? Font.SIZE_SMALL : diameter < 22 ? Font.SIZE_MEDIUM : Font.SIZE_LARGE;
+      int size = diameter < 16 ? Font.SIZE_SMALL : diameter < 22 ? Font.SIZE_MEDIUM : Font.SIZE_LARGE;
 
-         fntNodeLabel = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, size);
-         heightFntNodeLabel = fntNodeLabel.getHeight();
-         fntPlayerInfo = Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, size);
-         heightFntPlayerInfo = fntPlayerInfo.getHeight();
-
-      }
+      fntNodeLabel = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, size);
+      heightFntNodeLabel = fntNodeLabel.getHeight();
+      fntPlayerInfo = Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, size);
+      heightFntPlayerInfo = fntPlayerInfo.getHeight();
 
    }
 
