@@ -117,7 +117,7 @@ public class Database {
      *  @throws SQLException in addition to {@link #executeUpdate(String)} if
      *         <code>params</code> is either <code>null</code> or empty.
      *
-     * @see #executeUpdate(String).
+     * @see #executeUpdate(String)
      */
     public int insert(String tableName, List params) throws SQLException {
         if ((params == null) || (params.size() == 0)) {
@@ -162,7 +162,7 @@ public class Database {
      * @throws SQLException in addition to {@link #executeUpdate(String)} if
      *         <code>params</code> is either <code>null</code> or empty.
      *
-     * @see #executeUpdate(String).
+     * @see #executeUpdate(String)
      */
     public int insert(String tableName, Collection columns, Collection params)
         throws SQLException {
@@ -213,7 +213,7 @@ public class Database {
      * @throws SQLException in addition to {@link #executeUpdate(String)} if
      *         <code>params</code> is either <code>null</code> or empty.
      *
-     * @see #executeUpdate(String).
+     * @see #executeUpdate(String)
      */
     public int delete(String tableName, Map params) throws SQLException {
         if ((params == null) || (params.size() == 0)) {
@@ -257,7 +257,7 @@ public class Database {
      *
      * @throws SQLException see {@link #executeUpdate(String)}
      *
-     * @see #executeUpdate(String).
+     * @see #executeUpdate(String)
      */
     public int delete(String tableName, String tName, String tValue) throws SQLException {
         StringBuffer bufDelete = new StringBuffer("DELETE FROM ");
@@ -282,7 +282,7 @@ public class Database {
      *
      * @throws SQLException see {@link #executeUpdate(String)}
      *
-     * @see #executeUpdate(String).
+     * @see #executeUpdate(String)
      */
     public int delete(String tableName, String tName, double tValue) throws SQLException {
         StringBuffer bufDelete = new StringBuffer("DELETE FROM ");
@@ -305,7 +305,7 @@ public class Database {
      *
      * @throws SQLException see {@link #executeUpdate(String)}
      *
-     * @see #executeUpdate(String).
+     * @see #executeUpdate(String)
      */
     public int update(String tableName, Map attrMap, Map whereMap) throws SQLException {
         StringBuffer buf = new StringBuffer("UPDATE ");
