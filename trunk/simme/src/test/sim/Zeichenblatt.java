@@ -16,7 +16,9 @@ class Zeichenblatt extends Canvas implements CommandListener {
   private static byte linewidth;
   private static final Command CMD_CANCEL = new Command("Cancel", Command.CANCEL, 1);
   private static final Command CMD_NEWGAME = new Command("New Game", Command.OK, 1);
+  private static final Command CMD_NEWGAME2 = new Command("New Game", Command.OK, 1);
 
+  
   /** Inner and outer colors of player1's lines */
   private static int p1c1, p1c2;
 
@@ -52,6 +54,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
   private Font fntPlayerInfo;
 
   private Graphics graphics;
+  boolean single = false;
 
   /**
    * Creates a new screen to play.
@@ -81,13 +84,14 @@ class Zeichenblatt extends Canvas implements CommandListener {
       game = new GameRandomAI();
     } else {
       game = new Game();
+      single = true;
 
     }
-
+      
     // add cancel command
     addCommand(CMD_CANCEL);
     setCommandListener(this);
-
+     
     width = getWidth();
     height = getHeight();
     System.out.println("pointer events :" + hasPointerEvents());
@@ -129,9 +133,14 @@ class Zeichenblatt extends Canvas implements CommandListener {
     graphics.fillRect(0, 0, width, height);
 
     if (game.getWinner() != 0) {
+      if (!single) {
+      addCommand(CMD_NEWGAME2);
+    } else {
       addCommand(CMD_NEWGAME);
+      }
     }
-
+    
+    
     int c1 = nc1;
     int c2 = nc2;
 
@@ -262,8 +271,8 @@ class Zeichenblatt extends Canvas implements CommandListener {
         graphics.drawString(
           s,
           width / 2,
-          height - (height / 6),
-          Graphics.HCENTER | Graphics.BOTTOM);
+          height - (19 * height / 20),
+          Graphics.HCENTER | Graphics.TOP);
       }
     }
   }
@@ -363,6 +372,9 @@ class Zeichenblatt extends Canvas implements CommandListener {
       display.setCurrent(Sim.getMainScreen());
     } else if (c == CMD_NEWGAME) {
       zeichenblatt = new Zeichenblatt();
+      display.setCurrent(zeichenblatt);
+    } else if (c == CMD_NEWGAME2) {
+      zeichenblatt = new Zeichenblatt(true);
       display.setCurrent(zeichenblatt);
     }
   }
