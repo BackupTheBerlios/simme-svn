@@ -1,15 +1,12 @@
-<%@ taglib prefix="c" uri="/WEB-INF/tlds/c.tld" %>
-<%@ page contentType="text/xml; charset=iso-8859-1"%>
+<%@ page contentType="text/xml; charset=UTF-8"%>
 <%@ page import="at.einspiel.simme.server.*"%>
-
-
-<!--
+<%@ taglib prefix="c" uri="/WEB-INF/tlds/c.tld" %>
+<%/*
    [Simme-Server]
           Java ServerPage: doLogin.jsp
-                    $Date: 2004/09/02 10:15:30 $
-                $Revision: 1.6 $
--->
-
+                    $Date: 2004/09/07 13:19:21 $
+                $Revision: 1.7 $
+*/%>
 <c:choose>
     <c:when test="${(empty param.user) || (empty param.pwd)}">
         <%
@@ -24,7 +21,7 @@
         <c:set var="model" value="${param.model}" />
         <c:set var="version" value="${param.version}" />
 
-        <jsp:useBean id="user" class="at.einspiel.simme.server.ManagedUser" scope="session">
+        <jsp:useBean id="user" class="at.einspiel.simme.server.ManagedUser">
             <jsp:setProperty name="user" property="nick" param="user" />
             <jsp:setProperty name="user" property="pwd" />
             <jsp:setProperty name="user" property="clientmodel" param="model" />
@@ -33,8 +30,7 @@
         <%
             // login
             out.print(user.login((String) pageContext.getAttribute("version")).toString());
-            // print user to console
-            // TODO log this 
+            // log user name 
             log("Login request by user: " + request.getParameter("user"));
         %>
     </c:otherwise>
