@@ -5,7 +5,7 @@
             use="false" notree="false" nonavbar="false" noindex="false"
             splitindex="true" author="false" version="true"
             nodeprecatedlist="false" nodeprecated="false"
-            packagenames="test.sim.util,test.sim,test.tests"
+            packagenames="nanoxml,test.sim.net,test.sim.util,test.sim,test.tests"
             sourcepath="src"
             classpath="classes;lib\midpapi.zip;lib\mmapi.zip;lib\wma.zip;D:\Devel\JUnit\junit.jar" doctitle="SimME API Documentation">
             <link href="file:/D:/Devel/JUnit/javadoc/"/>
