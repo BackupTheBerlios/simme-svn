@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: ISimpleInfo.java
-//                  $Date: 2004/08/25 15:34:24 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/09/02 10:17:29 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
@@ -50,7 +50,7 @@ public interface ISimpleInfo {
 
 	/**
 	 * Returns a text representation of this info object.
-	 * @return
+	 * @return the text representation of this object.
 	 */
 	String getText();
 

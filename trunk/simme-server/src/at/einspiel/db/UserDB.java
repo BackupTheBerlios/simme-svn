@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: UserDB.java
-//                  $Date: 2004/08/25 15:45:43 $
-//              $Revision: 1.3 $
+//                  $Date: 2004/09/02 10:18:34 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package at.einspiel.db;
 
@@ -127,6 +127,7 @@ public class UserDB {
 	 *         <code>rs</code>
 	 * @throws SQLException
 	 *             if a database access error occurs.
+	 * 
 	 * @see #buildUser(ResultSet)
 	 */
 	private static User[] buildUsers(ResultSet rs) throws SQLException {
