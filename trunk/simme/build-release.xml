@@ -18,6 +18,7 @@
 		<tstamp />
 		<mkdir dir="${rel.dir}" />
 		<mkdir dir="${rel.dir.backup}" />
+		<ant antfile="build-javadoc.xml"/>
 		<!-- create release documentation -->
 		<xslt in="changes.xml" out="changes.html" style="changes-html.xsl" />
 		<xslt in="changes.xml" out="changes.txt" style="changes-txt.xsl" />
