@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: Zeichenblatt.java
-//               $Date: 2004/08/13 13:58:23 $
-//           $Revision: 1.9 $
+//               $Date: 2004/09/07 13:27:21 $
+//           $Revision: 1.10 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -105,7 +105,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
 
 		width = getWidth();
 		height = getHeight();
-		Logger.debug("pointer events :" + hasPointerEvents());
+		Logger.debug(getClass(), "pointer events: " + hasPointerEvents());
 		setDisplayParameters(false);
 	}
 
