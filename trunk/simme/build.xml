@@ -8,6 +8,7 @@
     <property name="deploy2.srcdir" value="${deploy2.dir}/src"/>
 
     <property name="src" value="src"/>
+    <property name="cls" value="classes"/>
     <property name="client-package" value="test/sim" />
 
  
@@ -28,5 +29,5 @@
 		</fileset>
       </copy>
     </target>
-
+    
 </project>

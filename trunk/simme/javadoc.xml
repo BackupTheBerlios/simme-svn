@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="SimME" default="javadoc">
     <target name="javadoc">
-        <javadoc destdir="doc\api" access="public" source="1.4"
-            use="false" notree="false" nonavbar="false" noindex="false"
-            splitindex="true" author="false" version="true"
+        <javadoc destdir="doc\api" access="protected" use="false"
+            notree="false" nonavbar="false" noindex="false"
+            splitindex="false" author="false" version="true"
             nodeprecatedlist="false" nodeprecated="false"
             packagenames="nanoxml,test.sim.net,test.sim.util,test.sim,test.tests"
             sourcepath="src"
-            classpath="classes;lib\midpapi.zip;lib\mmapi.zip;lib\wma.zip;D:\Devel\JUnit\junit.jar" doctitle="SimME API Documentation">
+            classpath="classes;D:\Devel\JUnit\junit.jar;D:\Devel\j2me-wtk104\lib\midpapi.zip" doctitle="SimME API Documentation">
             <link href="file:/D:/Devel/JUnit/javadoc/"/>
+            <link href="file:/D:/Devel/j2me-wtk104/docs/api/"/>
+            <link href="file:/D:/Devel/jdk-1.4/docs/api/"/>
         </javadoc>
     </target>
 </project>

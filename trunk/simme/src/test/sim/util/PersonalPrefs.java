@@ -24,7 +24,7 @@ public class PersonalPrefs extends Prefs
   private PersonalPrefs()
   {
     super(RECORD_NAME, (byte) 4);
-    savedData = new String[getNumberOfRecords()];
+    savedData = new String[getNbRecs()];
   }
 
   /**
