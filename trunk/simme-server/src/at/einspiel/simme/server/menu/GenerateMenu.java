@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: GenerateMenu.java
-//                  $Date: 2004/04/06 22:27:05 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/06/07 09:26:45 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
@@ -15,6 +15,11 @@ import org.w3c.dom.Element;
 class GenerateMenu extends AbstractMenu implements IMenu {
 
    static final String TAG_NAME = "generate";
+   
+   static final String USERS_ALL = "all";
+   static final String USERS_WAITING = "waiting";
+   static final String USERS_PLAYING = "online";
+   
 
    /**
     * Creates a new instance of <code>GenerateMenu</code>.
@@ -30,5 +35,5 @@ class GenerateMenu extends AbstractMenu implements IMenu {
       // TODO Auto-generated method stub (kariem)
       return null;
    }
-
+   
 }

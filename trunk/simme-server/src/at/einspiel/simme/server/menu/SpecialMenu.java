@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: SpecialMenu.java
-//                  $Date: 2004/04/06 22:27:05 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/06/07 09:26:45 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
@@ -14,26 +14,26 @@ import org.w3c.dom.Element;
  * 
  * @author kariem
  */
-class SpecialMenu extends AbstractMenu implements IMenu {
+class SpecialMenu extends AbstractUserMenu implements IMenu {
 
-   static final String TAG_NAME = "special";
-   
-   static final String SPECIAL_WAIT = "wait";
-   static final String SPECIAL_START = "start";
-   static final String SPECIAL_READY = "ready";
+    static final String TAG_NAME = "special";
 
-   /**
-    * Creates a new instance of <code>SpecialMenu</code>.
-    * @param e
-    */
-   SpecialMenu(Element e) {
-      super(e);
-      // TODO Auto-generated constructor stub (kariem)
-   }
+    static final String SPECIAL_WAIT = "wait";
+    static final String SPECIAL_START = "start";
+    static final String SPECIAL_READY = "ready";
 
-   /** @see at.einspiel.simme.server.menu.IMenu#getXml() */
-   public String getXml() {
-      // TODO Auto-generated method stub (kariem)
-      return null;
-   }
+    /**
+     * Creates a new instance of <code>SpecialMenu</code>.
+     * @param e
+     */
+    SpecialMenu(Element e) {
+        super(e);
+        // TODO Auto-generated constructor stub (kariem)
+    }
+
+    /** @see at.einspiel.simme.server.menu.IMenu#getXml() */
+    public String getXml() {
+        // TODO Auto-generated method stub (kariem)
+        return null;
+    }
 }
