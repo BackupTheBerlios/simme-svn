@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="SimME" default="deploy">
+ 
+    <property name="deploy.dir" value="D:/Devel/wtk-1.0.4/apps/SimME"/>
+    <property name="deploy.srcdir" value="${deploy.dir}/src"/>
+
+    <property name="src" value="src"/>
+    <property name="client-package" value="test/sim" />
+
+ 
+    <target name="deploy">
+	  <copy todir="${deploy.srcdir}" >
+		<fileset dir="${src}">
+		  <include name="${client-package}/**/*.java"/>
+		</fileset>
+      </copy>
+    </target>
+</project>

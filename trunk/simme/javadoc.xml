@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="SimME" default="javadoc">
+    <target name="javadoc">
+        <javadoc destdir="doc\api" access="public" source="1.4"
+            use="false" notree="false" nonavbar="false" noindex="false"
+            splitindex="true" author="false" version="true"
+            nodeprecatedlist="false" nodeprecated="false"
+            packagenames="test.sim.util,test.sim,test.tests"
+            sourcepath="src"
+            classpath="classes;lib\midpapi.zip;lib\mmapi.zip;lib\wma.zip;D:\Devel\JUnit\junit.jar" doctitle="SimME API Documentation">
+            <link href="file:/D:/Devel/JUnit/javadoc/"/>
+        </javadoc>
+    </target>
+</project>
