@@ -1,0 +1,7 @@
+build
+cls-client
+doc
+*.log
+SimME*.jar
+changes.html
+changes.txt

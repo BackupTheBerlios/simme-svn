@@ -1,0 +1,4 @@
+readme.txt
+README*
+changes.html
+changes.txt

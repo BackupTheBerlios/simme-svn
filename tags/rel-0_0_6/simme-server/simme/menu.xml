@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    [Simme-Server]
+         Menu XML File: menu.xml
+                 $Date: 2004/09/07 13:19:07 $
+             $Revision: 1.5 $
+-->
+<menus>
+    <list title="Willkommen" id="0" list="true">
+        <child id="1">Sofort Spielen</child>
+        <child id="4">Gegner Wählen</child>
+        <child id="5">Wer ist online?</child>
+        <child id="6">Spielerliste</child>
+        <child id="7">Hilfe</child>
+    </list>
+
+	<!-- 
+		The user will be set to the state "waiting". This player will be the
+		next one selected, if another player wants to start a game. The client
+		will auto-reconnect to see, if another user wants to play against him.
+	-->
+    <special title="Warte auf Gegenspieler" id="1" next="2"
+            type="wait"/>
+
+	<!-- 
+		This is the state right after "waiting". The opponents are selected and
+		the game is in the process of being created. The two clients will 
+		reconnect after a short time. Their state will be set to "playing".
+		
+		The client's receive a message with information about their opponent.
+	-->
+    <special title="Starte Spiel" id="2" next="3"
+            type="start"/>
+
+	<!-- 
+		The game has been created. After receiving this menu, the game will be
+		started.
+	-->
+    <special title="SimME playing" id="3"
+            type="ready"/>
+
+	<!--
+		Generate a list of all players that are currently not playing. These are
+		the players that may be challenged.
+	-->
+    <generate title="Gegner Wählen" id="4"
+            type="waiting"/>
+
+	<!--
+		Generates a list of all online players, including the players currently
+		involved in playing.
+	-->
+    <generate title="Spieler Online" id="5"
+            type="online"/>
+
+	<!-- 
+		Generates a list of all players currently in the database.
+	-->
+    <generate title="Spielerliste" id="6"
+            type="all"/>
+
+    <text title="Hilfe" id="7">
+        <msg>
+        "Sofort Spielen" startet ein Spiel so schnell wie möglich. Ist ein
+        Gegner verfügbar, kann man sofort gegen diesen spielen.
+
+        "Gegner wählen" hier kann man sich seinen Gegenspieler aussuchen und ihn
+        herausfordern.
+
+        "Wer ist online?" verrät, welche Spieler gerade online sind. Man sieht
+        auch, wer gerade spielt und wer frei ist.
+
+        "Spielerliste" zeigt eine Liste mit allen Spielern an. Hier kann man
+        nachsehen, wo man im Vergleich zu den anderen Spielern liegt. Bei vielen
+        registrierten Benutzern, kann das Laden ein bisschen länger dauern.
+
+        Viel Spaß!
+        </msg>
+    </text>
+</menus>

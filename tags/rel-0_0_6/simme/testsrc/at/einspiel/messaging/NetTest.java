@@ -1,0 +1,83 @@
+package at.einspiel.messaging;
+
+import java.io.IOException;
+
+import junit.framework.TestCase;
+
+/**
+ * Class used to Test class network methods.
+ * 
+ * @author kariem
+ */
+public class NetTest extends TestCase {
+	private static final String LOGIN_PAGE = "Login";
+
+	private static final String SERVER = ITestRequest.TEST_SERVER;
+	private Request req;
+
+	/** @see TestCase#setUp() */
+	protected void setUp() {
+		req = new TestRequest();
+	}
+
+	/** Tests connecting to a server */
+	public void testConnection() {
+		req.sendRequest(SERVER, ".");
+	}
+
+	/** Tests building URLs */
+	public void testBuildURL() {
+		req.setParam("user", "username");
+		assertEquals("?user=username", req.getParamString(false));
+		assertEquals("user=username", req.getParamString(true));
+
+		req.setParam("pwd", "password");
+		assertEquals("?user=username&pwd=password", req.getParamString(false));
+		assertEquals("user=username&pwd=password", req.getParamString(true));
+
+		req.setParam("user", "username");
+		assertEquals("?user=username&pwd=password", req.getParamString(false));
+		assertEquals("user=username&pwd=password", req.getParamString(true));
+	}
+
+	/** Tests sending via GET */
+	public void testGetSubmission() {
+		req.setParam(IConstants.PARAM_USER, "username");
+		assertEquals("?" + IConstants.PARAM_USER + "=username", req.getParamString(false));
+
+		req.setParam(IConstants.PARAM_PASS, "password");
+		assertEquals("?" + IConstants.PARAM_USER + "=username&" + IConstants.PARAM_PASS
+				+ "=password", req.getParamString(false));
+
+		req.sendRequest(SERVER, LOGIN_PAGE, false);
+	}
+
+	/** Tests sending via POST */
+	public void testPostSubmission() {
+		req.setParam(IConstants.PARAM_USER, "username2");
+		assertEquals(IConstants.PARAM_USER + "=username2", req.getParamString(true));
+
+		req.setParam(IConstants.PARAM_PASS, "password");
+		assertEquals(IConstants.PARAM_USER + "=username2&" + IConstants.PARAM_PASS
+				+ "=password", req.getParamString(true));
+
+		req.sendRequest(SERVER, LOGIN_PAGE);
+	}
+
+	/**
+	 * Tests sending login information
+	 * 
+	 * @throws IOException
+	 *             if a problem has occured while sending the request.
+	 */
+	public void testLoginMessage() throws IOException {
+		TestLoginRequest login = new TestLoginRequest("loginTest", "password", "eclipse", "1.0");
+
+		/*
+		 * PrintWriter sysOut = new PrintWriter(System.out);
+		 * login.getXmlElement().write(sysOut); sysOut.flush();
+		 */
+		login.sendRequest(SERVER, LOGIN_PAGE, true);
+		System.out.println(new String(login.getResponse()).trim());
+	}
+}

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  [Simme]
+    Ant build file: build.xml
+             $Date: 2004/09/22 19:11:19 $
+         $Revision: 1.3 $
+
+	Used to facilitate the creation of releases and changelogs.
+	
+ -->
+<project name="SimME Client Rel" basedir="." default="packages">
+	<description>Create releases for SimME Server</description>
+
+	<property file="ant-build.properties" />
+	<property file="ant-release.properties" />
+
+	<target name="-init">
+		<tstamp />
+		<mkdir dir="${rel.dir}" />
+		<mkdir dir="${rel.dir.backup}" />
+		<!-- create release documentation -->
+		<xslt in="changes.xml" out="changes.html" style="changes-html.xsl" />
+		<xslt in="changes.xml" out="changes.txt" style="changes-txt.xsl" />
+	</target>
+
+	<target name="sources"
+	        depends="-init"
+	        description="Creates a source distribution."
+	>
+		<!-- create tar gzip bzip2 and zip files -->
+		<property name="rel.filename.src"
+		          value="${rel.backupfile}-src-${DSTAMP}"
+		/>
+
+		<tar destfile="${rel.filename.src}.tar">
+			<tarfileset dir="${src}" prefix="/${src}" />
+			<tarfileset dir="${src.test}" prefix="/${src.test}" />
+			<tarfileset dir="${doc}" prefix="/${doc}" />
+			<tarfileset dir="${resources}" prefix="/${resources}" />
+			<tarfileset file="${jad.debug}" />
+			<tarfileset file="${jad.run}" />
+			<tarfileset dir=".">
+				<include name="*ant*" />
+				<include name="*.properties" />
+				<include name="build*.xml" />
+				<includesfile name="releasefiles.txt" />
+			</tarfileset>
+		</tar>
+		<gzip src="${rel.filename.src}.tar"
+		      destfile="${rel.dir}/${rel.filename}-src-${rel.version}.tar.gz"
+		/>
+	</target>
+
+
+	<target name="binaries"
+	        depends="-init"
+	        description="Creates the binary distribution."
+	>
+		<property name="rel.filename.bin"
+		          value="${rel.backupfile}-bin-${DSTAMP}"
+		/>
+
+		<tar destfile="${rel.filename.bin}.tar">
+			<tarfileset file="${jar.run}" prefix="/client" />
+			<tarfileset file="${jad.run}" prefix="/client" />
+			<tarfileset dir=".">
+				<includesfile name="releasefiles.txt" />
+			</tarfileset>
+		</tar>
+
+		<gzip src="${rel.filename.bin}.tar"
+		      destfile="${rel.dir}/${rel.filename}-bin-${rel.version}.tar.gz"
+		/>
+	</target>
+
+
+	<!-- ================================= 
+          target: packages              
+         ================================= -->
+	<target name="packages"
+	        depends="sources,binaries"
+	        description="Creates all necessary packages"
+	/>
+
+	<target name="clean" description="cleans the created files">
+		<delete failonerror="false">
+			<fileset dir=".">
+				<include name="changes.txt" />
+				<include name="changes.html" />
+			</fileset>
+		</delete>
+	</target>
+
+
+</project>
