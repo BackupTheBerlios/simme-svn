@@ -1,7 +1,7 @@
 /* XMLElement.java
  *
- * $Revision: 1.6 $
- * $Date: 2004/06/07 09:27:25 $
+ * $Revision: 1.7 $
+ * $Date: 2004/09/22 18:22:45 $
  * $Name:  $
  *
  * This file is part of NanoXML 2 Lite.
@@ -134,7 +134,7 @@ public class XMLElement {
      *     <li>The keys and the values are strings.
      * </ul></dd></dl>
      */
-    private Hashtable attributes;
+    private final Hashtable attributes;
 
     /**
      * Child elements of the element.
@@ -146,7 +146,7 @@ public class XMLElement {
      *         or a subclass of <code>XMLElement</code>.
      * </ul></dd></dl>
      */
-    private Vector children;
+    private final Vector children;
 
     /**
      * The name of the element.
