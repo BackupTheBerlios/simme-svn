@@ -51,6 +51,17 @@ public class Move {
     }
 
     /**
+     * Creates a new move. The parameters are cast to <code>byte</code>
+     * 
+     * @param node1 the first node.
+     * @param node2 the second node.
+     */
+    public Move(int node1, int node2) {
+       this((byte) node1, (byte) node2);
+    }
+   
+    
+    /**
      * Creates a new move.
      * @param edge the edge index.
      */
@@ -58,6 +69,15 @@ public class Move {
         setEdge(edge);
     }
 
+    /**
+     * Creates a new move. The parameters are cast to <code>byte</code>.
+     * @param edge the edge index.
+     */
+    public Move(int edge) {
+       this((byte) edge);
+    }
+    
+    
     /**
      * Sets the edge
      * @param edge the edge

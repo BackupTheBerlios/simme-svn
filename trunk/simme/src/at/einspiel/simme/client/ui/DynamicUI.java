@@ -1,9 +1,9 @@
 package at.einspiel.simme.client.ui;
 
+import at.einspiel.messaging.Request;
+import at.einspiel.messaging.SendableUI;
 import at.einspiel.simme.client.Game;
 import at.einspiel.simme.client.Sim;
-import at.einspiel.simme.client.net.Request;
-import at.einspiel.simme.client.net.SendableUI;
 
 import java.io.IOException;
 

@@ -1,8 +1,8 @@
 package at.einspiel.simme.client.ui;
 
+import at.einspiel.messaging.LoginMessage;
+import at.einspiel.messaging.LoginResult;
 import at.einspiel.simme.client.Sim;
-import at.einspiel.simme.client.net.LoginMessage;
-import at.einspiel.simme.client.net.LoginResult;
 import at.einspiel.simme.client.util.PersonalPrefs;
 import at.einspiel.simme.client.util.PrefsException;
 

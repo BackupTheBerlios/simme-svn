@@ -2,8 +2,8 @@ package at.einspiel.simme.client;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import at.einspiel.simme.client.net.NetTest;
-import at.einspiel.simme.client.net.SendableUITest;
+import at.einspiel.messaging.NetTest;
+import at.einspiel.messaging.SendableUITest;
 
 /**
  * Testing simme module
