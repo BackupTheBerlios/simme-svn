@@ -9,27 +9,20 @@ import java.io.IOException;
  */
 public class StatusMessage extends XmlMessage {
 
-   /**
-    * @param data
-    * @throws IOException
-    */
+   /** @see XmlMessage#XmlMessage(byte[]) */
    public StatusMessage(byte[] data) throws IOException {
       super(data);
    }
 
-   /**
-    * @param data
-    * @throws IOException
-    */
+   /** @see XmlMessage#XmlMessage(String) */
    public StatusMessage(String data) throws IOException {
       super(data);
    }
 
    /**
     * Returns the content of the statusmessage, or <code>null</code>
-    * 
     *
-    * @return
+    * @return the string that this message contained.
     */
    public String getString() {
       String message = (String) xmlElement.getAttribute("msg");

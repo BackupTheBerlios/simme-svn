@@ -20,7 +20,7 @@ public class Sim extends MIDlet {
     * Creates a new Sim object.
     */
    public Sim() {
-   	instance = this;
+      instance = this;
    }
 
    /** @see MIDlet#destroyApp(boolean) */
@@ -43,7 +43,6 @@ public class Sim extends MIDlet {
 
       //SplashScreen splashScreen = new SplashScreen(this);
       d.setCurrent(main);
-      
    }
 
    /**
@@ -54,10 +53,9 @@ public class Sim extends MIDlet {
    public static Screen getMainScreen() {
       return main;
    }
-   
- 
+
    /**
-    * @return
+    * @return the single instance of this midlet
     */
    public static Sim getInstance() {
       return instance;

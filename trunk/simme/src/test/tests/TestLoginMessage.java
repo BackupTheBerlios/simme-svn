@@ -25,11 +25,19 @@ public class TestLoginMessage extends LoginMessage {
    public TestLoginMessage(String nick, String pwd, String version) throws IOException {
       this(nick, pwd, null, version);
    }
-   
-   
-	public HttpConnection getHttpConnection(String url) throws IOException {
-		URL destination = new URL(url);
-		return new ConnectionMaker(destination.openConnection());
-	}
+
+   /**
+    * Creates a new <code>HttpConnection</code> from a url.
+    * 
+    * @param url a string representing a URL.
+    * @return a new <code>HttpConnection</code> to the <code>url</code>.
+    * 
+    * @throws IOException if an error occured while trying to open a
+    *         connection.
+    */
+   public HttpConnection getHttpConnection(String url) throws IOException {
+      URL destination = new URL(url);
+      return new ConnectionMaker(destination.openConnection());
+   }
 
 }

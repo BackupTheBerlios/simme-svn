@@ -223,7 +223,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
       if (game.getWinner() == Game.PLAYER1) {
          g.drawString("Red wins", width / 3, height - height / 6, 0);
       } else if (game.getWinner() == Game.PLAYER2) {
-			g.drawString("Green wins", width / 3, height - height / 6, 0);
+         g.drawString("Green wins", width / 3, height - height / 6, 0);
       }
 
    }
@@ -232,15 +232,15 @@ class Zeichenblatt extends Canvas implements CommandListener {
     * Draws "Winner" or "Loser" onto graphics context
     */
 
-  /* private void drawWinner(Graphics g) {
-      if (game.getWinner() == Game.PLAYER1) {
-         g.drawString("WINNER", xPInfo1 + 2, yPInfo1 + linewidththick / 2, 0);
-         g.drawString("LOSER", xPInfo1 + 2, yPInfo2 + linewidththick / 2, 0);
-      } else if (game.getWinner() == Game.PLAYER2) {
-         g.drawString("LOSER", xPInfo1 + 2, yPInfo1 + linewidththick / 2, 0);
-         g.drawString("WINNER", xPInfo1 + 2, yPInfo2 + linewidththick / 2, 0);
-      }
-   } */
+   /* private void drawWinner(Graphics g) {
+       if (game.getWinner() == Game.PLAYER1) {
+          g.drawString("WINNER", xPInfo1 + 2, yPInfo1 + linewidththick / 2, 0);
+          g.drawString("LOSER", xPInfo1 + 2, yPInfo2 + linewidththick / 2, 0);
+       } else if (game.getWinner() == Game.PLAYER2) {
+          g.drawString("LOSER", xPInfo1 + 2, yPInfo1 + linewidththick / 2, 0);
+          g.drawString("WINNER", xPInfo1 + 2, yPInfo2 + linewidththick / 2, 0);
+       }
+    } */
 
    /**
     * Looks at current width and height and sets drawing parameters accordingly.

@@ -1,9 +1,3 @@
-/*
- * Created on 20.04.2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
 package test.sim;
 
 import java.util.Enumeration;
@@ -17,16 +11,18 @@ import javax.microedition.lcdui.List;
 import nanoxml.XMLElement;
 
 /**
+ * This class is intended to create dynamically a user interface from the
+ * information found in an xml string.
+ * 
  * @author jorge
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class DynamicUI extends List implements CommandListener {
 
    /**
-    * @param arg0
-    * @param arg1
+    * Creates a new instance of this object with list entries built from the
+    * data found in the given xml string.
+    * 
+    * @param xmlString information to build the user interface.
     */
    public DynamicUI(String xmlString) {
       super("", List.EXCLUSIVE);
@@ -48,8 +44,6 @@ public class DynamicUI extends List implements CommandListener {
          }
 
       }
-
-      // TODO Auto-generated constructor stub
    }
 
    /** @see CommandListener#commandAction(Command, Displayable) */

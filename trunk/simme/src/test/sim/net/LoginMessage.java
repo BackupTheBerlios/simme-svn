@@ -23,9 +23,9 @@ public class LoginMessage extends Request {
       //super(makeLoginMessage(nick, pwd, clientmodel, version));
       super();
       setParam("user", nick);
-		setParam("pwd", pwd);
-		setParam("model", clientmodel);
-		setParam("version", version);
+      setParam("pwd", pwd);
+      setParam("model", clientmodel);
+      setParam("version", version);
    }
 
    /**

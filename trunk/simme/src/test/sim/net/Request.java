@@ -173,7 +173,7 @@ public class Request {
                   ;
                }
             }
-				System.out.println("getting response " + System.currentTimeMillis());
+            System.out.println("getting response " + System.currentTimeMillis());
             return response;
          }
       }
@@ -243,17 +243,17 @@ public class Request {
       private void sendRequest(boolean post) throws IOException {
          try {
             c = getHttpConnection(url.toString());
-				/*
+            /*
             c.setRequestMethod(HttpConnection.POST);
             c.setRequestProperty("IF-Modified-Since", "25 Nov 2001 15:17:19 GMT");
             c.setRequestProperty("User-Agent","Profile/MIDP-1.0 Configuration/CLDC-1.0");
             c.setRequestProperty("Content-Language", "en-CA");
             c.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-     
+            
             os = c.openOutputStream();
             os.write(("name=test").getBytes());
             os.flush();
-
+            
             is = c.openDataInputStream();
             
             /*
@@ -265,9 +265,9 @@ public class Request {
             t = new TextBox("Date", b.toString(), 1024, 0);
             t.setCommandListener(this);
             */
-            
+
             //setResponse(new byte[] {});
-            
+
             c.setRequestProperty("User-Agent", "Profile/MIDP-1.0 Configuration/CLDC-1.0");
             // TODO add content language via param
             // c.setRequestProperty("Content-Language", "en-CA");
@@ -317,9 +317,9 @@ public class Request {
             byte[] responseCopy = new byte[counter];
             System.arraycopy(localResponse, 0, responseCopy, 0, counter);
 
-				System.out.println("setting response " + System.currentTimeMillis());
-            setResponse(localResponse);//*/
-            
+            System.out.println("setting response " + System.currentTimeMillis());
+            setResponse(localResponse); //*/
+
          } finally {
             if (is != null) {
                is.close();

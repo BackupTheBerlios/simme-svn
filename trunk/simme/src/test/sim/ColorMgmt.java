@@ -2,7 +2,6 @@ package test.sim;
 
 import javax.microedition.lcdui.Display;
 
-
 /**
  * This class allows for easy color definitions and should contain methods to
  * efficiently display the game using a rich color set suitable for all
@@ -13,9 +12,7 @@ import javax.microedition.lcdui.Display;
 public class ColorMgmt {
 
    /** p1, p2, nc, nnc, nsc, ndc */
-   private static final int[] COLORS_FULL =
-   {
-      0x00DD0000, 0x00FF0000, 0x0000DD00, 0x0000FF00, // p1, p2 
+   private static final int[] COLORS_FULL = { 0x00DD0000, 0x00FF0000, 0x0000DD00, 0x0000FF00, // p1, p2 
       0x00888888, 0, // neutral line
       0x00888888, 0, // neutral node
       0x00888888, 0x000000FF, // selected node
@@ -24,9 +21,7 @@ public class ColorMgmt {
    };
 
    /** p1, p2, nc, nnc, nsc, ndc  - */
-   private static final int[] COLORS_GREY16 =
-   {
-      0x00FFFFFF, 0x00111111, 0x00111111, 0x00222222, // p1, p2 
+   private static final int[] COLORS_GREY16 = { 0x00FFFFFF, 0x00111111, 0x00111111, 0x00222222, // p1, p2 
       0x00888888, 0, // neutral line
       0x00888888, 0, // neutral node
       0x00888888, 0x00AAAAAA, // selected node
@@ -36,10 +31,7 @@ public class ColorMgmt {
 
    /** p1, p2, nc, nnc, nsc, ndc  - */
    private static final int[] COLORS_GREY8 =
-   {
-      0x00FFFFFF, 0, 0x00111111, 0, 0x00888888, 0, 0x00888888, 0, 0x00AAAAAA, 0,
-      0x00444444, 0x00888888, 0xDDDDDD
-   };
+      { 0x00FFFFFF, 0, 0x00111111, 0, 0x00888888, 0, 0x00888888, 0, 0x00AAAAAA, 0, 0x00444444, 0x00888888, 0xDDDDDD };
 
    /** Inner and outer colors of player1's lines */
    public static int p1c1;
@@ -74,12 +66,11 @@ public class ColorMgmt {
    /** background */
    public static int bg;
 
-
    /**
     * Sets the color values according to properties of the given
     * <code>Display</code>
     *
-    * @param d
+    * @param d the display for which the colors are to be set.
     */
    public static void setDisplay(Display d) {
       if (d.isColor()) {

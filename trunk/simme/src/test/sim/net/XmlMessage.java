@@ -16,7 +16,7 @@ import test.sim.util.StringReader;
 public class XmlMessage {
 
    XMLElement xmlElement;
-   
+
    /** The request object used to transmit information */
    protected Request request;
 
@@ -43,7 +43,7 @@ public class XmlMessage {
    public XmlMessage(String data) throws IOException {
       xmlElement = new XMLElement();
       if ((data == null) || (data.length() == 0)) {
-      	throw new IOException("Supplied String is empty");
+         throw new IOException("Supplied String is empty");
       }
       xmlElement.parseFromReader(new StringReader(data));
       request = new Request();
@@ -82,7 +82,7 @@ public class XmlMessage {
     */
    public void sendRequest(String urlBase, String path) throws IOException {
       ByteArrayOutputStream bas = new ByteArrayOutputStream();
-      OutputStreamWriter writer = new OutputStreamWriter(bas); 
+      OutputStreamWriter writer = new OutputStreamWriter(bas);
       write(writer);
       writer.flush();
       //System.out.println("sending: " + bas.toString());
@@ -99,7 +99,7 @@ public class XmlMessage {
    public XMLElement getXmlElement() {
       return xmlElement;
    }
-   
+
    /**
     * Return the response
     * 

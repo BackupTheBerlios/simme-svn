@@ -16,7 +16,7 @@ public class NetTest extends TestCase {
 
    private Request req;
    //private static final String SERVER = "http://localhost:8080/simme/";
-	private static final String SERVER = "http://128.131.111.157:8080/simme/";
+   private static final String SERVER = "http://128.131.111.157:8080/simme/";
    /** @see TestCase#setUp() */
    protected void setUp() {
       req = new TestRequest();
@@ -59,7 +59,7 @@ public class NetTest extends TestCase {
 
       req.setParam("pwd", "password");
       assertEquals("?user=username&pwd=password", req.getParamString(false));
-      
+
       req.sendRequest(SERVER, "doLogin.jsp", false);
 
    }
@@ -75,10 +75,9 @@ public class NetTest extends TestCase {
 
       req.setParam("pwd", "password");
       assertEquals("user=username2&pwd=password", req.getParamString(true));
-      
+
       req.sendRequest(SERVER, "doLogin.jsp");
    }
-
 
    /**
     * Tests parse response into XML and print it
@@ -89,9 +88,9 @@ public class NetTest extends TestCase {
       req.setParam("user", "xmltest");
       req.setParam("pwd", "password");
       assertEquals("user=xmltest&pwd=password", req.getParamString(true));
-      
+
       req.sendRequest(SERVER, "doLogin.jsp");
-      
+
       XmlMessage msg = new XmlMessage(req.getResponse());
       PrintWriter sysOut = new PrintWriter(System.out);
       msg.write(sysOut);
@@ -112,7 +111,7 @@ public class NetTest extends TestCase {
       sysOut.flush();
       */
       login.sendRequest(SERVER, "doLogin.jsp", false);
-      System.out.println(new String(login.getResponse()).trim());      
+      System.out.println(new String(login.getResponse()).trim());
    }
 
 }

@@ -50,7 +50,7 @@ public class SplashScreen extends Form {
          }
 
          Display d = Display.getDisplay(sim);
-         d.setCurrent(sim.getMainScreen());
+         d.setCurrent(Sim.getMainScreen());
       }
    }
 }
