@@ -10,6 +10,18 @@ import javax.microedition.lcdui.Display;
  */
 public class ColorMgmt {
 
+   /** p1, p2, nc, nnc, nsc, ndc */
+   private static final int[] COLORS_FULL =
+      { 0x00FF0000, 0, 0x0000FF00, 0, 0x00888888, 0, 0x00888888, 0, 0x0000FF00, 0, 0x00444444, 0x00888888, 0xA0AFFF };
+
+   /** p1, p2, nc, nnc, nsc, ndc  - */
+   private static final int[] COLORS_GREY8 =
+      { 0x00FFFFFF, 0, 0x00111111, 0, 0x00888888, 0, 0x00888888, 0, 0x00AAAAAA, 0, 0x00444444, 0x00888888, 0xDDDDDD };
+
+   /** p1, p2, nc, nnc, nsc, ndc  - */
+   private static final int[] COLORS_GREY4 =
+      { 0x00FFFFFF, 0, 0x00111111, 0, 0x00888888, 0, 0x00888888, 0, 0x00AAAAAA, 0, 0x00444444, 0x00888888, 0xDDDDDD };
+
    /** Inner and outer colors of player1's lines */
    public static int p1c1, p1c2;
    /** Inner and outer colors of player2's lines */
@@ -23,7 +35,7 @@ public class ColorMgmt {
    public static int nsc1, nsc2;
    /** Inner and outer colors of a disabled node */
    public static int ndc1, ndc2;
-   
+
    /** background */
    public static int bg;
 
@@ -33,37 +45,41 @@ public class ColorMgmt {
     * @param d
     */
    public static void setDisplay(Display d) {
-      /* commonly used colors: 
-         COLOR_BACKGROUND,COLOR_FOREGROUND,
-         COLOR_HIGHLIGHTED_BACKGROUND, COLOR_HIGHLIGHTED_FOREGROUND,
-         COLOR_BORDER, or COLOR_HIGHLIGHTED_BORDER
-      */
-
-      p1c1 = 0x00FF0000; //d.getColor(Display.COLOR_HIGHLIGHTED_BACKGROUND);
-      p1c2 = 0;          //d.getColor(Display.COLOR_FOREGROUND);
-
-      p2c1 = 0x0000FF00; //d.getColor(Display.COLOR_BACKGROUND);
-      p2c2 = 0;          //d.getColor(Display.COLOR_HIGHLIGHTED_FOREGROUND);
-
-      nnc1 = nc1 = 0x00888888; //d.getColor(Display.COLOR_BACKGROUND);
-      nnc2 = nc2 = 0;          //d.getColor(Display.COLOR_FOREGROUND);
-
-      nsc1 = 0x0000FF00; //d.getColor(Display.COLOR_HIGHLIGHTED_BORDER);
-      nsc2 = 0;          //d.getColor(Display.COLOR_BORDER);
-
-      ndc1 = 0;          //d.getColor(Display.COLOR_FOREGROUND);
-      ndc2 = 0x00888888; //d.getColor(Display.COLOR_BACKGROUND);
-
-		bg = 0xA0AFFF;
-
-		// TODO Herausfinden der nötigen Farben
-		
-      /* later
       if (d.isColor()) {
-      	// having color display
+         if (d.numColors() >= 8) {
+            setColors(COLORS_FULL);
+            System.out.println("running with full colors");
+         }
       } else {
-      	// no color display 
+         if (d.numColors() >= 8) {
+            setColors(COLORS_GREY8);
+            System.out.println("running with grey8");
+         } else {
+            setColors(COLORS_GREY4);
+            System.out.println("running with grey4");
+         }
       }
-      */
+   }
+
+   private static void setColors(int[] a) {
+      p1c1 = a[0];
+      p1c2 = a[1];
+
+      p2c1 = a[2];
+      p2c2 = a[3];
+
+      nc1 = a[4];
+      nc2 = a[5];
+
+      nnc1 = a[6];
+      nnc2 = a[7];
+
+      nsc1 = a[8];
+      nsc2 = a[9];
+
+      ndc1 = a[10];
+      ndc2 = a[11];
+
+      bg = a[12];
    }
 }
