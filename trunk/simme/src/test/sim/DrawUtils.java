@@ -103,7 +103,8 @@ public class DrawUtils {
       int yEnd,
       int thickness,
       int innerColor,
-      int outerColor) {
+      int outerColor,
+      boolean dotted) {
       if (thickness < 2) {
          return;
       }
@@ -124,6 +125,7 @@ public class DrawUtils {
          x2 = xEnd;
       }
 
+
       // set y1 to lower, y2 to higher value
       if (yStart > yEnd) {
          y1 = yEnd;
@@ -133,7 +135,7 @@ public class DrawUtils {
          y2 = yEnd;
       }
 
-      if (drawAxisLine(g, x1, y1, x2, y2, thickness)) {
+      /*if (drawAxisLine(g, x1, y1, x2, y2, thickness)) {
          int pos;
 
          if (x1 == x2) {
@@ -151,7 +153,7 @@ public class DrawUtils {
          }
 
          return;
-      }
+      }*/
 
       // sonst ist es ein bisschen komplizierter
       boolean notSteep = (y2 - y1) < (x2 - x1);
@@ -167,6 +169,10 @@ public class DrawUtils {
       }
 
       int add;
+      if(dotted)
+      {
+      	g.setStrokeStyle(Graphics.DOTTED);
+      }
 
       for (int i = 0; i < (thickness - 2); i++) {
          // update line position
@@ -182,9 +188,9 @@ public class DrawUtils {
             g.drawLine(x1, y1, x2, y2);
          }
       }
-
       g.setColor(outerColor);
-
+      
+      
       if (notSteep) {
          g.drawLine(y1, yStart + r, y2, yEnd + r);
          g.drawLine(y1, yStart - r, y2, yEnd - r);
@@ -192,6 +198,7 @@ public class DrawUtils {
          g.drawLine(xStart + r, y1, xEnd + r, y2);
          g.drawLine(xStart - r, y1, xEnd - r, y2);
       }
+      	g.setStrokeStyle(Graphics.SOLID);
    }
 
    /**

@@ -119,9 +119,10 @@ class Zeichenblatt extends Canvas implements CommandListener {
 
       // Kanten zeichnen
       int c1 = nc1, c2 = nc2;
-
+     
       while (i < 6) {
          for (j = 0; j < 5; j++) {
+	    boolean dotted = false;
             switch (game.getEdgeOwner(i, j)) {
                case Game.NEUTRAL :
                   c1 = nc1;
@@ -136,10 +137,11 @@ class Zeichenblatt extends Canvas implements CommandListener {
                case Game.PLAYER2 :
                   c1 = p2c1;
                   c2 = p2c2;
+		  dotted = true;
                   break;
             }
 
-            DrawUtils.drawLineWithBorder(g, node[i][0], node[i][1], node[j][0], node[j][1], linewidth, c1, c2);
+            DrawUtils.drawLineWithBorder(g, node[i][0], node[i][1], node[j][0], node[j][1], linewidth, c1, c2,dotted);
          }
 
          i++;
