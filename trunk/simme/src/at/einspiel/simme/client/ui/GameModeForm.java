@@ -29,8 +29,8 @@ public class GameModeForm extends List implements CommandListener {
      */
     public GameModeForm() {
         super("Game Mode", List.IMPLICIT, CHOICES, null);
-        addCommand(new Command("Back", Command.BACK, 0));
-        addCommand(new Command("OK", Command.OK, 1));
+        addCommand(new Command("Zurück", Command.BACK, 0));
+        addCommand(new Command("Auswahl", Command.OK, 1));
         setCommandListener(this);
     }
 

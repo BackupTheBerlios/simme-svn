@@ -34,13 +34,13 @@ public class PrefForm extends List implements CommandListener {
      * Creates a new PrefForm object.
      */
     public PrefForm() {
-        super("Preferences", List.IMPLICIT, MAIN, null);
+        super("Einstellungen", List.IMPLICIT, MAIN, null);
         init();
     }
 
     private void init() {
         addCommand(new Command("Zurück", Command.BACK, 0));
-        addCommand(new Command("OK", Command.OK, 1));
+        addCommand(new Command("Auswahl", Command.OK, 0));
         setCommandListener(this);
         myself = this;
     }
@@ -95,12 +95,12 @@ public class PrefForm extends List implements CommandListener {
         frmPrefs.append(new StringItem("Version: ", Sim.getProperty("MIDlet-Version")));
 
         // command handling
-        frmPrefs.addCommand(new Command("Speichern", Command.BACK, 1));
         frmPrefs.addCommand(new Command("Abbrechen", Command.CANCEL, 0));
+        frmPrefs.addCommand(new Command("Speichern", Command.OK, 0));
 
         frmPrefs.setCommandListener(new CommandListener() {
             public void commandAction(Command c, Displayable d) {
-                if (c.getCommandType() == Command.BACK) {
+                if (c.getCommandType() == Command.OK) {
                     String[] newData =
                         {
                             tfNick.getString(),
@@ -152,7 +152,7 @@ public class PrefForm extends List implements CommandListener {
     public void commandAction(Command cmd, Displayable disp) {
         Display d = Sim.getDisplay();
 
-        if (cmd.getCommandType() == Command.BACK) {
+        if (cmd.getCommandType() == Command.OK) {
             d.setCurrent(Sim.getMainScreen());
         }
 
