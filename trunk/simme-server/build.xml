@@ -36,6 +36,7 @@
         <path id="project.class.path">
             <pathelement path="${lib.junit}"/>
             <pathelement path="${lib.xerces}"/>
+        	<pathelement path="${lib.servlet}"/>
             <pathelement location="${client.cls}"/>
         </path>
         <mkdir dir="${cls}"/>
@@ -60,7 +61,9 @@
     <target name="war" depends="build">
         <description>Builds the web archive for deployment.</description>
         <!-- create war -->
-        <war basedir="${module}" destfile="${deploy.war}" webxml="${webxml}" index="true"/>
+        <war basedir="${module}" destfile="${deploy.war}" webxml="${webxml}" index="true">
+    		<!-- <metainf file="context.xml"/> -->
+        </war>
     </target>
 
 	<target name="deploy-dir" depends="war" description="Create WAR and copy it to deploy directory">
@@ -93,7 +96,7 @@
 	
 	
     <!-- delete created classes -->
-    <target name="clean">
+    <target name="clean" description="cleans classes directory, and web-inf classes directory and removes the .war file">
         <delete dir="${cls}"/>
         <delete dir="${web-inf.classes}"/>
         <delete file="${deploy.war}"/>
