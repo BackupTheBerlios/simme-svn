@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: InfoText.java
-//                  $Date: 2004/08/25 15:34:24 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/09/07 13:23:06 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
@@ -17,6 +17,8 @@ import at.einspiel.simme.nanoxml.XMLParseException;
  */
 public class InfoText extends AbstractInfo implements ISimpleInfo {
 
+	private static final String ATTR_MSG = "msg";
+	
 	/** for simple uis: only text */
 	private String text;
 
@@ -39,13 +41,14 @@ public class InfoText extends AbstractInfo implements ISimpleInfo {
 	public InfoText(XMLElement xml) {
 		super(xml);
 		// text sent => retrieve msg attribute or element
-		text = xml.getAttribute("msg");
+		text = xml.getAttribute(ATTR_MSG);
 		if (text == null || text.length() == 0) {
 			if (xml.countChildren() > 0) {
 				text = ((XMLElement) xml.getChildren().elementAt(0)).getContent();
+			} else {
+				// fall-back instead of showing nothing
+				text = "Keine zusätzliche Information ...";
 			}
-			// fall-back instead of showing nothing
-			text = "Warte...";
 		}
 	}
 
@@ -82,7 +85,7 @@ public class InfoText extends AbstractInfo implements ISimpleInfo {
 
 	/** @see at.einspiel.messaging.AbstractInfo#addXmlInfo(at.einspiel.simme.nanoxml.XMLElement) */
 	protected void addXmlInfo(XMLElement xml) {
-		xml.setAttribute("msg", text);
+		xml.setName(ISimpleInfo.TAG_TEXT);
+		xml.setAttribute(ATTR_MSG, text);
 	}
-
 }

@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: AbstractInfo.java
-//                  $Date: 2004/08/25 15:34:24 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/09/07 13:23:06 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
@@ -11,6 +11,12 @@ import java.util.Vector;
 import at.einspiel.simme.nanoxml.XMLElement;
 
 /**
+ * Abstract implementation of {@linkplain at.einspiel.messaging.ISimpleInfo}.
+ * This class contains simple constructors which initialize the fields
+ * <code>id</code> and <code>title</code>. Additionally default
+ * implementations for the methods definied in
+ * {@linkplain at.einspiel.messaging.ISimpleInfo} are provided.
+ * 
  * @author kariem
  */
 public abstract class AbstractInfo implements ISimpleInfo {
@@ -36,7 +42,7 @@ public abstract class AbstractInfo implements ISimpleInfo {
 	 *            an xml element.
 	 */
 	public AbstractInfo(XMLElement xml) {
-		this(xml.getAttribute("title", "Auswahl"), (byte) xml.getAttributeInt("id", 0));
+		this(xml.getAttribute(ATTR_TITLE, "Auswahl"), (byte) xml.getAttributeInt(ATTR_ID, 0));
 	}
 
 	/**
@@ -62,8 +68,8 @@ public abstract class AbstractInfo implements ISimpleInfo {
 	public String getXmlString() {
 		XMLElement xml = new XMLElement();
 		xml.setName("sendable");
-		xml.setAttribute("title", title);
-		xml.setAttribute("id", Integer.toString(id));
+		xml.setAttribute(ISimpleInfo.ATTR_TITLE, title);
+		xml.setAttribute(ISimpleInfo.ATTR_ID, Integer.toString(id));
 
 		// append additional XML information to xml object
 		addXmlInfo(xml);
@@ -118,5 +124,13 @@ public abstract class AbstractInfo implements ISimpleInfo {
 	 */
 	public XMLElement getXmlInfo() {
 		return null;
+	}
+
+	/**
+	 * Always returns <code>false</code>.
+	 * @see at.einspiel.messaging.ISimpleInfo#hasMetaInfo()
+	 */
+	public boolean hasMetaInfo() {
+		return false;
 	}
 }

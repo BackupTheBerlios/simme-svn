@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: LoginMessage.java
-//                  $Date: 2004/08/25 15:39:38 $
-//              $Revision: 1.5 $
+//                  $Date: 2004/09/07 13:23:06 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
@@ -64,7 +64,7 @@ public class LoginMessage implements Message {
 			setInfo("Reply had errors.");
 		}
 	}
-
+	
 	/**
 	 * Creates a new <code>LoginResult</code> from the given properties.
 	 * 

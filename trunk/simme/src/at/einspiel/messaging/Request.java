@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: Request.java
-//               $Date: 2004/09/02 10:17:05 $
-//           $Revision: 1.5 $
+//               $Date: 2004/09/07 13:23:06 $
+//           $Revision: 1.6 $
 //----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
@@ -35,12 +35,13 @@ public class Request {
 	public static final int DEFAULT_TIMEOUT = 5000;
 
 	/**
-	 * The base url where <code>Request</code> s are sent to. This should be
-	 * one of
+	 * The base url to where a <code>Request</code> will be sent. This should
+	 * be one of
 	 * <ul>
-	 * <li>http://localhost:8080/simme/ (debug)</li>
-	 * <li>http://www.einspiel.at/simme/</li>
+	 * <li><code>http://localhost:8080/simme/</code> (debug)</li>
+	 * <li><code>http://www.einspiel.at/simme/</code></li>
 	 * </ul>
+	 * The field is set by the MIDlet property <code>simme.server.base</code>.
 	 */
 	public static final String URL_BASE = Sim.getProperty("simme.server.base");
 	private static final int RESPONSE_INITIAL_SIZE = 1024;
@@ -108,7 +109,7 @@ public class Request {
 	public void setParam(String name, String value) {
 		if (value != null) {
 			params.put(name, value);
-			Logger.debug(getClass(), "added param " + name);
+			//Logger.debug(getClass(), "added param " + name);
 		}
 	}
 
@@ -118,7 +119,8 @@ public class Request {
 	 * {@link #getResponse()}.
 	 * 
 	 * @param path
-	 *            The path on the server ({@link #URL_BASE}).
+	 *            The path on the server prepended by ({@link #URL_BASE})
+	 *            without the first "/"; e.g. <code>index.html</code>.
 	 * @see #sendRequest(String, String)
 	 */
 	public void sendRequest(String path) {
@@ -244,15 +246,6 @@ public class Request {
 	}
 
 	/**
-	 * Cancels the request. This is used to unblock the method waiting for the
-	 * request's response. Usually the method {@linkplain #getResponse()}
-	 * returns <code>null</code> after a call to the cancel method.
-	 */
-	public void cancel() {
-		sender.destroy();
-	}
-
-	/**
 	 * Opens a http connection with the specified url.
 	 * 
 	 * @param url
@@ -327,7 +320,6 @@ public class Request {
 				url.append(getParamString(false));
 			}
 
-			Logger.debug("request url=" + url.toString());
 			this.post = post;
 		}
 
@@ -340,26 +332,10 @@ public class Request {
 		/** @see java.lang.Thread#run() */
 		public void run() {
 			try {
-				Logger.debug("sending message: " + url.toString());
+				Logger.debug(getClass(), "sending message: " + url.toString());
 				sendRequest();
 			} catch (IOException e) {
 				setOccurredException(e);
-			}
-		}
-
-		/**
-		 * This method tries to cancel the current thread by closing the input
-		 * stream.
-		 * @see java.lang.Thread#destroy()
-		 */
-		public void destroy() {
-			cancelled = true;
-			if (is != null) {
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 			}
 		}
 
