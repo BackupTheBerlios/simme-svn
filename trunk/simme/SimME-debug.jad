@@ -2,10 +2,10 @@ MIDlet-Name: SimME
 MIDlet-Icon: /icons/SimME.png
 MIDlet-Vendor: Georg Spielmann & Kariem Hussein
 MIDlet-1: SimME, /icons/SimME.png, at.einspiel.simme.client.Sim
-MIDlet-Version: 0.0.6
+MIDlet-Version: 0.0.7
 MicroEdition-Configuration: CLDC-1.0
 MicroEdition-Profile: MIDP-1.0
 simme.server.base: http://192.168.0.6:8080/simme/
 simme.page.login: Login
-MIDlet-Jar-Size: 97355
+MIDlet-Jar-Size: 95400
 MIDlet-Jar-URL: SimME-debug.jar
