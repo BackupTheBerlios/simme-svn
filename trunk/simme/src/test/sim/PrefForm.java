@@ -25,17 +25,13 @@ public class PrefForm extends List implements CommandListener {
    // list items
    private static final String[] MAIN = { "Internet", "Hilfe" };
 
-   private Sim parent;
    private List myself;
 
    /**
     * Creates a new PrefForm object.
-    *
-    * @param parent The parent of this form.
     */
-   public PrefForm(Sim parent) {
+   public PrefForm() {
       super("Preferences", List.IMPLICIT, MAIN, null);
-      this.parent = parent;
       init();
    }
 
@@ -121,7 +117,7 @@ public class PrefForm extends List implements CommandListener {
             }
 
             // show last display
-            Display.getDisplay(parent).setCurrent(myself);
+            Sim.getDisplay().setCurrent(myself);
          }
       });
 
@@ -132,7 +128,7 @@ public class PrefForm extends List implements CommandListener {
     * @see CommandListener#commandAction(Command, Displayable)
     */
    public void commandAction(Command cmd, Displayable disp) {
-      Display d = Display.getDisplay(parent);
+      Display d = Sim.getDisplay();
 
       if (cmd.getCommandType() == Command.BACK) {
          d.setCurrent(Sim.getMainScreen());

@@ -60,5 +60,14 @@ public class Sim extends MIDlet {
    public static Sim getInstance() {
       return instance;
    }
+   
+   /**
+    * Returns the current <code>Display</code> of this MIDlet.
+    *  
+    * @return the <code>Display</code> of this MIDlet.
+    */
+   public static Display getDisplay() {
+      return Display.getDisplay(instance);
+   }
 
 }

@@ -19,18 +19,14 @@ public class GameModeForm extends List implements CommandListener {
 
    private static final String[] CHOICES = { "Internet Spiel", "Lokales Spiel" };
 
-   private Sim sim;
    private Zeichenblatt zeichenblatt;
 
    /**
     * Creates a new Form where the user can choose between several types of
     * games.
-    * 
-    * @param sim main midlet.
     */
-   public GameModeForm(Sim sim) {
+   public GameModeForm() {
       super("Game Mode", List.IMPLICIT, CHOICES, null);
-      this.sim = sim;
       addCommand(new Command("Back", Command.BACK, 0));
       addCommand(new Command("OK", Command.OK, 1));
       setCommandListener(this);
@@ -38,11 +34,10 @@ public class GameModeForm extends List implements CommandListener {
 
    /** @see CommandListener#commandAction(Command, Displayable) */
    public void commandAction(Command cmd, Displayable disp) {
-      Display d = Display.getDisplay(sim);
+      Display d = Sim.getDisplay();
       if (cmd.getCommandType() == Command.BACK) {
          d.setCurrent(Sim.getMainScreen());
       } else {
-         d = Display.getDisplay(sim);
 
          switch (getSelectedIndex()) {
             case 0 : // Internet Spiel
@@ -63,7 +58,7 @@ public class GameModeForm extends List implements CommandListener {
                break;
 
             case 1 : // Lokales Spiel
-               zeichenblatt = new Zeichenblatt(sim);
+               zeichenblatt = new Zeichenblatt();
                d.setCurrent(zeichenblatt);
 
                break;

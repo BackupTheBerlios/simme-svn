@@ -38,7 +38,6 @@ class Zeichenblatt extends Canvas implements CommandListener {
    private Game game;
 
    private Zeichenblatt zeichenblatt;
-   private final Sim sim;
 
    int node[][] = new int[6][2];
    String nodeNumber[] = new String[6];
@@ -53,12 +52,8 @@ class Zeichenblatt extends Canvas implements CommandListener {
    private Font fntPlayerInfo;
    private int heightFntPlayerInfo;
 
-   Zeichenblatt(Sim midlet) {
-      this.sim = midlet;
-
-      // set colors
-      Display d = Display.getDisplay(sim);
-      ColorMgmt.setDisplay(d);
+   Zeichenblatt() {
+      ColorMgmt.setDisplay(Sim.getDisplay());
 
       p1c1 = ColorMgmt.p1c1;
       p1c2 = ColorMgmt.p1c2;
@@ -305,11 +300,12 @@ class Zeichenblatt extends Canvas implements CommandListener {
     * @see CommandListener#commandAction(Command, Displayable)
     */
    public void commandAction(Command c, Displayable d) {
+      Display display = Sim.getDisplay();
       if (c == CMD_CANCEL) {
-         Display.getDisplay(sim).setCurrent(Sim.getMainScreen());
+         display.setCurrent(Sim.getMainScreen());
       } else if (c == CMD_NEWGAME) {
-         zeichenblatt = new Zeichenblatt(sim);
-         Display.getDisplay(sim).setCurrent(zeichenblatt);
+         zeichenblatt = new Zeichenblatt();
+         display.setCurrent(zeichenblatt);
       }
    }
 }

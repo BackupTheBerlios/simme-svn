@@ -48,9 +48,9 @@ public class DynamicUI extends List implements CommandListener {
 
    /** @see CommandListener#commandAction(Command, Displayable) */
    public void commandAction(Command cmd, Displayable d) {
+      Display display = Sim.getDisplay();
 
       if (cmd.getCommandType() == Command.EXIT) {
-         Display display = Display.getDisplay(Sim.getInstance());
          display.setCurrent(Sim.getMainScreen());
       } else {
          // TODO selektierten index auswählen

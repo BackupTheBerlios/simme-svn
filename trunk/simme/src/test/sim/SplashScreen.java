@@ -12,16 +12,11 @@ import javax.microedition.lcdui.ImageItem;
  */
 public class SplashScreen extends Form {
 
-   private Sim sim;
-
    /**
     * Creates a new SplashScreen object.
-    *
-    * @param sim Midlet which the splash screen is intended for.
     */
-   public SplashScreen(Sim sim) {
+   public SplashScreen() {
       super("");
-      this.sim = sim;
 
       Image image = null;
 
@@ -49,7 +44,7 @@ public class SplashScreen extends Form {
             ; // ??
          }
 
-         Display d = Display.getDisplay(sim);
+         Display d = Sim.getDisplay();
          d.setCurrent(Sim.getMainScreen());
       }
    }

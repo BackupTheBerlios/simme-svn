@@ -39,27 +39,27 @@ public class StartForm extends List implements CommandListener {
          sim.destroyApp(false);
          sim.notifyDestroyed();
       } else {
-         Display d = Display.getDisplay(sim);
+         Display d = Sim.getDisplay();
 
          switch (getSelectedIndex()) {
             case 0 : // Neues Spiel
-               gamemode = new GameModeForm(sim);
+               gamemode = new GameModeForm();
                d.setCurrent(gamemode);
                break;
 
             case 1 : // Einstellungen
-               d.setCurrent(new PrefForm(sim));
+               d.setCurrent(new PrefForm());
                break;
 
             case 2 : // Info
-               Info.showInfo(Display.getDisplay(sim));
+               Info.showInfo(d);
                break;
 
             case 3 : // About
                Alert alert2 =
                   new Alert("About", "SimME\n by SPIESSEIN\n based on HEXI\n by Prof. Slany\n", null, AlertType.INFO);
                alert2.setTimeout(5000);
-               Display.getDisplay(sim).setCurrent(alert2, this);
+               d.setCurrent(alert2, this);
                break;
          }
       }
