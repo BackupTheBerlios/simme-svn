@@ -14,8 +14,8 @@ public class PrefsException extends Exception {
    }
 
    /**
-    * Creates a new instance with the given <code>message<code>.
-    * @param message The message for this <code>PrefsException</code>
+   * Creates a new instance with the given <code>message<code>.
+   * @param message The message for this <code>PrefsException</code>
     */
    public PrefsException(String message) {
       super(message);

@@ -14,14 +14,17 @@ import javax.microedition.rms.RecordStoreFullException;
 import javax.microedition.rms.RecordStoreNotFoundException;
 import javax.microedition.rms.RecordStoreNotOpenException;
 
+
 /**
- * @author kariem
+ * DOCUMENT ME!
  *
+ * @author kariem
  */
 public class Prefs {
 
-   static byte INITIAL_SIZE = 10;
-   static byte GROWTH_FACTOR = 5;
+   static final byte INITIAL_SIZE = 10;
+   static final byte GROWTH_FACTOR = 5;
+
 
    RecordStore rs;
    RecordEnumeration enum;
@@ -32,6 +35,13 @@ public class Prefs {
    DataOutputStream dos;
    ByteArrayOutputStream baos;
 
+
+   /**
+    * Creates a new Prefs object.
+    *
+    * @param name DOCUMENT ME!
+    * @param nbRecords DOCUMENT ME!
+    */
    public Prefs(String name, byte nbRecords) {
       setName(name);
       setNumberOfRecords(nbRecords);
@@ -41,6 +51,12 @@ public class Prefs {
       dos = new DataOutputStream(baos);
    }
 
+
+   /**
+    * DOCUMENT ME!
+    *
+    * @throws PrefsException DOCUMENT ME!
+    */
    public void open() throws PrefsException {
       try {
          rs = RecordStore.openRecordStore("user", true);
@@ -54,6 +70,11 @@ public class Prefs {
       }
    }
 
+   /**
+    * DOCUMENT ME!
+    *
+    * @throws PrefsException DOCUMENT ME!
+    */
    public void close() throws PrefsException {
       if (rs != null) {
          try {
@@ -66,14 +87,31 @@ public class Prefs {
       }
    }
 
+   /**
+    * DOCUMENT ME!
+    *
+    * @return DOCUMENT ME!
+    */
    public boolean hasNext() {
       return enum.hasNextElement();
    }
 
+   /**
+    * DOCUMENT ME!
+    *
+    * @return DOCUMENT ME!
+    */
    public boolean hasPrevious() {
       return enum.hasPreviousElement();
    }
-   
+
+   /**
+    * DOCUMENT ME!
+    *
+    * @return DOCUMENT ME!
+    *
+    * @throws PrefsException DOCUMENT ME!
+    */
    public int currentSize() throws PrefsException {
       try {
          return rs.getNumRecords();
@@ -82,6 +120,13 @@ public class Prefs {
       }
    }
 
+   /**
+    * DOCUMENT ME!
+    *
+    * @return DOCUMENT ME!
+    *
+    * @throws PrefsException DOCUMENT ME!
+    */
    public byte[] readNext() throws PrefsException {
       try {
          return enum.nextRecord();
@@ -94,42 +139,13 @@ public class Prefs {
       }
    }
 
-	/*
-   public String readNextString() throws PrefsException {
-      loadNext();
-      try {
-			dis.reset();
-         String s = dis.readUTF();
-         System.out.println("read: " + s);
-         return s;
-      } catch (IOException e) {
-         e.printStackTrace();
-         throw new PrefsException(e.getMessage());
-      }
-   }
-
-	private int loadNext() throws PrefsException {
-		try {
-			int id = enum.nextRecordId();
-			System.out.println("loading (id=" + id +")");
-			int len = rs.getRecordSize(id);
-			if (len > data.length) {
-				data = new byte[len + GROWTH_FACTOR];
-			}
-			return rs.getRecord(id, data, 0);
-		} catch (InvalidRecordIDException e) {
-			e.printStackTrace();
-			throw new PrefsException(e.getMessage());
-		} catch (RecordStoreNotOpenException e) {
-			e.printStackTrace();
-			throw new PrefsException(e.getMessage());
-		} catch (RecordStoreException e) {
-			e.printStackTrace();
-			throw new PrefsException(e.getMessage());
-		}
-	}
-	*/
-
+   /**
+    * DOCUMENT ME!
+    *
+    * @param b DOCUMENT ME!
+    *
+    * @throws PrefsException DOCUMENT ME!
+    */
    public void writeNext(byte[] b) throws PrefsException {
       try {
          // go through recordset and change information
@@ -145,55 +161,55 @@ public class Prefs {
          throw new PrefsException(e.getMessage());
       }
    }
-   
+
+   /**
+    * DOCUMENT ME!
+    *
+    * @throws PrefsException DOCUMENT ME!
+    */
    public void writeNext() throws PrefsException {
-		writeNext(baos.toByteArray());
-		baos.reset();   	
-   }
-   
-	public void addNext(byte[] b) throws PrefsException {
-		try {
-			rs.addRecord(b, 0, b.length);
-		} catch (RecordStoreNotOpenException e) {
-			throw new PrefsException(e.getMessage());
-		} catch (InvalidRecordIDException e) {
-			throw new PrefsException(e.getMessage());
-		} catch (RecordStoreFullException e) {
-			throw new PrefsException(e.getMessage());
-		} catch (RecordStoreException e) {
-			throw new PrefsException(e.getMessage());
-		}
-	}
-	
-	public void addNext() throws PrefsException {
-		addNext(baos.toByteArray());
-		baos.reset();		
-	}
-
-
-	/*
-   public void writeNext(String s) throws PrefsException {
-   	writeToBuffer(s);
       writeNext(baos.toByteArray());
       baos.reset();
    }
 
-	public void addNext(String s) throws PrefsException {
-		writeToBuffer(s);
-		addNext(baos.toByteArray());
-		baos.reset();
-	}
-	*/
+   /**
+    * DOCUMENT ME!
+    *
+    * @param b DOCUMENT ME!
+    *
+    * @throws PrefsException DOCUMENT ME!
+    */
+   public void addNext(byte[] b) throws PrefsException {
+      try {
+         rs.addRecord(b, 0, b.length);
+      } catch (RecordStoreNotOpenException e) {
+         throw new PrefsException(e.getMessage());
+      } catch (InvalidRecordIDException e) {
+         throw new PrefsException(e.getMessage());
+      } catch (RecordStoreFullException e) {
+         throw new PrefsException(e.getMessage());
+      } catch (RecordStoreException e) {
+         throw new PrefsException(e.getMessage());
+      }
+   }
 
-	void writeToBuffer(String s) throws PrefsException{
-		try {
-			dos.writeUTF(s);
-		} catch (IOException e) {
-			throw new PrefsException(e.getMessage());
-		}
-	}
+   /**
+    * DOCUMENT ME!
+    *
+    * @throws PrefsException DOCUMENT ME!
+    */
+   public void addNext() throws PrefsException {
+      addNext(baos.toByteArray());
+      baos.reset();
+   }
 
-
+   void writeToBuffer(String s) throws PrefsException {
+      try {
+         dos.writeUTF(s);
+      } catch (IOException e) {
+         throw new PrefsException(e.getMessage());
+      }
+   }
 
    void resetEnum() {
       enum.rebuild();
@@ -215,6 +231,8 @@ public class Prefs {
    */
 
    /**
+    * DOCUMENT ME!
+    *
     * @return String
     */
    public String getName() {
@@ -223,6 +241,7 @@ public class Prefs {
 
    /**
     * Sets the name.
+    *
     * @param name The name to set
     */
    public void setName(String name) {
@@ -230,6 +249,8 @@ public class Prefs {
    }
 
    /**
+    * DOCUMENT ME!
+    *
     * @return byte
     */
    public byte getNumberOfRecords() {
@@ -238,10 +259,10 @@ public class Prefs {
 
    /**
     * Sets the numberOfRecords.
+    *
     * @param numberOfRecords The numberOfRecords to set
     */
    public void setNumberOfRecords(byte numberOfRecords) {
       this.numberOfRecords = numberOfRecords;
    }
-
 }

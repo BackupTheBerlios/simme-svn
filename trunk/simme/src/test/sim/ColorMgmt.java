@@ -2,16 +2,19 @@ package test.sim;
 
 import javax.microedition.lcdui.Display;
 
+
 /**
- * This class allows for easy color definitions and should contain methods
- * to efficiently display the game using a rich color set suitable for all
- * devices. 
+ * This class allows for easy color definitions and should contain methods to
+ * efficiently display the game using a rich color set suitable for all
+ * devices.
+ *
  * @author kariem
  */
 public class ColorMgmt {
 
    /** p1, p2, nc, nnc, nsc, ndc */
-   private static final int[] COLORS_FULL = { //
+   private static final int[] COLORS_FULL =
+   {
       0x00DD0000, 0x00FF0000, 0x0000DD00, 0x0000FF00, // p1, p2 
       0x00888888, 0, // neutral line
       0x00888888, 0, // neutral node
@@ -21,7 +24,8 @@ public class ColorMgmt {
    };
 
    /** p1, p2, nc, nnc, nsc, ndc  - */
-   private static final int[] COLORS_GREY16 = { //
+   private static final int[] COLORS_GREY16 =
+   {
       0x00FFFFFF, 0x00111111, 0x00111111, 0x00222222, // p1, p2 
       0x00888888, 0, // neutral line
       0x00888888, 0, // neutral node
@@ -32,28 +36,49 @@ public class ColorMgmt {
 
    /** p1, p2, nc, nnc, nsc, ndc  - */
    private static final int[] COLORS_GREY8 =
-      { 0x00FFFFFF, 0, 0x00111111, 0, 0x00888888, 0, 0x00888888, 0, 0x00AAAAAA, 0, 0x00444444, 0x00888888, 0xDDDDDD };
+   {
+      0x00FFFFFF, 0, 0x00111111, 0, 0x00888888, 0, 0x00888888, 0, 0x00AAAAAA, 0,
+      0x00444444, 0x00888888, 0xDDDDDD
+   };
 
    /** Inner and outer colors of player1's lines */
-   public static int p1c1, p1c2;
+   public static int p1c1;
+   /** Inner and outer colors of player1's lines */
+   public static int p1c2;
+
    /** Inner and outer colors of player2's lines */
-   public static int p2c1, p2c2;
+   public static int p2c1;
+   /** Inner and outer colors of player2's lines */
+   public static int p2c2;
+
    /** Inner and outer colors of neutral lines */
-   public static int nc1, nc2;
+   public static int nc1;
+   /** Inner and outer colors of neutral lines */
+   public static int nc2;
 
    /** Inner and outer colors of a normal node */
-   public static int nnc1, nnc2;
+   public static int nnc1;
+   /** Inner and outer colors of a normal node */
+   public static int nnc2;
+
    /** Inner and outer colors of a selected node */
-   public static int nsc1, nsc2;
+   public static int nsc1;
+   /** Inner and outer colors of a selected node */
+   public static int nsc2;
+
    /** Inner and outer colors of a disabled node */
-   public static int ndc1, ndc2;
+   public static int ndc1;
+   /** Inner and outer colors of a disabled node */
+   public static int ndc2;
 
    /** background */
    public static int bg;
 
+
    /**
     * Sets the color values according to properties of the given
-    * <code>Display</code> 
+    * <code>Display</code>
+    *
     * @param d
     */
    public static void setDisplay(Display d) {
@@ -61,15 +86,18 @@ public class ColorMgmt {
          if (d.numColors() >= 16) {
             setColors(COLORS_FULL);
             System.out.println("running with full colors");
+
             return;
          }
       } else {
          if (d.numColors() >= 16) {
             setColors(COLORS_GREY16);
             System.out.println("running with grey16");
+
             return;
          }
       }
+
       setColors(COLORS_GREY8);
       System.out.println("running with grey8");
    }
