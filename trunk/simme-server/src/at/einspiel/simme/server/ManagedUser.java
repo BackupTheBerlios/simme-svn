@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: ManagedUser.java
-//                  $Date: 2004/02/23 09:10:36 $
-//              $Revision: 1.5 $
+//                  $Date: 2004/04/06 22:28:31 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
@@ -26,233 +26,232 @@ import at.einspiel.simme.client.Move;
  */
 public class ManagedUser extends User implements IChangeSupport {
 
-   private static final int ACCURACY = 1000;
+    private static final int ACCURACY = 1000;
 
-   private UserState state;
-   private long lastStatusUpdate;
-   private ManagedGame game;
-   private Message clientMessage;
+    private UserState state;
+    private long lastStatusUpdate;
+    private ManagedGame game;
+    private Message clientMessage;
 
-   /**
-    * Simple default constructor.
-    */
-   public ManagedUser() {
-      super();
-      init();
-   }
+    /**
+     * Simple default constructor.
+     */
+    public ManagedUser() {
+        super();
+        init();
+    }
 
-   /**
-    * Simple constructor with nick name.
-    * @param nick
-    */
-   ManagedUser(String nick) {
-      super();
-      setNick(nick);
-      init();
-   }
+    /**
+     * Simple constructor with nick name.
+     * @param nick
+     */
+    ManagedUser(String nick) {
+        super();
+        setNick(nick);
+        init();
+    }
 
-   /**
-    * Creates a new <code>ManagedUser</code> with the given properties.
-    * @param u the user
-    */
-   public ManagedUser(User u) {
-      super(u.getNick(), u.getPwd(), u.getWinmsg(), u.getLang(), u.getInfo(), u
-            .getLocation(), u.getClientmodel());
-      init();
-   }
+    /**
+     * Creates a new <code>ManagedUser</code> with the given properties.
+     * @param u the user
+     */
+    public ManagedUser(User u) {
+        super(u.getNick(), u.getPwd(), u.getWinmsg(), u.getLang(), u.getInfo(),
+                u.getLocation(), u.getClientmodel());
+        init();
+    }
 
-   /**
-    * Creates a new <code>ManagedUser</code> by querying the database with
-    * the nickname.
-    * 
-    * @param nick the user's nick name.
-    * @return the user with the corresponding nick name.
-    * 
-    * @throws UserException if the user with the given id cannot
-    *         be found
-    */
-   public static ManagedUser getManagedUserByNick(String nick)
-         throws UserException {
-      ManagedUser user = new ManagedUser(UserDB.getUserByNick(nick));
-      return user;
-   }
+    /**
+     * Creates a new <code>ManagedUser</code> by querying the database with
+     * the nickname.
+     * 
+     * @param nick the user's nick name.
+     * @return the user with the corresponding nick name.
+     * 
+     * @throws UserException if the user with the given id cannot
+     *         be found
+     */
+    public static ManagedUser getManagedUserByNick(String nick) throws UserException {
+        ManagedUser user = new ManagedUser(UserDB.getUserByNick(nick));
+        return user;
+    }
 
-   /**
-    * Creates a new <code>ManagedUser</code> by querying the database with
-    * the nickname.
-    * 
-    * @param nick the user's nick name.
-    * @param pwd the user's passwort.
-    * @return either an already existing user with the given nick/password
-    *         combination, or a newly created user.
-    * @throws UserException if the user with the given id cannot
-    *         be found
-    */
-   public static ManagedUser getManagedUser(String nick, String pwd)
-         throws UserException {
-      ManagedUser user = new ManagedUser(UserDB.getUser(nick, pwd));
-      return user;
-   }
+    /**
+     * Creates a new <code>ManagedUser</code> by querying the database with
+     * the nickname.
+     * 
+     * @param nick the user's nick name.
+     * @param pwd the user's passwort.
+     * @return either an already existing user with the given nick/password
+     *         combination, or a newly created user.
+     * @throws UserException if the user with the given id cannot
+     *         be found
+     */
+    public static ManagedUser getManagedUser(String nick, String pwd) throws UserException {
+        final User user = UserDB.getUser(nick, pwd);
+        ManagedUser managedUser = new ManagedUser(user);
+        return managedUser;
+    }
 
-   private void init() {
-      state = new UserState(this);
-      lastStatusUpdate = System.currentTimeMillis();
-   }
+    private void init() {
+        state = new UserState(this);
+        lastStatusUpdate = System.currentTimeMillis();
+    }
 
-   /**
-    * Starts the login procedure. The result will be returned.
-    * 
-    * @param version the SimME version of the client in use.
-    * @return the result of the login procedure.
-    */
-   public LoginMessage login(String version) {
-      return SessionManager.getInstance().addUser(this, version);
-   }
+    /**
+     * Starts the login procedure. The result will be returned.
+     * 
+     * @param version the SimME version of the client in use.
+     * @return the result of the login procedure.
+     */
+    public LoginMessage login(String version) {
+        return SessionManager.getInstance().addUser(this, version);
+    }
 
-   /** Starts a game against the first available opponent. */
-   public void startGame() {
-      // first set the user to waiting 
-      this.state.setStateCategory(UserState.STATE_WAITING);
-      // ... user manager will initialize the game, if possible
+    /** Starts a game against the first available opponent. */
+    public void startGame() {
+        // first set the user to waiting 
+        this.state.setStateCategory(UserState.STATE_WAITING);
+        // ... user manager will initialize the game, if possible
 
-   }
+    }
 
-   /**
-    * Returns the current state of the user.
-    * 
-    * @return The current state.
-    */
-   UserState getUserState() {
-      return state;
-   }
+    /**
+     * Returns the current state of the user.
+     * 
+     * @return The current state.
+     */
+    UserState getUserState() {
+        return state;
+    }
 
-   /**
-    * Returns the seconds since the last update of this user was performed.
-    * 
-    * @return The time in seconds since the last update.
-    */
-   int secondsSinceLastUpdate() {
-      return (int) ((System.currentTimeMillis() - lastStatusUpdate) / ACCURACY);
-   }
+    /**
+     * Returns the seconds since the last update of this user was performed.
+     * 
+     * @return The time in seconds since the last update.
+     */
+    int secondsSinceLastUpdate() {
+        return (int) ((System.currentTimeMillis() - lastStatusUpdate) / ACCURACY);
+    }
 
-   /**
-    * Updates the user, setting the time of last update to the time of
-    * executing this method.
-    */
-   public void update() {
-      lastStatusUpdate = System.currentTimeMillis();
-   }
+    /**
+     * Updates the user, setting the time of last update to the time of
+     * executing this method.
+     */
+    public void update() {
+        lastStatusUpdate = System.currentTimeMillis();
+    }
 
-   /**
-    * Returns the users state
-    * @return the user's state
-    */
-   UserState getState() {
-      return state;
-   }
+    /**
+     * Returns the users state
+     * @return the user's state
+     */
+    UserState getState() {
+        return state;
+    }
 
-   /**
-    * Returns whether the user is playing.
-    * @return <code>true</code> if the user is playing, <code>false</code>
-    *          otherwise.
-    */
-   public boolean isPlaying() {
-      return state.isPlaying();
-   }
-   
-   /**
-    * Return whether the user is waiting.
-    * 
-    * @return <code>true</code> if the user is waiting, <code>false</code>
-    *          otherwise.
-    */
-   public boolean isWaiting() {
-      return state.getStateCategory() == UserState.STATE_WAITING;
-   }
+    /**
+     * Returns whether the user is playing.
+     * @return <code>true</code> if the user is playing, <code>false</code>
+     *          otherwise.
+     */
+    public boolean isPlaying() {
+        return state.isPlaying();
+    }
 
-   /**
-    * <p>Sets this user into "waiting" mode. If the user is managed by a user
-    * manager the user's "waiting" mode will be detected by the manager and the
-    * user will be added to game, if possible.</p>
-    * 
-    * <p>If the user currently participates in a game, this method returns
-    * without any changes.</p>. 
-    */
-   public void waitForGame() {
-      state.waitForGame();
-   }
+    /**
+     * Return whether the user is waiting.
+     * 
+     * @return <code>true</code> if the user is waiting, <code>false</code>
+     *          otherwise.
+     */
+    public boolean isWaiting() {
+        return state.getStateCategory() == UserState.STATE_WAITING;
+    }
 
-   /**
-    * Sets the game for this user.
-    * @param game a reference to the game.
-    */
-   public void setGame(ManagedGame game) {
-      this.game = game;
-      addStateListener(game);
-   }
+    /**
+     * <p>Sets this user into "waiting" mode. If the user is managed by a user
+     * manager the user's "waiting" mode will be detected by the manager and the
+     * user will be added to game, if possible.</p>
+     * 
+     * <p>If the user currently participates in a game, this method returns
+     * without any changes.</p>. 
+     */
+    public void waitForGame() {
+        state.waitForGame();
+    }
 
-   /**
-    * Returns the current game.
-    * @return the current game. If this user currently does not participate in
-    *          a game, <code>null</code> is returned.
-    */
-   public ManagedGame getGame() {
-      return game;
-   }
+    /**
+     * Sets the game for this user.
+     * @param game a reference to the game.
+     */
+    public void setGame(ManagedGame game) {
+        this.game = game;
+        addStateListener(game);
+    }
 
-   /**
-    * Selects an edge on the currently running game.
-    * @param m the move to perform.
-    * @return the result of calling make move on the game. This method returns
-    *          <code>null</code> if the game is <code>null</code> or not
-    *          running.
-    */
-   public Result makeMove(Move m) {
-      if (game != null) {
-         if (game.isRunning()) {
-            return game.makeMove(this, m);
-         }
-      }
-      return null;
-   }
+    /**
+     * Returns the current game.
+     * @return the current game. If this user currently does not participate in
+     *          a game, <code>null</code> is returned.
+     */
+    public ManagedGame getGame() {
+        return game;
+    }
 
-   /**
-    * Returns whether this user is currently on turn.
-    * @return <code>true</code> if he participates in a game which is running,
-    *          and is on turn; <code>false</code> otherwise.
-    */
-   public boolean isOnTurn() {
-      if (game != null) {
-         if (game.isRunning()) {
-            return game.isPlayerOnTurn(this);
-         }
-      }
-      return false;
-   }
+    /**
+     * Selects an edge on the currently running game.
+     * @param m the move to perform.
+     * @return the result of calling make move on the game. This method returns
+     *          <code>null</code> if the game is <code>null</code> or not
+     *          running.
+     */
+    public Result makeMove(Move m) {
+        if (game != null) {
+            if (game.isRunning()) {
+                return game.makeMove(this, m);
+            }
+        }
+        return null;
+    }
 
-   /** @see IChangeSupport#addStateListener(StateListener) */
-   public void addStateListener(StateListener listener) {
-      state.addStateListener(listener);
-   }
+    /**
+     * Returns whether this user is currently on turn.
+     * @return <code>true</code> if he participates in a game which is running,
+     *          and is on turn; <code>false</code> otherwise.
+     */
+    public boolean isOnTurn() {
+        if (game != null) {
+            if (game.isRunning()) {
+                return game.isPlayerOnTurn(this);
+            }
+        }
+        return false;
+    }
 
-   /** @see IChangeSupport#removeStateListener(StateListener) */
-   public void removeStateListener(StateListener listener) {
-      state.removeStateListener(listener);
-   }
+    /** @see IChangeSupport#addStateListener(StateListener) */
+    public void addStateListener(StateListener listener) {
+        state.addStateListener(listener);
+    }
 
-   /**
-    * Returns the message for the client.
-    * @return the client message.
-    */
-   public Message getClientMessage() {
-      return clientMessage;
-   }
+    /** @see IChangeSupport#removeStateListener(StateListener) */
+    public void removeStateListener(StateListener listener) {
+        state.removeStateListener(listener);
+    }
 
-   /**
-    * Sets the client message for this user.
-    * @param msg the message to set.
-    */
-   public void setClientMessage(Message msg) {
-      this.clientMessage = msg;
-   }
+    /**
+     * Returns the message for the client.
+     * @return the client message.
+     */
+    public Message getClientMessage() {
+        return clientMessage;
+    }
+
+    /**
+     * Sets the client message for this user.
+     * @param msg the message to set.
+     */
+    public void setClientMessage(Message msg) {
+        this.clientMessage = msg;
+    }
 }

@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: UserManager.java
-//                  $Date: 2003/12/30 23:04:47 $
-//              $Revision: 1.4 $
+//                  $Date: 2004/04/06 22:28:31 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 
 package at.einspiel.simme.server;
@@ -10,7 +10,13 @@ package at.einspiel.simme.server;
 import java.util.*;
 
 /**
- * Manages the users. This class is used by {@linkplain SessionManager}.
+ * Manages the users. Each user who has logged in will added to a list of active
+ * users. After some time of inactivity this user will be removed from the list.
+ * 
+ * The list is used to look up active users and to show their state (playing,
+ * waiting for a game, chatting, ...).
+ * 
+ * @see SessionManager
  * 
  * @author kariem
  */
