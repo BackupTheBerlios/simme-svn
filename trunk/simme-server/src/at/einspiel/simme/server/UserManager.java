@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: UserManager.java
-//                  $Date: 2004/09/13 15:16:03 $
-//              $Revision: 1.7 $
+//                  $Date: 2004/09/15 23:37:50 $
+//              $Revision: 1.8 $
 // ----------------------------------------------------------------------------
 
 package at.einspiel.simme.server;
@@ -233,7 +233,7 @@ public class UserManager {
 							countPlaying++;
 							break;
 						default :
-							throw new AssertionError("No such state category defined");
+							throw new RuntimeException("Assertion: No such state category defined");
 					}
 				}
 				setUsersOnline(users.size());

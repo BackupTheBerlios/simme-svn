@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: SpecialMenu.java
-//                  $Date: 2004/09/13 15:11:53 $
-//              $Revision: 1.6 $
+//                  $Date: 2004/09/15 23:37:50 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
@@ -42,7 +42,9 @@ class SpecialMenu extends AbstractUserMenu {
 		} else if (type.equals(SPECIAL_START)) {
 			handler = new ReqHandlerStart(id, idNext);
 		} else {
-			assert type.equals(SPECIAL_READY) : "Wrong type specified: " + type;
+			if (!type.equals(SPECIAL_READY)) {
+				throw new RuntimeException("Assertion: Wrong type specified: " + type);
+			}
 			handler = new ReqHandlerReady();
 		}
 	}
