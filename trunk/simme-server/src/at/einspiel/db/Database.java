@@ -1,22 +1,10 @@
 package at.einspiel.db;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.*;
+import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Date;
 
 /**
  * Represents the interface to the database.
@@ -25,10 +13,12 @@ import java.text.SimpleDateFormat;
  */
 public class Database {
 
+	private static final String BUNDLE_NAME = "at.einspiel.db.db";
+	
     private static final String DRIVER_CLASS = "org.postgresql.Driver";
     private static final String SERVER_URL = "jdbc:postgresql://127.0.0.1/einspiel";
     private static final String USER = "einspiel";
-    private static final String PWD = System.getProperty("db.password");
+    private static String PWD = ResourceBundle.getBundle(BUNDLE_NAME).getString("db.password");
     
     private Connection conn;
 
