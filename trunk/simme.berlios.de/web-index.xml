@@ -26,10 +26,8 @@
 		<section><title>General Information</title>
 
 			<p>This is the main web page with some current information on the project.
-			The most current version is 0.0.5. You can download the release files from
-			the <a
-			href="https://developer.berlios.de/project/showfiles.php?group_id=730">files
-			page</a>. Alternatively point your mobile phone to
+			Refer to the <a href="files.html">download section</a> for the latest
+			files. Alternatively you can point your mobile phone to
 
 			<blockquote>
 				<p><a href="http://www.einspiel.at/">www.einspiel.at</a></p>
@@ -37,8 +35,8 @@
 
 			in order to download the game directly to your phone.</p>
 
-			<p class="notes">Note: the above URL is a WAP page and may be displayed
-			incorrectly in some browsers.</p>
+			<p class="notes">Note: the above URL points to a WAP page and may be
+			displayed incorrectly in some browsers.</p>
 
 			<p>More information can be found at <a
 			href="http://openfacts.berlios.de/index-en.phtml?title=SimME">our wiki

@@ -1,4 +1,6 @@
-<page id="dev-environment">
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="website.xsl"?>
+<page id="devel">
 	<meta>
 		<title>SimME DevDocs - Development Environment</title>
 	</meta>
@@ -11,6 +13,10 @@
 		this document is made short. It won't be a waste of time to read through
 		this. If so then it was not very much time.</p>
 
+		<p>As this site will be changed soon, our Wiki now contains a <a
+		href="http://openfacts.berlios.de/index-en.phtml?title=SimME_Development_Documentation">page
+		dedicated to development documentation</a></p>
+
 		<section><title>What do you need?</title>
 
 			<p>Sure, there are a lot of different possibilities to develop for J2ME.
@@ -18,18 +24,20 @@
 
 			<table>
 				<tr>
-					<td valign="top">Wireless toolkit (WT)</td>
+					<td valign="top">Wireless toolkit (WTK)</td>
 					<td>
 						This is the main development tool used. Compiling of sources,
-						package deployment, emulation, etc. Newest version: <a
-						href="http://java.sun.com/products/j2mewtoolkit/index.html">http://java.sun.com/products/j2mewtoolkit/index.html</a>
+						package deployment, emulation, etc. The newest version can be found
+						at the <a
+						href="http://java.sun.com/products/j2mewtoolkit/index.html">WTK
+						site</a>
 					</td>
 				</tr>
 				<tr>
 					<td valign="top">JUnit</td>
 					<td>
 						Needed to run the tests. <a
-						href="http://www.junit.org/">http://www.junit.org/</a>
+						href="http://www.junit.org/">www.junit.org</a>
 					</td>
 				</tr>
 				<tr>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="website.xsl"?>
+<page id="files">
+	<meta>
+		<title>SimME - Files</title>
+	</meta>
+
+<body>
+	<section><title>SimME - Files and Releases</title>
+
+    <p>Here are links to all the files released by SimME. The links lead to the
+    <a
+    href="http://developer.berlios.de/project/showfiles.php?group_id=730">project's
+    files</a> at berlios.</p>
+
+    <section><title>Sources</title>
+
+      <p>If you want to have a look at the sources, choose one of these files</p>
+
+      <ul>
+        <li>SimME (MIDlet) -&gt; <a href="http://download.berlios.de/simme/simmeclient-src-0.0.5.tar.gz">version 0.0.5</a></li>
+        <li>SimME Server -&gt; <a href="http://download.berlios.de/simme/simmeserver-src-0.0.5.tar.gz">version 0.0.5</a></li>
+      </ul>
+
+    </section>
+
+    <section><title>Binaries</title>
+
+      <p>These files contain the application. In case you just want to play
+      around a little bit.</p>
+
+      <ul>
+        <li>SimME (MIDlet) -&gt; <a href="http://download.berlios.de/simme/simmeclient-bin-0.0.5.tar.gz">version 0.0.5</a></li>
+        <li>SimME Server -&gt; <a href="http://download.berlios.de/simme/simmeserver-bin-0.0.5.tar.gz">version 0.0.5</a></li>
+      </ul>
+
+    </section>
+
+  </section>
+</body>
+</page>

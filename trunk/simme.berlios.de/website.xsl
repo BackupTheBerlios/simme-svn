@@ -1,70 +1,84 @@
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0"
-     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-     xmlns:str="http://xsltsl.org/string">
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:str="http://xsltsl.org/string">
 
   <!-- This stylesheet produces HTML in iso-8859-1 -->
   <xsl:output method="html"
-              doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"
-              encoding="iso-8859-1"/>
+      doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"
+      encoding="iso-8859-1"/>
 
   <xsl:variable name="page-id" select="page/@id"/>
 
   <xsl:template match="/">
-  <html>
+    <html>
 
-    <xsl:variable name="title" select="page/meta/title"/>
-    <head>
-      <title><xsl:value-of select="$title"/></title>
-      <link rel="stylesheet" href="style/styles.css" media="screen"/>
-      <link rel="stylesheet" href="style/print.css" media="print"/>
-    </head>
+      <xsl:variable name="title" select="page/meta/title"/>
+      <head>
+        <title>
+          <xsl:value-of select="$title"/>
+        </title>
+        <link rel="stylesheet" href="style/styles.css" media="screen"/>
+        <link rel="stylesheet" href="style/print.css" media="print"/>
+      </head>
 
-    <body>
-      <table width="100%">
-        <tbody>
-          <tr>
-            <td id="menu">
-              <table>
-              <div id="nav">Quick Nav</div>
-                  <xsl:call-template name="menu">
-                    <xsl:with-param name="page">index.html</xsl:with-param>
-                    <xsl:with-param name="name">Main</xsl:with-param>
-                  </xsl:call-template>
-                  <xsl:call-template name="menu">
-                    <xsl:with-param name="page">dev-environment.html</xsl:with-param>
-                    <xsl:with-param name="name">Dev Environment</xsl:with-param>
-                  </xsl:call-template>
-                  </table>
-            </td>
-            <td width="100%">
+      <body>
+        <table width="100%">
+          <tbody>
+            <tr>
+              <td id="menu">
+                <table>
+                  <div id="nav">Quick Nav</div>
+                  <tr>
+                    <xsl:call-template name="menu">
+                      <xsl:with-param name="page">index.html</xsl:with-param>
+                      <xsl:with-param name="name">Main</xsl:with-param>
+                    </xsl:call-template>
+                  </tr>
+                  <tr>
+                    <xsl:call-template name="menu">
+                      <xsl:with-param name="page">devel.html</xsl:with-param>
+                      <xsl:with-param name="name">DevDocs</xsl:with-param>
+                    </xsl:call-template>
+                  </tr>
+                  <tr>
+                    <xsl:call-template name="menu">
+                      <xsl:with-param name="page">files.html</xsl:with-param>
+                      <xsl:with-param name="name">Files</xsl:with-param>
+                    </xsl:call-template>
+                  </tr>
+                </table>
+              </td>
+              <td width="100%">
 
             <!-- content of the page -->
 
-            <xsl:apply-templates select="page/body"/>
+                <xsl:apply-templates select="page/body"/>
 
             <!-- end of content -->
-            </td>
-          </tr>
-        </tbody>
+              </td>
+            </tr>
+          </tbody>
 
-      </table>
+        </table>
 
 
-      <div id="info">
+        <div id="info">
         Any comments? Send <a
-        href="mailto:kariem@users.berlios.de?subject=[simme]%20web%20-%20">
+              href="mailto:kariem@users.berlios.de?subject=[simme]%20web%20-%20">
         us</a> an email!
       </div>
-    </body>
-  </html>
+      </body>
+    </html>
   </xsl:template>
 
 
   <xsl:template match="section">
     <xsl:param name="level">
-       <xsl:call-template name="str:count-substring">
-        <xsl:with-param name="text"><xsl:number count="section" level="multiple"/></xsl:with-param>
+      <xsl:call-template name="str:count-substring">
+        <xsl:with-param name="text">
+          <xsl:number count="section" level="multiple"/>
+        </xsl:with-param>
         <xsl:with-param name="chars" select="'.'"/>
       </xsl:call-template>
     </xsl:param>
@@ -101,16 +115,31 @@
   <xsl:template name="menu">
     <xsl:param name="page"/>
     <xsl:param name="name"/>
+    <xsl:param name="class"/>
 
-    <tr><td>
-      <xsl:choose><xsl:when test="$page-id = substring-before($page, '.')">
-          <xsl:value-of select="$name"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <a href="{$page}"><xsl:value-of select="$name"/></a>
-        </xsl:otherwise>
-      </xsl:choose>
-    </td></tr>
+    <td>
+      <!-- see if there is a class attribute -->
+      <div>
+        <xsl:if test="$class != ''">
+          <xsl:attribute name="class">
+            <xsl:value-of select="$class"/>
+          </xsl:attribute>
+        </xsl:if>
+      <!-- check if link is necessary -->
+        <xsl:choose>
+          <xsl:when test="$page-id = substring-before($page, '.')">
+            <div class="selected">
+              <xsl:value-of select="$name"/>
+            </div>
+          </xsl:when>
+          <xsl:otherwise>
+            <a href="{$page}">
+              <xsl:value-of select="$name"/>
+            </a>
+          </xsl:otherwise>
+        </xsl:choose>
+      </div>
+    </td>
   </xsl:template>
 
 

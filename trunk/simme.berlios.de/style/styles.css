@@ -32,12 +32,28 @@ td {
   font-style: italic;
 }
 
-#menu { font-size: small; }
 
-#info { width:100%;
-        text-align:center; font-size: smaller;
-        border-top: solid 1px; margin-top: 1em;
+#info {
+  width: 100%;
+  text-align: center; font-size: smaller;
+  border-top: solid 1px; margin-top: 1em;
 }
+
+/* Navigation menu */
+
+#menu {
+  font-size: small;
+}
+
+#menu .selected {
+  font-weight: bold;
+}
+
+#menu .header {
+  margin-left: -0.5em;
+  font-size: larger;
+}
+
 
 #nav {
   font-size: small;
