@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: GameInfo.java
-//                  $Date: 2004/08/13 13:58:23 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/09/13 15:22:33 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client;
 
@@ -14,6 +14,8 @@ import at.einspiel.simme.nanoxml.XMLElement;
  * @author kariem
  */
 public class GameInfo {
+
+	private static final String TAG_GAME_INFO = "gameinfo";
 
 	// meta information
 	private String id;
@@ -57,10 +59,35 @@ public class GameInfo {
 	 *             if <code>xmlInfo</code> is <code>null</code>.
 	 */
 	public GameInfo(XMLElement xmlInfo) throws NullPointerException {
-		this(xmlInfo.getAttribute("id"), xmlInfo.getAttribute("p1"),
-				xmlInfo.getAttribute("p2"), xmlInfo.getAttribute("info1"), xmlInfo
-						.getAttribute("info2"));
+		this(xmlInfo.getAttribute("gameid"), xmlInfo.getAttribute("p1"), xmlInfo
+				.getAttribute("p2"), xmlInfo.getAttribute("info1"), xmlInfo
+				.getAttribute("info2"));
 	}
+
+	/**
+	 * Returns an xml representation of the game information.
+	 * @return an xml representation showing id and player names. Additional
+	 *         player information is optional and ommitted if not existant.
+	 */
+	public XMLElement toXml() {
+		XMLElement info = new XMLElement();
+		info.setName(TAG_GAME_INFO);
+		info.setAttribute("gameid", id);
+		info.setAttribute("p1", p1Name);
+		info.setAttribute("p2", p2Name);
+		// optional info fields
+		if (p1Info != null) {
+			info.setAttribute("info1", p1Info);
+		}
+		if (p2Info != null) {
+			info.setAttribute("info2", p2Info);
+		}
+		return info;
+	}
+
+	//
+	// getters and setters
+	//
 
 	/**
 	 * @return Returns the id.
@@ -135,5 +162,30 @@ public class GameInfo {
 	 */
 	public void setP2Name(String name) {
 		p2Name = name;
+	}
+
+	//
+	// overidden java.lang.Object methods
+	//
+
+	/** @see java.lang.Object#equals(java.lang.Object) */
+	public boolean equals(Object obj) {
+		if (obj instanceof GameInfo) {
+			return equals((GameInfo) obj);
+		}
+		return false;
+	}
+
+	/**
+	 * Indicates whether some other GameInfo is equal to this one.
+	 * @param info
+	 *            the other GamInfo object.
+	 * @return <code>true</code> if both GameInfo objects share the same id,
+	 *         and the names of player1 and player2 are equal between the
+	 *         GameInfo objects.
+	 */
+	public boolean equals(GameInfo info) {
+		return info.id.equals(this.id) && info.p1Name.equals(this.p1Name)
+				&& info.p2Name.equals(this.p2Name);
 	}
 }

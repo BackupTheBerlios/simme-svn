@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: Game.java
-//               $Date: 2004/08/13 13:58:23 $
-//           $Revision: 1.9 $
+//               $Date: 2004/09/13 15:22:33 $
+//           $Revision: 1.10 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client;
 
@@ -51,8 +51,6 @@ public abstract class Game {
 	// game meta information
 	/** The game meta information */
 	private final GameInfo gameInfo;
-	/** The game id, usually taken from the game information. */
-	private String id;
 
 	// information for the user
 	/** the move message */
@@ -81,7 +79,6 @@ public abstract class Game {
 		} else {
 			this.gameInfo = new GameInfo(gameInfoXML);
 		}
-		setId(this.gameInfo.getId());
 
 		// initialize playing field arrays
 		nodes = new Node[NB_NODES];
@@ -525,7 +522,7 @@ public abstract class Game {
 	 * @return Returns the id.
 	 */
 	public String getId() {
-		return id;
+		return gameInfo.getId();
 	}
 
 	/**
@@ -533,7 +530,7 @@ public abstract class Game {
 	 *            The id to set.
 	 */
 	public void setId(String id) {
-		this.id = id;
+		this.gameInfo.setId(id);
 	}
 
 	/**
@@ -581,6 +578,61 @@ public abstract class Game {
 		return buf.toString();
 	}
 
+	/** @see java.lang.Object#equals(java.lang.Object) */
+	public boolean equals(Object obj) {
+		if (obj instanceof Game) {
+			return equals((Game) obj);
+		}
+		return false;
+	}
+
+	/**
+	 * Shows whether this game is equal to another game.
+	 * @param g
+	 *            the game, this game is compared to.
+	 * @return <code>true</code>, if both games have the same number of
+	 *         moves, and the game informations are equal.
+	 */
+	public boolean equals(Game g) {
+		return g.moveNr == this.moveNr && selectionIsEqual(g)
+				&& g.gameInfo.equals(this.gameInfo);
+	}
+
+	/**
+	 * Indicates whether the selection is equal to the selection on some other
+	 * game.
+	 * 
+	 * @param g
+	 *            the other game.
+	 * @return if all nodes are in the same state of selection, and all edges
+	 *         show the same selection.
+	 */
+	private boolean selectionIsEqual(Game g) {
+		// compare nodes
+		Node[] otherNodes = g.nodes;
+		if (otherNodes != nodes) {
+			for (int i = 0; i < nodes.length; i++) {
+				if (nodes[i] == null && otherNodes[i] == null) {
+					continue;
+				}
+				if (!nodes[i].equals(otherNodes[i])) {
+					return false;
+				}
+			}
+		}
+
+		// compare edges
+		byte[] otherEdges = g.edges;
+		if (otherEdges != edges) {
+			for (int i = 0; i < edges.length; i++) {
+				if (edges[i] != otherEdges[i]) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	//
 	// internal classes
 	//
@@ -592,6 +644,15 @@ public abstract class Game {
 		/** @see Object#toString() */
 		public String toString() {
 			return "Node[act=" + activated + ", dis=" + disabled + "]";
+		}
+
+		/** @see java.lang.Object#equals(java.lang.Object) */
+		public boolean equals(Object obj) {
+			if (obj instanceof Node) {
+				Node other = (Node) obj;
+				return other.activated == activated && other.disabled == disabled;
+			}
+			return false;
 		}
 	}
 
