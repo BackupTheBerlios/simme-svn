@@ -1,57 +1,42 @@
 <%@page contentType="text/xml; charset=iso-8859-1"%>
 <%@page import="at.einspiel.simme.server.base.User"%>
+<%@page import="at.einspiel.simme.server.management.ManagedUser"%>
 <%@page import="at.einspiel.simme.server.management.SessionManager"%>
-<%@page import="java.util.Enumeration"%>
 
 <%@taglib prefix="c" uri="/WEB-INF/tlds/c.tld"%>
 <%@taglib prefix="x" uri="/WEB-INF/tlds/x.tld"%>
 
-
-<c:if test="${(param.user != '') || (param.pwd != '')}">
-
-    <c:set var="nick" value="${param.user}" />
-    <c:set var="pass" value="${param.pwd}"  />
-    <c:set var="model" value="${param.model}" />
-    <c:set var="version" value="${param.version}" />
-
-
-    <%
-        User user = new User();
-        user.setNick((String)session.getAttribute("nick"));
-        user.setPassword((String)session.getAttribute("pass"));
-        user.setClientmodel((String)session.getAttribute("model"));
-        SessionManager sMgr = SessionManager.getInstance();
-        String requestUrl = request.getRequestURL().toString();
-        sMgr.setBaseUrl(requestUrl.substring(0,requestUrl.lastIndexOf('/')));
-        String version = (String)pageContext.getAttribute("version");
-        out.print(sMgr.addUser(user, version).toString());
-    %>
-
-    <% 
-        out.print("hello");
-        /*
-    <jsp:useBean id="user" class="at.einspiel.simme.server.base.User"
-                 scope="session" >
-        <jsp:setProperty name="user" property="nick" param="user" />
-        <jsp:setProperty name="user" property="pass" param="pwd" />
-    </jsp:useBean>
-         String nick = (String)session.getAttribute("nick");
-         String pass = (String)session.getAttribute("pass");
-         String model = (String)pageContext.getAttribute("model");
-         String version = (String)pageContext.getAttribute("version");
-         User u = null;
-         try {
-            u = new User(nick, pass, null, (byte) 0, null, null, model);
-         } catch (NoSuchMethodError err) {
-            out.println(err.getMessage());
-            return;
-         }
-         //String address = "<address>" + request.getRemoteAddr() + "</address>";
-         //String host = "<host>" + request.getRemoteHost() + "</host>";
-         SessionManager sMgr = SessionManager.getInstance();
-         String requestUrl = request.getRequestURL().toString();
-         sMgr.setBaseUrl(requestUrl.substring(0,requestUrl.lastIndexOf('/')));
-         out.print(sMgr.addUser(u, version).toString());
-        */
-    %>
-</c:if>
+<c:choose>
+    <c:when test="${(empty param.user) || (empty param.pwd)}">
+        <%
+            String msg = "Please enter username and password.";
+            String title = "Error";
+            out.print(SessionManager.makeMessage(title, msg));
+        %>
+    </c:when>
+    <c:otherwise>
+        <c:set var="nick" value="${param.user}" />
+        <c:set var="pass" value="${param.pwd}"  />
+        <c:set var="model" value="${param.model}" />
+        <c:set var="version" value="${param.version}" />
+    
+        <jsp:useBean id="user" class="at.einspiel.simme.server.management.ManagedUser" scope="session">
+            <jsp:setProperty name="user" property="nick" param="user" />
+            <jsp:setProperty name="user" property="pwd" />
+            <jsp:setProperty name="user" property="clientmodel" param="model" />
+        </jsp:useBean>
+    
+        <%
+            // retrieve the user from the session's context
+            User u = (User) session.getAttribute("user");
+            // retrieve the session manager
+            SessionManager sMgr = SessionManager.getInstance();
+            String requestUrl = request.getRequestURL().toString();
+            sMgr.setBaseUrl(requestUrl.substring(0,requestUrl.lastIndexOf('/')));
+            String version = (String) pageContext.getAttribute("version");
+            // register user and return resulting messsage
+            out.print(sMgr.addUser(u, version).toString());
+            System.out.println(request.getParameter("user"));
+        %>
+    </c:otherwise>
+</c:choose>

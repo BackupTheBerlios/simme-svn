@@ -3,9 +3,14 @@ package at.einspiel.simme.server.management;
 import at.einspiel.simme.server.base.User;
 import at.einspiel.simme.server.base.UserException;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import test.sim.net.LoginResult;
+import test.sim.net.SendableUI;
 
 /**
  * This class is intended to be used for User management. Each user who
@@ -19,9 +24,14 @@ import test.sim.net.LoginResult;
  */
 public class SessionManager {
 
-    private static int updateInterval = 30000; // 30 seconds
-    private static int maxSecondsIdle = 300; // 5 minutes
-    private static int maxSecondsWaiting = 600; // 10 minutes
+    private static final int DEF_UPDATE_INTERVAL = 30000; // 30 seconds
+    private static final int DEF_SECONDS_IDLE = 300; // 5 minutes
+    private static final int DEF_SECONDS_WAITING = 600; // 10 minutes
+    
+
+    private static int updateInterval = DEF_UPDATE_INTERVAL; 
+    private static int maxSecondsIdle = DEF_SECONDS_IDLE; // 5 minutes
+    private static int maxSecondsWaiting = DEF_SECONDS_WAITING; // 10 minutes
     private static final String MGMT_PAGE = "sessionsMgr.jsp";
 
     SortedMap users;
@@ -57,6 +67,19 @@ public class SessionManager {
     }
 
     /**
+     * Creates a message using <code>SendableUI</code>.
+     * @param title the title.
+     * @param message the text for the message.
+     * @return an xml string containing the formatted message.
+     */
+    public static String makeMessage(String title, String message) {
+       SendableUI sui = new SendableUI();
+       sui.setTitle(title);
+       sui.setText(message);
+       return sui.getXmlString();
+    }   
+
+    /**
      * Adds a user to the list of managed users.
      * 
      * @param u the user.
@@ -72,7 +95,7 @@ public class SessionManager {
             if (!userFromDB.equals(u)) {
                 u.saveToDB();
             }
-            addUser(new ManagedUser(u));
+            addManagedUser(new ManagedUser(u));
             response = "User signed on";
             return new LoginResult(true, response, baseUrl + MGMT_PAGE);
         } catch (UserException e) {
@@ -92,7 +115,7 @@ public class SessionManager {
     public LoginResult addUser(String nick, String pwd) {
         String response = null;
         try {
-            addUser(ManagedUser.getManagedUser(nick, pwd));
+            addManagedUser(ManagedUser.getManagedUser(nick, pwd));
             response = "User signed on";
             return new LoginResult(true, response, baseUrl + MGMT_PAGE);
         } catch (UserException e) {
@@ -106,7 +129,7 @@ public class SessionManager {
      * 
      * @param user The user which is added.
      */
-    public void addUser(ManagedUser user) {
+    public void addManagedUser(ManagedUser user) {
         System.out.println("[" + System.currentTimeMillis() + "] adding " + user.getNick());
         synchronized (users) {
             users.put(user.getNick(), user);
@@ -137,6 +160,10 @@ public class SessionManager {
         return users.size();
     }
 
+    /**
+     * Sets the base URL.
+     * @param string the base URL.
+     */
     public void setBaseUrl(String string) {
         if (!string.endsWith("/")) {
             string = string + "/";

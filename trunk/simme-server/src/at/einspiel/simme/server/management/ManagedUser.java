@@ -14,6 +14,11 @@ public class ManagedUser extends User {
    private UserState state;
    private long lastStatusUpdate;
 
+   public ManagedUser()
+   {
+      super();
+   }
+
    /**
     * Creates a new <code>ManagedUser</code> with the given properties.
     * @param u the user

@@ -1,5 +1,6 @@
 <%@page contentType="text/html"%>
 <%@page import="at.einspiel.simme.server.management.*"%>
+
 <html>
 <head><title>Online Users - Simme</title></head>
 
