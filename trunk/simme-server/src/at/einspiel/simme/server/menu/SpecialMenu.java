@@ -1,15 +1,15 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: SpecialMenu.java
-//                  $Date: 2004/06/07 09:26:45 $
-//              $Revision: 1.3 $
+//                  $Date: 2004/08/25 15:43:11 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
 import org.w3c.dom.Element;
 
 /**
- * Is used to deliver specialited menu information. That includes means to start
+ * Is used to deliver specialised menu information. This includes means to start
  * a game, or set a user into waiting state.
  * 
  * @author kariem
