@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: TestLoginRequest.java
-//                  $Date: 2004/06/07 09:27:25 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/09/13 15:22:00 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
@@ -19,7 +19,7 @@ import at.einspiel.messaging.LoginRequest;
  *
  * @author kariem
  */
-public class TestLoginRequest extends LoginRequest {
+public class TestLoginRequest extends LoginRequest implements ITestRequest {
    
    /** @see LoginRequest#LoginRequest(String, String, String, String) */
    public TestLoginRequest(String nick, String pwd, String clientmodel, String version) {
@@ -31,7 +31,12 @@ public class TestLoginRequest extends LoginRequest {
       this(nick, pwd, null, version);
    }
 
-   /**
+	/** @see at.einspiel.messaging.Request#sendRequest(java.lang.String) */
+	public void sendRequest(String path) {
+		super.sendRequest(TEST_SERVER, path);
+	}
+
+	/**
     * Creates a new <code>HttpConnection</code> from a url.
     *
     * @param url a string representing a URL.

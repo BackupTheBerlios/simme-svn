@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: SuiteTestNet.java
-//                  $Date: 2004/08/12 22:00:07 $
-//              $Revision: 1.3 $
+//                  $Date: 2004/09/13 15:22:00 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client.net;
 
@@ -29,6 +29,8 @@ public class SuiteTestNet {
 		TestSuite suite = new TestSuite("Test for package at.einspiel.simme.client.net");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(MoveMessageTest.class);
+		suite.addTestSuite(PlayRequestTest.class);
+		suite.addTestSuite(SimulatedPlayerTest.class);
 		//$JUnit-END$
 		return suite;
 	}

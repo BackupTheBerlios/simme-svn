@@ -1,3 +1,9 @@
+//----------------------------------------------------------------------------
+//[Simme]
+//    Java Source File: TestRequest.java
+//               $Date: 2004/09/13 15:22:00 $
+//           $Revision: 1.3 $
+//----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
 import at.einspiel.messaging.Request;
@@ -14,13 +20,23 @@ import javax.microedition.io.HttpConnection;
  *
  * @author kariem
  */
-public class TestRequest extends Request {
+public class TestRequest extends Request implements ITestRequest {
 
-   /** @see Request#Request() */
+	/** @see Request#Request() */
    public TestRequest() {
       super();
    }
-
+   
+	/** @see Request#Request(int) */
+	public TestRequest(int timeout) {
+		super(timeout);
+	}
+	
+	/** @see at.einspiel.messaging.Request#sendRequest(java.lang.String) */
+	public void sendRequest(String path) {
+		super.sendRequest(TEST_SERVER, path);
+	}
+	
    /**
     * Overriden for testing purposes
     *
