@@ -1,266 +1,358 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: Logger.java
-//                  $Date: 2004/09/13 23:38:01 $
-//              $Revision: 1.5 $
+//                  $Date: 2004/09/14 22:28:56 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package at.einspiel.logging;
 
-import java.io.PrintStream;
+import java.util.Hashtable;
 
 /**
- * This class provides a simple logging interface for the whole application. For
- * concurrently running applications this interface has to be changed.
+ * A simple logging class loosely adapted from the java.util.logging.Logger
+ * class. Adapted from Eric Giguere (April 29, 2002):
+ * http://developers.sun.com/techtopics/mobility/midp/ttips/logging/
  * 
- * @author kariem
+ * @author Kariem
  */
 public class Logger {
 
-	/** Debug level */
-	public static final int LVL_DEBUG = 3;
-	/**
-	 * Information level, used for clear messages that could even be forwarded
-	 * to an experienced user.
-	 */
-	public static final int LVL_INFO = 2;
-	/** Warning level, used for non fatal warning messages */
-	public static final int LVL_WARN = 1;
-	/** Error level, used for fatal error messages */
-	public static final int LVL_ERROR = 0;
+	private Level lvl;
+	private String name;
+	private Logger parent;
+	private int version;
 
-	private static int verboseLevel = 2;
-	private static LimitedLog log = new LimitedLog();
+	// root logger
+	private static Logger root = new Logger("");
+	// set of loggers
+	private static Hashtable loggers = new Hashtable();
+
+	static { // Initialize the root level
+		loggers.put("", root);
+		root.setParent(null);
+		root.setLevel(Level.FINE);
+	}
+
+	private Logger(String name) {
+		this.name = name;
+	}
 
 	/**
-	 * <p>
-	 * Logs the message according to the currently set verbose level and the log
-	 * level of this message. If a debug or information messages is received and
-	 * the verbose level is high enough, the message will be printed to stdout.
-	 * Otherwise stderr is used.
-	 * </p>
-	 * <p>
-	 * Irrespective the verbose level all messages will be appended to the
-	 * current log.
-	 * </p>
-	 * 
-	 * @param c
-	 *            the class which has called the log method. This parameter may
-	 *            be <code>null</code>.
-	 * 
-	 * @param message
-	 *            the message.
-	 * @param lvl
-	 *            the log level.
-	 * @param t
-	 *            additional info on the cause. This parameter may be
-	 *            <code>null</code>.
+	 * Finds the logger's parent by parsing the name into parts separated by '.'
+	 * @param childName
+	 *            the name of the child logger in question.
+	 * @return the parent logger
 	 */
-	static void log(Class c, String message, int lvl, Throwable t) {
-		if (c != null) {
-			message = addClassInfo(message, c);
+	private Logger findParent(String childName) {
+		if (childName == null || childName.length() == 0) {
+			return null;
 		}
-		if (t != null) {
-			message = message + ": " + t.getMessage();
-		}
-		message = addLevelInfo(message, lvl);
-		if (lvl >= verboseLevel) {
-			final PrintStream ps;
-			// log to stdout or stderr accordingly
-			if (lvl == LVL_DEBUG || lvl == LVL_INFO) {
-				ps = System.out;
-			} else {
-				ps = System.err;
-			}
-			ps.println(message);
-			// add stack trace if necessary
-			if (t != null) {
-				t.printStackTrace();
+
+		Logger p;
+
+		synchronized (loggers) {
+			while (true) {
+				int pos = childName.lastIndexOf('.');
+				if (pos < 0) {
+					p = root;
+					break;
+				}
+
+				String pname = childName.substring(0, pos);
+				p = (Logger) loggers.get(pname);
+				if (p != null)
+					break;
+
+				childName = pname;
 			}
 		}
-		appendToLog(message);
-	}
 
-	static void log(Class c, String message, int lvl) {
-		log(c, message, lvl, null);
-	}
-
-	static void log(String message, int lvl, Throwable t) {
-		log(null, message, lvl, t);
-	}
-
-	static void log(String message, int lvl) {
-		log(null, message, lvl);
+		return p;
 	}
 
 	/**
-	 * Appends the string to the log.
+	 * Get this logger's level.
+	 * @return the logger's level, or <code>null</code> if no level has been
+	 *         set.
+	 */
+	public Level getLevel() {
+		return lvl;
+	}
+
+	/**
+	 * Find the logger registered with a specific name.
+	 * @param name
+	 *            the logger's name
+	 * @return the logger registered with <code>name</code>. If there is no
+	 *         logger registered with <code>name</code> a new logger will be
+	 *         created and registered accordingly.
+	 */
+	public static synchronized Logger getLogger(String name) {
+		Logger l = (Logger) loggers.get(name);
+
+		if (l == null) {
+			l = new Logger(name);
+			loggers.put(name, l);
+		}
+
+		return l;
+	}
+
+	/**
+	 * Return the logger's name.
+	 * @return the logger's name.
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Return the logger's parent. The parent is reset if other loggers were
+	 * created, in case children are created after their parents.
 	 * 
+	 * @return the logger's parent.
+	 */
+	public Logger getParent() {
+		if (loggers.size() != version) {
+			setParent(findParent(name));
+		}
+
+		return parent;
+	}
+
+	/**
+	 * Test whether the given level is loggable according to this Logger.
+	 * @param test
+	 *            the level to test.
+	 * @return whether the given level is loggable for this logger.
+	 */
+	public boolean isLoggable(Level test) {
+		if (test == null)
+			return false;
+
+		Logger curr = this;
+		while (curr != null) {
+			Level actual = curr.getLevel();
+			if (actual != null) {
+				if (actual == Level.OFF) {
+					return false;
+				}
+				return (test.intVal() >= actual.intVal());
+			}
+
+			curr = curr.getParent();
+		}
+
+		return false;
+	}
+
+	/**
+	 * Log a message using the given level.
+	 * @param level
+	 *            the log level to use for logging.
 	 * @param msg
-	 *            the message to be appended.
+	 *            the message to log.
 	 */
-	private static void appendToLog(String msg) {
-		log.append(msg);
+	public void log(Level level, String msg) {
+		log(level, msg, null);
 	}
 
 	/**
-	 * Returns the log's most recent content.
-	 * 
-	 * @return the the content.
-	 */
-	public static String getContent() {
-		return log.getContent();
-	}
-
-	/**
-	 * Prepends the class information to the message
-	 * 
-	 * @param message
-	 *            the message
-	 * @param c
-	 *            the class
-	 * @return the message with the class information.
-	 */
-	private static String addClassInfo(String message, Class c) {
-		String name = c.getName();
-		int dotPos = name.lastIndexOf('.');
-		return "[" + Thread.currentThread()  + "] #" + name.substring(dotPos + 1) + "# " + message;
-		//+ " \t_" + Thread.currentThread();
-	}
-
-	/**
-	 * Prepends the log level to the message.
-	 * 
-	 * @param message
-	 *            the message.
-	 * @param lvl
-	 *            the level
-	 * @return the message with an additional log level.
-	 */
-	private static String addLevelInfo(String message, int lvl) {
-		switch (lvl) {
-			case LVL_DEBUG :
-				return "[DBG] " + message;
-			case LVL_INFO :
-				return message; //"[INF]" + message;
-			case LVL_WARN :
-				return "[WRN] " + message;
-			case LVL_ERROR :
-				return "[ERR] " + message;
-			default :
-				return "[???] " + message;
-		}
-	}
-
-	/**
-	 * Reports a debug message to the logger.
-	 * 
-	 * @param message
-	 *            the debug message.
-	 */
-	public static void debug(String message) {
-		debug(null, message);
-	}
-
-	/**
-	 * Reports a debug message to the logger including the generating class.
-	 * 
-	 * @param c
-	 *            the class.
-	 * @param message
-	 *            the debug message.
-	 */
-	public static void debug(Class c, String message) {
-		log(c, message, LVL_DEBUG);
-	}
-
-	/**
-	 * Reports an information message to the logger.
-	 * 
-	 * @param message
-	 *            the information message.
-	 */
-	public static void info(String message) {
-		log(message, LVL_INFO);
-	}
-
-	/**
-	 * Reports a warning message to the logger.
-	 * 
-	 * @param message
-	 *            the warning message.
-	 */
-	public static void warn(String message) {
-		log(message, LVL_WARN);
-	}
-
-	/**
-	 * Reports an error message to the logger.
-	 * @param message
-	 *            the message.
+	 * Log a message using the given level.
+	 * @param level
+	 *            the log level to use for logging.
+	 * @param msg
+	 *            the message to log.
 	 * @param t
-	 *            a throwable that cause the error. This might be
-	 *            <code>null</code>.
+	 *            the throwable to log.
 	 */
-	public static void error(String message, Throwable t) {
-		log(message, LVL_ERROR, t);
+	public void log(Level level, String msg, Throwable t) {
+		log(null, level, msg, t);
 	}
 
 	/**
-	 * Reports an error message to the logger.
-	 * 
-	 * @param message
-	 *            the error message.
+	 * Log a message using the given level.
+	 * @param c
+	 *            the class to log.
+	 * @param level
+	 *            the log level to use for logging.
+	 * @param msg
+	 *            the message to log.
 	 */
-	public static void error(String message) {
-		error(message, null);
+	public void log(Class c, Level level, String msg) {
+		log(c, level, msg, null);
 	}
 
 	/**
-	 * Returns the current log level.
-	 * 
-	 * @return the current log level will be one of {@linkplain #LVL_DEBUG},
-	 *         {@linkplain #LVL_INFO},{@linkplain #LVL_WARN},
-	 *         {@linkplain #LVL_ERROR}
+	 * Log a message using the given level, including optional exception
+	 * information.
+	 * @param c
+	 *            the class to log.
+	 * @param level
+	 *            the log level
+	 * @param msg
+	 *            the message to log.
+	 * @param t
+	 *            the throwable object,t that should be logged.
 	 */
-	public static int getVerboseLevel() {
-		return verboseLevel;
-	}
-
-	/**
-	 * Sets the log level.
-	 * 
-	 * @param loglevel
-	 *            the log level to set. This can be one of
-	 *            {@linkplain #LVL_DEBUG},{@linkplain #LVL_INFO},
-	 *            {@linkplain #LVL_WARN},{@linkplain #LVL_ERROR}
-	 */
-	public static void setVerboseLevel(int loglevel) {
-		Logger.verboseLevel = loglevel;
-	}
-
-	/**
-	 * Sets the log level from a string parameter.
-	 * 
-	 * @param loglevel
-	 *            one of
-	 *            <ul>
-	 *            <li><i>debug </i></li>
-	 *            <li><i>info </i></li>
-	 *            <li><i>warn </i></li>
-	 *            <li><i>error </i></li>
-	 *            </ul>
-	 * 
-	 * @see #setVerboseLevel(int)
-	 */
-	public static void setVerboseLevel(String loglevel) {
-		if (loglevel.equals("debug")) {
-			setVerboseLevel(LVL_DEBUG);
-		} else if (loglevel.equals("info")) {
-			setVerboseLevel(LVL_INFO);
-		} else if (loglevel.equals("warn")) {
-			setVerboseLevel(LVL_WARN);
-		} else if (loglevel.equals("error")) {
-			setVerboseLevel(LVL_ERROR);
+	public void log(Class c, Level level, String msg, Throwable t) {
+		if (level == null) {
+			// no level => set to fine
+			level = Level.FINE;
 		}
+		if (!isLoggable(level)) {
+			return;
+		}
+
+		long time = System.currentTimeMillis();
+		String tname = Thread.currentThread().toString();
+
+		if (t != null) {
+			msg += " " + t;
+		}
+
+		if (c != null) {
+			final String cName = c.getName();
+			int dotPos = cName.lastIndexOf('.');
+			msg += "#" + cName.substring(dotPos + 1) + "#";
+		}
+
+		System.out.println(time + " " + tname + " " + level + " " + msg);
+	}
+
+	/**
+	 * Sets the logger's level.
+	 * @param level
+	 *            the new level. This parameter may be <code>null</code>.
+	 */
+	public void setLevel(Level level) {
+		lvl = level;
+	}
+
+	/**
+	 * Sets the logger's parent.
+	 * @param parent
+	 *            the new parent.
+	 */
+	public void setParent(Logger parent) {
+		this.parent = parent;
+		version = loggers.size();
+	}
+
+	//
+	// static logging methods
+	//
+
+	/**
+	 * Log a message to the root logger with the FINE level.
+	 * @param c
+	 *            the class to log.
+	 * @param msg
+	 *            the message to log.
+	 */
+	public static void debug(Class c, String msg) {
+		root.fine(c, msg);
+	}
+
+	/**
+	 * Log a message to the root logger with the FINE level.
+	 * @param msg
+	 *            the message to log.
+	 */
+	public static void debug(String msg) {
+		debug(null, msg);
+	}
+
+	/**
+	 * Log a message to the root logger with the WARNING level.
+	 * @param msg
+	 *            the message to log.
+	 */
+	public static void warn(String msg) {
+		root.warning(msg);
+	}
+
+	/**
+	 * Log a message to the root logger with the SEVERE level.
+	 * @param msg
+	 *            the message to log.
+	 * @param t
+	 *            the throwable to log.
+	 */
+	public static void error(String msg, Throwable t) {
+		root.severe(msg, t);
+	}
+
+	//
+	// logging methods
+	//
+
+	/**
+	 * Log a message with the FINE level.
+	 * @param c
+	 *            the class to log.
+	 * @param msg
+	 *            the message to log.
+	 */
+	public void fine(Class c, String msg) {
+		log(c, Level.FINE, msg);
+	}
+
+	/**
+	 * Log a message with the FINE level.
+	 * @param msg
+	 *            the message to log.
+	 */
+	public void fine(String msg) {
+		log(Level.FINE, msg);
+	}
+
+	/**
+	 * Log a message with the INFO level. *
+	 * @param msg
+	 *            the message to log.
+	 */
+	public void info(String msg) {
+		log(Level.INFO, msg);
+	}
+
+	/**
+	 * Log a message using the WARNING level.
+	 * @param msg
+	 *            the message to log.
+	 */
+	public void warning(String msg) {
+		log(Level.WARNING, msg);
+	}
+
+	/**
+	 * Log a message using the WARNING level.
+	 * @param msg
+	 *            the message to log.
+	 * @param t
+	 *            the throwable to log.
+	 */
+	public void warning(String msg, Throwable t) {
+		log(Level.WARNING, msg, t);
+	}
+
+	/**
+	 * Log a message using the SEVERE level.
+	 * @param msg
+	 *            the message to log.
+	 */
+	public void severe(String msg) {
+		log(Level.SEVERE, msg);
+	}
+
+	/**
+	 * Log a message using the SEVERE level.
+	 * @param msg
+	 *            the message to log.
+	 * @param t
+	 *            the throwable to log.
+	 */
+	public void severe(String msg, Throwable t) {
+		log(Level.WARNING, msg, t);
 	}
 }
