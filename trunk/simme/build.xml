@@ -1,37 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="build" name="SimME">
-    <property name="deploy-14.dir" value="D:/Devel/j2me-wtk104/apps/SimME"/>
-    <property name="deploy-14.srcdir" value="${deploy.dir}/src"/>
+	<property name="wtk14" value="D:/Devel/j2me-wtk104"/>
+    <property name="deploy-14.dir" value="${wtk14}/apps/SimME"/>
+    <property name="deploy-14.srcdir" value="${deploy-14.dir}/src"/>
 
     <property name="deploy-2.dir" value="D:/Devel/j2me-wtk/apps/SimME"/>
-    <property name="deploy-2.srcdir" value="${deploy2.dir}/src"/>
+    <property name="deploy-2.srcdir" value="${deploy-2.dir}/src"/>
 
-    <property name="src" value="src"/>
+	<!-- directories used for building -->
+    <property name="bin" value="bin"/>
+    <property name="build" value="build"/>
     <property name="cls" value="cls"/>
+    <property name="cls-client" value="cls-client"/>
     <property name="client-package" value="test/sim"/>
+    <property name="dir.obfuscate" value="${build}/obfuscate"/>
+    <property name="dir.preverify" value="${build}/preverify"/>
+    <property name="resources" value="res"/>
+    <property name="src" value="src"/>
 
     <!-- misc libraries for building -->
     <property name="lib.junit" value="../lib/junit.jar"/>
     <property name="lib.midp" value="../lib/midpapi.zip"/>
+    <property name="lib.proguard" value="../lib/proguard.jar"/>
 
-    <target name="initbuild">
-        <path id="project.class.path">
-            <pathelement path="${lib.midp}"/>
-            <pathelement path="${lib.junit}"/>
-        </path>
+    <!-- build all simme sources -->
+    <target name="compile">
         <mkdir dir="${cls}"/>
+        <javac srcdir="${src}" destdir="${cls}">
+            <classpath>
+	            <pathelement path="${lib.midp}" />
+	            <pathelement path="${lib.junit}"/>
+	        </classpath>
+        </javac>
+    </target>
+
+    <!-- compile only classes to be deployed on client -->
+    <target name="compile-client">
+        <mkdir dir="${cls-client}"/>
+        <javac srcdir="${src}" destdir="${cls-client}" target="1.1"
+               excludes="**/*Test*,**/tests/*"
+               bootclasspath="${lib.midp}" />
     </target>
     
-    <!-- build simme -->
-    <target name="compile" depends="initbuild">
-        <javac srcdir="${src}" destdir="${cls}">
-            <classpath refid="project.class.path"/>
-        </javac>
+    <target name="obfuscate" depends="compile-client">
+    	<mkdir dir="${dir.obfuscate}"/>
+        <!-- pack classes into a single jar -->
+        <jar basedir="${cls-client}"
+             jarfile="${dir.obfuscate}/input.jar">
+        </jar>
+        <!-- pack resources into a single jar -->
+        <jar basedir="${resources}"
+             jarfile="${dir.obfuscate}/res.jar">
+             <patternset>
+                 <include name="**/*.png"/>
+                 <include name="**/*.gif"/>
+             </patternset>
+        </jar>
+        <!-- obfuscate classes -->
+        <java fork="yes" classname="proguard.ProGuard" classpath="${lib.proguard}">
+            <arg line="-libraryjars ${lib.midp}"/>
+            <arg line="-injars ${dir.obfuscate}/input.jar"/>
+            <arg line="-resourcejars ${dir.obfuscate}/res.jar"/>
+            <arg line="-outjar ${dir.obfuscate}/obfuscated.jar"/>
+            <arg line="-keep 'public class * extends **MIDlet'"/>
+        </java>
+        <unjar src="${dir.obfuscate}/obfuscated.jar" dest="${dir.obfuscate}/obfuscated"/>
+    </target>
+    
+    <target name="preverify-obfuscate" depends="obfuscate">
+        <mkdir dir="${dir.obfuscate}/preverified"/>
+        <exec executable="${wtk14}/bin/preverify.exe">
+            <arg line="-classpath ${lib.midp}"/>
+            <arg line="-d ${dir.obfuscate}/preverified"/>
+            <arg line="${dir.obfuscate}/obfuscated"/>
+        </exec>
+    </target>
+    
+    <target name="preverify" depends="compile-client">
+        <mkdir dir="${dir.preverify}"/>
+        <exec executable="${wtk14}/bin/preverify.exe">
+            <arg line="-classpath ${lib.midp}"/>
+            <arg line="-d ${dir.preverify}"/>
+            <arg line="${cls-client}"/>
+        </exec>
+    </target>
+
+
+    <target name="dist">
+        <mkdir dir="${build}/bin"/>
+        <jar basedir="${dir.preverify}"
+             jarfile="${build}/bin/SimME.jar"
+             manifest="${bin}/MANIFEST.MF">
+             <fileset dir="${basedir}" includes="${resources}/**"/>
+        </jar>
+        <!--
+        <copy file="${bin}/SimME.jad"
+              tofile="${build}/bin/SimME.jad"/>
+        -->
+    </target>
+    
+    
+    <target name="run" depends="dist">
+        <exec executable="${wtk14}/bin/emulatorw.exe">
+            <arg line="-Xdescriptor:${build}/bin/SimME.jad"/>
+        </exec>
     </target>
 
     <!-- delete created classes -->
     <target name="clean">
         <delete dir="${cls}"/>
+        <delete dir="${build}"/>
     </target>
     
     <target name="build" depends="compile">
@@ -40,16 +118,32 @@
         </description>
         <jar destfile="../lib/simme-client.jar" index="true" update="true">
             <fileset dir="${cls}">
-                <!-- omitting test classes -->
-                <patternset id="non.test.classes">
-                    <include name="**/*.class"/>
-                    <exclude name="**/*Test*"/>
-                    <exclude name="**/tests/*"/>
-                </patternset>
+		        <patternset>
+		            <include name="**/*.class"/>
+		            <exclude name="**/*Test*"/>
+		            <exclude name="**/tests/*"/>
+		        </patternset>
             </fileset>
         </jar>
     </target>
-
+    
+    <target name="simme-jar" depends="preverify">
+        <mkdir dir="${build}/bin"/>
+        <jar basedir="${dir.preverify}"
+             jarfile="${build}/bin/SimME.jar"
+             manifest="${bin}/MANIFEST.MF">
+             <fileset dir="${basedir}" includes="${resources}/**"/>
+        </jar>    
+    </target>
+    <target name="simme-jar-small" depends="preverify-obfuscate">
+        <mkdir dir="${build}/bin"/>
+        <jar basedir="${dir.obfuscate}/preverified"
+             jarfile="${build}/bin/SimME-small.jar"
+             manifest="${bin}/MANIFEST.MF">
+             <fileset dir="${basedir}" includes="${resources}/**"/>
+        </jar>    
+    </target>
+    
     <!-- deployment to wtk-104 -->
     <target name="deploy">
       <copy todir="${deploy-14.srcdir}">
