@@ -7,7 +7,7 @@
             nodeprecatedlist="true" nodeprecated="true"
             packagenames="at.einspiel.*"
             sourcepath="src"
-            classpath="cls;../lib/junit.jar;../lib/simme-client.jar"
+            classpath="cls;../lib/junit.jar;../lib/simme-client.jar;../lib/servlet.jar"
             doctitle="SimME Server API Documentation">
         </javadoc>
     </target>
