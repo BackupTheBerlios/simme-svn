@@ -1,20 +1,22 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: LimitedLog.java
-//                  $Date: 2004/08/12 21:56:08 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/08/25 15:33:29 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.logging;
 
 /**
  * Represents a log which can be limited in size. The default size is
- * {@linkplain #DEFAULT_LOG_SIZE}characters.
+ * {@linkplain #DEFAULT_LOG_SIZE} characters.
  * 
  * @author kariem
  */
 public class LimitedLog {
 
+	/** The default size for a log in characters. This is currently set to 1000 */
 	protected static final int DEFAULT_LOG_SIZE = 1000;
+
 	private final int maxLogSize;
 	private StringBuffer logContent;
 
