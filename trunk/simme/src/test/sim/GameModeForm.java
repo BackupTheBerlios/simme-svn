@@ -40,7 +40,7 @@ public class GameModeForm extends List implements CommandListener {
    public void commandAction(Command cmd, Displayable disp) {
       Display d = Display.getDisplay(sim);
       if (cmd.getCommandType() == Command.BACK) {
-         d.setCurrent(sim.getMainScreen());
+         d.setCurrent(Sim.getMainScreen());
       } else {
          d = Display.getDisplay(sim);
 

@@ -232,7 +232,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
     * Draws "Winner" or "Loser" onto graphics context
     */
 
-   private void drawWinner(Graphics g) {
+  /* private void drawWinner(Graphics g) {
       if (game.getWinner() == Game.PLAYER1) {
          g.drawString("WINNER", xPInfo1 + 2, yPInfo1 + linewidththick / 2, 0);
          g.drawString("LOSER", xPInfo1 + 2, yPInfo2 + linewidththick / 2, 0);
@@ -240,7 +240,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
          g.drawString("LOSER", xPInfo1 + 2, yPInfo1 + linewidththick / 2, 0);
          g.drawString("WINNER", xPInfo1 + 2, yPInfo2 + linewidththick / 2, 0);
       }
-   }
+   } */
 
    /**
     * Looks at current width and height and sets drawing parameters accordingly.
@@ -306,7 +306,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
     */
    public void commandAction(Command c, Displayable d) {
       if (c == CMD_CANCEL) {
-         Display.getDisplay(sim).setCurrent(sim.getMainScreen());
+         Display.getDisplay(sim).setCurrent(Sim.getMainScreen());
       } else if (c == CMD_NEWGAME) {
          zeichenblatt = new Zeichenblatt(sim);
          Display.getDisplay(sim).setCurrent(zeichenblatt);

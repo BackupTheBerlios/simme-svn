@@ -197,7 +197,7 @@ public class PrefForm extends List implements CommandListener {
       Display d = Display.getDisplay(parent);
 
       if (cmd.getCommandType() == Command.BACK) {
-         d.setCurrent(parent.getMainScreen());
+         d.setCurrent(Sim.getMainScreen());
       }
 
       if ((cmd == List.SELECT_COMMAND) || (cmd.getCommandType() == Command.OK)) {

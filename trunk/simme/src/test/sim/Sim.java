@@ -13,12 +13,14 @@ import javax.microedition.midlet.MIDletStateChangeException;
  */
 public class Sim extends MIDlet {
 
-   List main;
+   static List main;
+   static Sim instance;
 
    /**
     * Creates a new Sim object.
     */
    public Sim() {
+   	instance = this;
    }
 
    /** @see MIDlet#destroyApp(boolean) */
@@ -49,7 +51,16 @@ public class Sim extends MIDlet {
     *
     * @return the main screen.
     */
-   public Screen getMainScreen() {
+   public static Screen getMainScreen() {
       return main;
    }
+   
+ 
+   /**
+    * @return
+    */
+   public static Sim getInstance() {
+      return instance;
+   }
+
 }
