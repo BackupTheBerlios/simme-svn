@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: GameModeForm.java
-//               $Date: 2004/09/13 15:26:53 $
-//           $Revision: 1.13 $
+//               $Date: 2004/09/14 22:31:01 $
+//           $Revision: 1.14 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -172,7 +172,7 @@ public class GameModeForm extends List implements CommandListener {
 							Alert loginAlert = new Alert("Fehler beim Einloggen", errorMessage,
 									null, type);
 							loginAlert.setTimeout(FOREVER);
-							Logger.info("login error: " + errorMessage);
+							Logger.warn("login error: " + errorMessage);
 							d.setCurrent(loginAlert);
 						}
 					} catch (IOException ioex) {
