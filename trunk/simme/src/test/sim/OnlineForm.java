@@ -41,7 +41,7 @@ public class OnlineForm extends List implements CommandListener {
             buf.append("You are currently in the main menu of SimME -Online-. ");
             buf.append("Currently you only have the choice to play a game ");
             buf.append("immediately. Future versions will permit to choose your ");
-            buf.append("opponnent");
+            buf.append("opponent");
             
             Alert info = new Alert("Info", buf.toString(), null, AlertType.INFO);
             d.setCurrent(info);

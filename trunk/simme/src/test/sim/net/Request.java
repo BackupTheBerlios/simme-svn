@@ -183,7 +183,6 @@ public class Request {
             return response;
          }
       }
-
       return null;
    }
 
@@ -192,7 +191,7 @@ public class Request {
     *
     * @return the response.
     */
-   private synchronized void setResponse(byte[] response) {
+   protected synchronized void setResponse(byte[] response) {
       this.response = response;
       notifyAll();
    }
@@ -275,13 +274,13 @@ public class Request {
 
       public void run() {
          try {
-            sendRequest(post);
+            sendRequest();
          } catch (IOException e) {
             setOccurredException(e);
          }
       }
 
-      private void sendRequest(boolean post) throws IOException {
+      private void sendRequest() throws IOException {
          try {
             c = getHttpConnection(url.toString());
 

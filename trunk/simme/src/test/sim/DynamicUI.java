@@ -2,32 +2,24 @@ package test.sim;
 
 import java.io.IOException;
 
-import java.util.Enumeration;
-
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.Form;
-import javax.microedition.lcdui.List;
-import javax.microedition.lcdui.StringItem;
 
-import nanoxml.XMLElement;
-import nanoxml.XMLParseException;
 import test.sim.net.Request;
+import test.sim.net.SendableUI;
 
 /**
  * This class is intended to create dynamically a user interface from the
- * information found in an xml string.
+ * information found in an xml string. For this purpose it uses {@link
+ * SendableUI}.
  *
  * @author jorge
  */
 public class DynamicUI implements CommandListener {
    private static final String COMM_PATH = "dynamicState";
-   String title;
-   private String stateID;
-   private Displayable displayable;
-   private boolean list;
+   SendableUI ui;
 
    /**
     * Creates a new instance of this object with list entries built from the
@@ -38,111 +30,52 @@ public class DynamicUI implements CommandListener {
    public DynamicUI(String xmlString) {
       System.out.println("xmlString=" + xmlString);
 
-      init(xmlString);
+      ui = new SendableUI(xmlString);
 
-      displayable.addCommand(new Command("Ende", Command.EXIT, 0));
-      displayable.setCommandListener(this);
+      Displayable uiDisp = ui.getDisplayable();
+      uiDisp.addCommand(new Command("Exit", Command.EXIT, 0));
+      uiDisp.setCommandListener(this);
    }
 
-   /**
-    * Initialization.
-    *
-    * @param xmlString the message to build this <code>DynamicUI</code>
-    */
-   private void init(String xmlString) {
-      XMLElement xml = new XMLElement();
+    /**
+     * Creates a new dynamic user interface.
+     * 
+     * @param message the message to display.
+     * @param url the address to connect to.
+     */
+    public DynamicUI(String message, String url) {
+        System.out.println("message=" + message);
+        ui = new SendableUI(message);
+        
+        Displayable uiDisp = ui.getDisplayable();
+        uiDisp.addCommand(new Command("Abort", Command.CANCEL, 0));
+        uiDisp.setCommandListener(this);
+        connect(url);
+    }
+    
+    
+    /**
+     * Connects to the specified address and updates the user interface with
+     * the information found in the given URL.
+     * 
+     * @param url the url.
+     */
+    private void connect(String url) {
+        ConnectorThread connector = new ConnectorThread(url);
+        connector.start();
+    }
 
-      try {
-         xml.parseString(xmlString);
-         makeXmlDisplayable(xml);
-      } catch (XMLParseException xex) {
-         title = "Information";
-         makeTextDisplayable(xmlString);
-      }
-   }
+    /** @see CommandListener#commandAction(Command, Displayable) */
+    public void commandAction(Command cmd, Displayable disp) {
+        Display d = Sim.getDisplay();
 
-   /**
-    * Creates a displayable from an xml string.
-    *
-    * @param xml a string of the form:
-    * <p>
-    * <pre>
-    *    &lt;element title="title" id="ID" list="true" &gt;
-    *        &lt;child name="name1" /&gt;
-    *        &lt;child name="name2" /&gt;
-    *        &lt;child name="name3" /&gt;
-    *    &lt;element/&gt;
-    * </pre>
-    * </p>
-    * or
-    * <p>
-    * <pre>
-    *    &lt;element title="title"
-    *                id="ID"
-    *                list="false"
-    *                msg="Text /&gt;
-    * </pre>
-    * </p>
-    */
-   private void makeXmlDisplayable(XMLElement xml) {
-      System.out.println("xmlling");
-
-      // set title
-      title = xml.getAttribute("title", "Auswahl");
-
-      // set id, if available
-      String id = xml.getAttribute("id", null);
-
-      if (id != null) {
-         stateID = id;
-      }
-
-      // show either list, or simple status message
-      if (xml.getAttributeBoolean("list", false)) {
-         list = true;
-         displayable = new List(title, List.IMPLICIT);
-
-         Enumeration enumeration = xml.enumerateChildren();
-
-         while (enumeration.hasMoreElements()) {
-            XMLElement element = (XMLElement) enumeration.nextElement();
-            String name = element.getAttribute("name", null);
-
-            if (name != null) {
-               ((List) displayable).append(name, null);
+        if (cmd.getCommandType() == Command.EXIT) {
+            d.setCurrent(Sim.getMainScreen());
+        } else {
+            Request r = ui.handleCommand(cmd, disp);
+            if (r == null) {
+                return;
             }
-         }
-      } else {
-         makeTextDisplayable(xml.getAttribute("msg", "Warten"));
-      }
-   }
-
-   private void makeTextDisplayable(String text) {
-      System.out.println("texting");
-      displayable = new Form(title);
-      ((Form) displayable).append(new StringItem("Status: ", text));
-   }
-
-   /** @see CommandListener#commandAction(Command, Displayable) */
-   public void commandAction(Command cmd, Displayable disp) {
-      Display d = Sim.getDisplay();
-
-      if (cmd.getCommandType() == Command.EXIT) {
-         d.setCurrent(Sim.getMainScreen());
-      } else {
-         if (list) {
-            // find selected index
-            int selected = ((List) displayable).getSelectedIndex();
-
-            // send index to server
-            Request r = new Request();
-            r.setParam("selected", Integer.toString(selected));
-
-            // attach id if possible
-            if (stateID != null) {
-               r.setParam("id", stateID);
-            }
-
             r.sendRequest(COMM_PATH);
 
             String response = null;
@@ -154,20 +87,52 @@ public class DynamicUI implements CommandListener {
             }
 
             // load response into UI
-            init(response);
+            ui.initialize(response);
 
             // show new UI
-            d.setCurrent(getDisplayable());
-         }
-      }
-   }
+            d.setCurrent(ui.getDisplayable());
+        }
+    }
 
-   /**
-    * Returns the current displayable object of the dynamic user interface.
-    *
-    * @return a displayable.
-    */
-   protected Displayable getDisplayable() {
-      return displayable;
-   }
+    /**
+     * Returns the current displayable object of the dynamic user interface.
+     *
+     * @return a displayable.
+     */
+    protected Displayable getDisplayable() {
+        return ui.getDisplayable();
+    }
+    
+    
+    /**
+     * Establishes a connection and updates the user interface.
+     */
+    class ConnectorThread extends Thread {
+
+        String url;
+
+        /**
+         * Creates a new thread that connects to <code>url</code>.
+         * @param url the address to connect to
+         */
+        public ConnectorThread(String url) {
+            this.url = url;
+            // TODO implement connection and error handling - update UI accordingly
+        }
+        
+        /** @see java.lang.Thread#run() */
+        public void run() {
+            // send the request
+            Request r = new Request();
+            r.sendRequest(url);
+            
+            try {
+                String response = new String(r.getResponse());
+                ui = new SendableUI(response);
+            } catch (IOException e) {
+                // error occured
+                ui = new SendableUI("connection broken");
+            }
+        }
+    }
 }

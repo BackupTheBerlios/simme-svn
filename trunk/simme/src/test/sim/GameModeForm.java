@@ -83,7 +83,7 @@ public class GameModeForm extends List implements CommandListener {
   }
 
   private class ConnectionAlert extends Alert {
-    private String[] loginData;
+    String[] loginData;
 
     /**
      * Constructs an empty <code>InfoAlert</code> with the given title
@@ -122,8 +122,8 @@ public class GameModeForm extends List implements CommandListener {
 
             try {
               loginMsg = new LoginMessage(loginData[0], loginData[1], loginData[3], version);
-            } catch (NullPointerException pppe) {
-              pppe.printStackTrace();
+            } catch (NullPointerException npe) {
+              npe.printStackTrace();
             }
 
             System.out.println("sending message");
@@ -138,9 +138,8 @@ public class GameModeForm extends List implements CommandListener {
             System.out.println("result: " + result);
 
             if (result.isSucceed()) {
-              //DynamicUI dUI = new DynamicUI(result.getMessage());
-              //d.setCurrent(dUI.getDisplayable());
-              d.setCurrent(new OnlineForm());
+              DynamicUI dUI = new DynamicUI(result.getMessage(), result.getUrl());
+              d.setCurrent(dUI.getDisplayable());
             } else {
               // no success => show cause
               AlertType type = result.isSucceed() ? AlertType.INFO : AlertType.ERROR;

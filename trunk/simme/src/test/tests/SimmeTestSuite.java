@@ -18,7 +18,6 @@ public class SimmeTestSuite {
     TestSuite suite = new TestSuite("Test for SimME client");
     suite.addTestSuite(GameTest.class);
     suite.addTestSuite(NetTest.class);
-
     return suite;
   }
 }

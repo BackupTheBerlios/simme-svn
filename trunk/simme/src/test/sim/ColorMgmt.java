@@ -23,7 +23,6 @@ public class ColorMgmt {
    private static final int GREEN = 0x0000FF00;
    private static final int RED = 0x00FF0000;
    private static final int RED_DARK = 0x00DD0000;
-   private static final int PINK = 0xA0AFFF;
    private static final int WHITE = 0x00FFFFFF;
 
    /** p1, p2, nc, nnc, nsc, ndc */
