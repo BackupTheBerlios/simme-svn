@@ -32,15 +32,29 @@
 		<copy file="${jar.debug}" tofile="${lib.dir}/simme-client.jar" />
 	</target>
 
+	
+	<!-- prepare resource bundles and localized messages -->
+	<target name="localization">
+		<ant antfile="build-ant.xml"/>
+		<mkdir dir="${src.localized}"/>
+		<copy todir="${src.localized}">
+			<fileset dir="${src}"/>
+		</copy>
+		<taskdef name="createbundles"
+		         classname="at.einspiel.tools.ant.BundleCreator"
+		         classpath="${lib.simme-ant}"
+		/>
+		<createbundles from="${src.localized}/at/einspiel/simme/client/messages/" 
+			prefix="bundle"/>
+	</target>
 
 	<!-- compile only classes to be deployed on client -->
-	<target name="compile-client">
+	<target name="compile-client" depends="localization">
 		<tstamp />
 		<mkdir dir="${cls-client}" />
-		<wtkbuild srcdir="${src}"
+		<wtkbuild srcdir="${src.localized}"
 		          destdir="${cls-client}"
 		          preverify="${var.preverify}"
-			
 		/>
 	</target>
 
