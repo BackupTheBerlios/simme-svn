@@ -1,124 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="build" name="SimME">
+<!-- 
+  [Simme]
+    Ant build file: wtkbuild.xml
+             $Date: 2004/09/09 14:07:47 $
+         $Revision: 1.17 $
 
-    <property file="ant-build.properties"/>
+ -->
+<project name="SimME" default="build">
 
-    <!-- compile only classes to be deployed on client -->
-    <target name="compile-client">
-        <tstamp/>
-        <mkdir dir="${cls-client}"/>
-        <javac srcdir="${src}" destdir="${cls-client}" target="1.1"
-               bootclasspath="${lib.midp}" />
-    </target>
-    
-	<!-- executed if property obfuscation.enabled is set -->
-    <target name="-obfuscate" depends="compile-client" if="obfuscation.enabled">
-    	<property name="dir.input" value="${dir.obfuscate}/obfuscated"/>
-    	<property name="dir.verified" value="${dir.obfuscate}/preverified"/>
-    	<property name="backup.jar" value="${build}/SimME-small-${DSTAMP}${TSTAMP}.jar"/>
+	<property file="ant-build.properties" />
+	<taskdef resource="antenna.properties" classpath="${lib.antenna}" />
 
-    	<mkdir dir="${dir.obfuscate}"/>
-        <!-- pack classes into a single jar -->
-        <jar basedir="${cls-client}"
-             jarfile="${dir.obfuscate}/input.jar">
-        </jar>
-        <!-- pack resources into a single jar -->
-        <jar basedir="${resources}"
-             jarfile="${dir.obfuscate}/res.jar">
-             <patternset>
-                 <include name="**/*.png"/>
-                 <include name="**/*.gif"/>
-             </patternset>
-        </jar>
-        <!-- obfuscate classes -->
-        <java fork="yes" classname="proguard.ProGuard" classpath="${lib.proguard}">
-            <arg line="-libraryjars ${lib.midp}"/>
-            <arg line="-injars ${dir.obfuscate}/input.jar"/>
-            <arg line="-resourcejars ${dir.obfuscate}/res.jar"/>
-            <arg line="-outjar ${dir.obfuscate}/obfuscated.jar"/>
-            <arg line="-keep 'public class * extends **MIDlet'"/>
-        </java>
-        <unjar src="${dir.obfuscate}/obfuscated.jar" dest="${dir.obfuscate}/obfuscated"/>
-    </target>
-	
-	<!-- executed if property obfuscation.enabled is not set -->
-	<target name="-no-obfuscate" depends="compile-client" unless="obfuscation.enabled" if="preverification.enabled">
-    	<property name="dir.input" value="${cls-client}"/>
-    	<property name="dir.verified" value="${dir.preverify}"/>
-    	<property name="backup.jar" value="${build}/SimME-${DSTAMP}.jar"/>
+	<path id="project.classpath">
+		<path location="${lib.proguard}" />
+	</path>
+
+
+	<!-- build simme-client.jar to include in server -->
+	<target name="build"
+	        depends="dist"
+	        description="Creates simme-client.jar in order to be included in Webapp"
+	>
+		<copy file="${build}/bin/SimME.jar" tofile="../lib/simme-client.jar" />
 	</target>
-	
-	<target name="-prepare-obfuscate" depends="-obfuscate, -no-obfuscate" />
-	
-    <target name="-preverify" depends="-prepare-obfuscate" if="preverification.enabled">
-        <mkdir dir="${dir.verified}"/>
-        <exec executable="${run.preverify}">
-            <arg line="-classpath ${lib.midp}"/>
-            <arg line="-d ${dir.verified}"/>
-            <arg line="${dir.input}"/>
-        </exec>
-    </target>
-	
-    <target name="-no-preverify" depends="compile-client" unless="preverification.enabled">
-    	<!-- no additional verification ... verfied sources are in classes dir -->
-    	<property name="dir.verified" value="${cls-client}"/>
-    	<property name="backup.jar" value="${build}/SimME-${DSTAMP}.jar"/>
-    </target>
 
-    <target name="dist" depends="-preverify, -no-preverify">
-        <mkdir dir="${build}/bin"/>
-    	<echo>building jar from ${dir.verified}</echo>
-        <jar basedir="${dir.verified}"
-             jarfile="${build}/bin/SimME.jar"
-             manifest="${bin}/MANIFEST.MF">
-             <fileset dir="${resources}"/>
-        </jar>
-    	<!-- make backup copy with timestamp -->
-        <copy file="${build}/bin/SimME.jar" tofile="${backup.jar}"/>
-    </target>
-    
-	<!-- build simme-client.jar to include in server -->    
-    <target name="build" depends="dist" description="Creates simme-client.jar in order to be included in Webapp">
-    	<copy file="${build}/bin/SimME.jar" tofile="../lib/simme-client.jar"/>
-    </target>
-    
-    <target name="run" depends="dist" description="Runs simme in an emulator">
-        <exec executable="${run.emulator}">
-            <arg line="-Xdescriptor:${debug.jad}"/>
-        </exec>
-    </target>
 
-    
+	<!-- compile only classes to be deployed on client -->
+	<target name="compile-client">
+		<tstamp />
+		<mkdir dir="${cls-client}" />
+		<wtkbuild srcdir="${src}"
+		          destdir="${cls-client}"
+		          preverify="${var.preverify}"
+		/>
+		<property name="backup.jar" value="${build}/SimME-${DSTAMP}.jar"/>
+	</target>
+
+	<target name="dist" depends="compile-client">
+		<mkdir dir="${build}/bin" />
+		<wtkpackage jarfile="${build}/bin/SimME.jar"
+		            jadfile="${debug.jad}"
+		            obfuscate="${var.obfuscate}"
+		            classpath="${lib.proguard}"
+		>
+			<fileset dir="${resources}" />
+			<fileset dir="${cls-client}" />
+			<preserve class="at.einspiel.simme.client.Sim" />
+		</wtkpackage>
+		<!-- make backup copy with timestamp -->
+		<copy file="${build}/bin/SimME.jar" tofile="${backup.jar}" />
+	</target>
+
+
+	<target name="run" depends="dist" description="Runs simme in an emulator">
+		<wtkrun jadfile="${debug.jad}" device="DefaultColorPhone" />
+	</target>
+
+
 	<!-- delete created classes -->
-    <target name="clean">
-        <delete dir="${cls}"/>
-        <delete dir="${dir.obfuscate}"/>
-        <delete dir="${dir.preverify}"/>
-        <delete dir="${cls-client}"/>
-    </target>
+	<target name="clean">
+		<delete dir="${cls}" />
+		<delete dir="${cls-client}" />
+	</target>
 
-    <!-- Tasks for deployment to wireless toolkit directories -->
-
-    <!-- deployment to wtk-104 -->
-    <target name="deploy">
-      <copy todir="${deploy-14.srcdir}">
-        <fileset dir="${src}">
-          <include name="${client-package}/**/*.java"/>
-          <include name="nanoxml/*.java"/>
-          <exclude name="**/*Test*,**/tests/*"/>
-        </fileset>
-      </copy>
-      <copy tofile="${deploy-14.dir}/bin/SimME.jad" file="${debug.jad}"/>	
-    </target>
-
-    <!-- deployment to wtk-2.0 -->
-    <target name="deploy2">
-      <copy todir="${deploy-2.srcdir}">
-        <fileset dir="${src}">
-          <include name="${client-package}/**/*.java"/>
-          <include name="nanoxml/*.java"/>
-          <exclude name="**/*Test*,**/tests/*"/>
-        </fileset>
-      </copy>
-    </target>
 </project>
+
