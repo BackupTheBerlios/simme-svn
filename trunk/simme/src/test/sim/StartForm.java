@@ -22,6 +22,7 @@ public class StartForm extends List implements CommandListener {
       super("SimME", List.IMPLICIT, CHOICES, null);
 		this.sim = sim;
       addCommand(new Command("Exit", Command.EXIT, 0));
+      addCommand(new Command("OK", Command.OK, 1));
       setCommandListener(this);
    }
 

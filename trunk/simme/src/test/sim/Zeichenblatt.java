@@ -189,43 +189,54 @@ class Zeichenblatt extends Canvas implements CommandListener {
 				node[4][1] + 9 / 2 + 4 * getHeightSpace(g, node[4][1]) / 5,
 				node[4][0]);
 
+			if (game.getWinner() == 1) {
+				g.drawString(
+					"WINNER",
+					node[4][0] - xoff / 2,
+					node[4][1] + getHeightSpace(g, node[4][1]) / 2,
+					node[4][0]);
+
+				g.drawString(
+					"LOSER",
+					node[4][0] - xoff / 2,
+					node[4][1] + 7 * getHeightSpace(g, node[4][1]) / 8,
+					node[4][0]);
+
+			} else if (game.getWinner() == 2) {
+				g.drawString(
+					"LOSER",
+					node[4][0] - xoff / 2,
+					node[4][1] + getHeightSpace(g, node[4][1]) / 2,
+					node[4][0]);
+
+				g.drawString(
+					"WINNER",
+					node[4][0] - xoff / 2,
+					node[4][1] + 7 * getHeightSpace(g, node[4][1]) / 8,
+					node[4][0]);
+
+			}
+
 		} else {
 			DrawUtils.drawLineWithBorder(
 				g,
 				node[1][0] + xoff + getWidthSpace(g, node[1][0] + xoff) / 4,
-				node[1][1],
+				node[1][1] + yoff / 2,
 				node[1][0] + xoff + getWidthSpace(g, node[1][0] + xoff) / 2,
-				node[1][1],
+				node[1][1] + yoff / 2,
 				15,
 				p1c1,
 				p1c1);
-		}
-		if (game.getWinner() == 1) {
-			g.drawString(
-				"WINNER",
-				node[4][0] - xoff / 2,
-				node[4][1] + getHeightSpace(g, node[4][1]) / 2,
-				node[4][0]);
 
-			g.drawString(
-				"LOSER",
-				node[4][0] - xoff / 2,
-				node[4][1] + 7 * getHeightSpace(g, node[4][1]) / 8,
-				node[4][0]);
-
-		} else if (game.getWinner() == 2) {
-			g.drawString(
-				"LOSER",
-				node[4][0] - xoff / 2,
-				node[4][1] + getHeightSpace(g, node[4][1]) / 2,
-				node[4][0]);
-
-			g.drawString(
-				"WINNER",
-				node[4][0] - xoff / 2,
-				node[4][1] + 7 * getHeightSpace(g, node[4][1]) / 8,
-				node[4][0]);
-
+			DrawUtils.drawLineWithBorder(
+				g,
+				node[1][0] + xoff + getWidthSpace(g, node[1][0] + xoff) / 4,
+				node[4][1] - yoff / 2,
+				node[1][0] + xoff + getWidthSpace(g, node[1][0] + xoff) / 2,
+				node[4][1] - yoff / 2,
+				15,
+				p2c1,
+				p2c1);
 		}
 
 		//System.out.println(game.getWinner());
