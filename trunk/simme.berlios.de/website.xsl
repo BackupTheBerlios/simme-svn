@@ -25,6 +25,7 @@
         <tbody>
           <tr>
             <td id="menu">
+              <table>
               <div id="nav">Quick Nav</div>
                   <xsl:call-template name="menu">
                     <xsl:with-param name="page">index.html</xsl:with-param>
@@ -34,6 +35,7 @@
                     <xsl:with-param name="page">dev-environment.html</xsl:with-param>
                     <xsl:with-param name="name">Dev Environment</xsl:with-param>
                   </xsl:call-template>
+                  </table>
             </td>
             <td width="100%">
 
