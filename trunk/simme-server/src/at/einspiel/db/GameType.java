@@ -4,7 +4,7 @@
 //                  $Date: 2003/12/29 07:24:27 $
 //              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
-package at.einspiel.base;
+package at.einspiel.db;
 
 /**
  * Different game types for different games. This class only holds some
