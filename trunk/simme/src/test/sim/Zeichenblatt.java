@@ -40,6 +40,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
    private final Sim sim;
 
    int node[][] = new int[6][2];
+   String nodeNumber[] = new String[6];
 
    int xPInfo1, xPInfo2, xPInfo3, xPInfo4, xPInfo5, xPInfo6;
    int yPInfo1, yPInfo1middle, yPInfo2, yPInfo2middle;
@@ -78,7 +79,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
 
       width = getWidth();
       height = getHeight();
-
+		System.out.println("pointer events :" + hasPointerEvents());
       setDisplayParameters();
 
    }
@@ -166,6 +167,9 @@ class Zeichenblatt extends Canvas implements CommandListener {
             360,
             c1,
             c2);
+            
+         g.setColor(0);
+         g.drawString(nodeNumber[i], node[i][0] - diameter / 6, node[i][1] - diameter / 2, 0);
       }
 
       // Spielerbalken zeichnen
@@ -266,6 +270,14 @@ class Zeichenblatt extends Canvas implements CommandListener {
          node[3] = new int[] { col3, row3 };
          node[4] = new int[] { col2, row3 };
          node[5] = new int[] { col1, row2 };
+         
+			nodeNumber[0] = new String ("1");
+         nodeNumber[1] = new String ("2");
+			nodeNumber[2] = new String ("3");
+			nodeNumber[3] = new String ("4");
+			nodeNumber[4] = new String ("5");
+			nodeNumber[5] = new String ("6");
+						
 
          xPInfo1 = col1 - diameter / 2;
          xPInfo2 = col2 + diameter / 2;
