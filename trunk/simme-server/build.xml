@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="SimME server" basedir="." default="clientlibs">
+
+    <property name="client.dir" value="../simme"/>
+    <property name="client.classes" value="${client.dir}/cls"/>
+    <property name="web-inf.classes" value="WEB-INF/classes" />
+    <property name="web-inf.lib" value="WEB-INF/lib" />
+    
+    <target name="buildclient">
+         <ant dir="${client.dir}"/>
+    </target>
+    
+    <target name="clientlibs" depends="buildclient">
+      <jar destfile="${web-inf.lib}/simme-client.jar"
+           basedir="${client.classes}"
+           index="true"
+           update="true"/>
+    </target>
+      
+</project>
