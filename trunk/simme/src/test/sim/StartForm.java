@@ -41,9 +41,10 @@ public class StartForm extends List implements CommandListener {
                d.setCurrent(new PrefForm(sim));
                break;
             case 2 : // Info
-               Alert alert = new Alert("Not Available", "Under Construction", null, AlertType.INFO);
+               /*Alert alert = new Alert("Not Available", "Under Construction", null, AlertType.INFO);
                alert.setTimeout(Alert.FOREVER);
-               Display.getDisplay(sim).setCurrent(alert, this);
+               Display.getDisplay(sim).setCurrent(alert, this);*/
+               Info.showInfo(Display.getDisplay(sim));
                break;
             case 3 : // About
                Alert alert2 =
