@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: Sim.java
-//               $Date: 2004/08/12 21:59:59 $
-//           $Revision: 1.5 $
+//               $Date: 2004/09/07 13:23:30 $
+//           $Revision: 1.6 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client;
 
@@ -15,99 +15,101 @@ import at.einspiel.simme.client.ui.StartForm;
 
 /**
  * Main class
- *
+ * 
  * @author georg
  */
 public class Sim extends MIDlet {
-    static List main;
-    static Sim instance;
+	static List main;
+	static Sim instance;
 
-    private String nick;
+	private String nick;
 
-    /**
-     * Creates a new Sim object.
-     */
-    public Sim() {
-        instance = this;
-        
-    }
+	/**
+	 * Creates a new Sim object.
+	 */
+	public Sim() {
+		instance = this;
 
-    /** @see MIDlet#destroyApp(boolean) */
-    public void destroyApp(boolean b) {
-        // TODO release network resources
-    }
+	}
 
-    /** @see MIDlet#pauseApp() */
-    protected void pauseApp() {
-        // important in case of incoming call
-        // TODO break current connection
-        // post wait method on server
-    }
+	/** @see MIDlet#destroyApp(boolean) */
+	public void destroyApp(boolean b) {
+		// TODO release network resources
+	}
 
-    /**
-     * Starts the application.
-     * @see javax.microedition.midlet.MIDlet#startApp()
-     */
-    protected void startApp() {
-        Display d = Display.getDisplay(this);
-        main = new StartForm(this);
+	/** @see MIDlet#pauseApp() */
+	protected void pauseApp() {
+		// important in case of incoming call
+		// TODO break current connection and
+		// post wait method on server
+	}
 
-        //SplashScreen splashScreen = new SplashScreen(this);
-        d.setCurrent(main);
-    }
+	/**
+	 * Starts the application.
+	 * @see javax.microedition.midlet.MIDlet#startApp()
+	 */
+	protected void startApp() {
+		Display d = Display.getDisplay(this);
+		main = new StartForm(this);
 
-    /**
-     * Returns the main screen of this application.
-     *
-     * @return the main screen.
-     */
-    public static Screen getMainScreen() {
-        return main;
-    }
+		//SplashScreen splashScreen = new SplashScreen(this);
+		d.setCurrent(main);
+	}
 
-    /**
-     * @return the single instance of this midlet
-     */
-    public static Sim getInstance() {
-        return instance;
-    }
+	/**
+	 * Returns the main screen of this application.
+	 * 
+	 * @return the main screen.
+	 */
+	public static Screen getMainScreen() {
+		return main;
+	}
 
-    /**
-     * Returns the current <code>Display</code> of this MIDlet.
-     *
-     * @return the <code>Display</code> of this MIDlet.
-     */
-    public static Display getDisplay() {
-        return Display.getDisplay(instance);
-    }
+	/**
+	 * @return the single instance of this midlet
+	 */
+	public static Sim getInstance() {
+		return instance;
+	}
 
-    /**
-     * Returns the MIDlet's application property.
-     * 
-     * @param key the key.
-     * @return the application property to the corresponding key.
-     * @see MIDlet#getAppProperty(String)
-     */
-    public static String getProperty(String key) {
-    	if (instance == null) {
-    		return null;
-    	}
-        return instance.getAppProperty(key);
-    }
+	/**
+	 * Returns the current <code>Display</code> of this MIDlet.
+	 * 
+	 * @return the <code>Display</code> of this MIDlet.
+	 */
+	public static Display getDisplay() {
+		return Display.getDisplay(instance);
+	}
 
-    /**
-     * Sets the nick name.
-     * @param nick the new nick name.
-     */
-    public static void setNick(String nick) {
-        instance.nick = nick;
-    }
+	/**
+	 * Returns the MIDlet's application property.
+	 * 
+	 * @param key
+	 *            the key.
+	 * @return the application property to the corresponding key.
+	 * @see MIDlet#getAppProperty(String)
+	 */
+	public static String getProperty(String key) {
+		if (instance == null) {
+			return null;
+		}
+		return instance.getAppProperty(key);
+	}
 
-    /**
-     * Returns the nick name.
-     * @return the nick name.
-     */
-    public static String getNick() {
-        return instance.nick;
-    }
+	/**
+	 * Sets the nick name.
+	 * @param nick
+	 *            the new nick name.
+	 */
+	public static void setNick(String nick) {
+		instance.nick = nick;
+	}
+
+	/**
+	 * Returns the nick name.
+	 * @return the nick name.
+	 */
+	public static String getNick() {
+		return instance.nick;
+	}
 }
