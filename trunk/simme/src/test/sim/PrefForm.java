@@ -2,7 +2,6 @@ package test.sim;
 
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.AlertType;
-import javax.microedition.lcdui.ChoiceGroup;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
@@ -24,31 +23,7 @@ import test.sim.util.PrefsException;
 public class PrefForm extends List implements CommandListener {
 
    // list items
-   private static final String[] MAIN = { "Personal", "Colors", "Options", "Help" };
-
-   // user prefs
-   private static final String[] LOCATION =
-      {
-         "AT",
-         "DE",
-         "CH",
-         "ES",
-         "FR",
-         "UK",
-         "other EU",
-         "other Europe",
-         "US",
-         "CA",
-         "Central America",
-         "South America",
-         "North Africa",
-         "Central Africa",
-         "Southern Africa",
-         "Middle East",
-         "Central Asia",
-         "Far East",
-         "Australia & Oceania" };
-   private static final String[] LANGUAGE = { "Deutsch", "English", "Français", "Español" };
+   private static final String[] MAIN = { "Internet", "Hilfe" };
 
    private Sim parent;
    private List myself;
@@ -65,16 +40,16 @@ public class PrefForm extends List implements CommandListener {
    }
 
    private void init() {
-      addCommand(new Command("Back", Command.BACK, 0));
+      addCommand(new Command("Zurück", Command.BACK, 0));
       addCommand(new Command("OK", Command.OK, 1));
       setCommandListener(this);
       myself = this;
    }
 
    private Screen makePersPrefs() {
-      final Form frmPrefs = new Form("Personal Preferences");
+      final Form frmPrefs = new Form("Einstellungen - Internet");
       final PersonalPrefs prefs = PersonalPrefs.getInstance();
-      String[] data = new String[7];
+      String[] data = new String[4];
       final boolean newRecord;
 
       try {
@@ -87,11 +62,8 @@ public class PrefForm extends List implements CommandListener {
             // Preferences are empty - set default values
             data[0] = "";
             data[1] = "";
-            data[2] = "Good Game!";
-            data[3] = "Deutsch";
-            data[4] = "";
-            data[5] = "AT";
-            data[6] = System.getProperty("microedition.platform");
+            data[2] = "";
+            data[3] = System.getProperty("microedition.platform");
          } else {
             newRecord = false;
 
@@ -108,61 +80,27 @@ public class PrefForm extends List implements CommandListener {
       }
 
       // set for this Form accordingly
-      final TextField tfNick = new TextField("Nick", data[0], 8, TextField.ANY);
-      final TextField tfPass = new TextField("Pass", data[1], 8, TextField.ANY);
-      final TextField tfWin = new TextField("Win-Msg", data[2], 20, TextField.ANY);
-
-      final ChoiceGroup cLang;
-
-      if (data[3].equals("Deutsch")) {
-         cLang = new ChoiceGroup("Sprache", ChoiceGroup.EXCLUSIVE, LANGUAGE, null);
-      } else {
-         String[] lang = new String[LANGUAGE.length + 1];
-         lang[0] = data[3];
-         System.arraycopy(LANGUAGE, 0, lang, 1, LANGUAGE.length);
-         cLang = new ChoiceGroup("Sprache", ChoiceGroup.EXCLUSIVE, lang, null);
-      }
-
-      final TextField tfInfo = new TextField("Info (opt.)", data[4], 8, TextField.ANY);
-
-      final ChoiceGroup cLoc;
-
-      if (data[5].equals("AT")) {
-         cLoc = new ChoiceGroup("Location (opt.)", ChoiceGroup.EXCLUSIVE, LOCATION, null);
-      } else {
-         String[] location = new String[LOCATION.length + 1];
-         location[0] = data[5];
-         System.arraycopy(LOCATION, 0, location, 1, LOCATION.length);
-         cLoc = new ChoiceGroup("Location (opt.)", ChoiceGroup.EXCLUSIVE, location, null);
-      }
-
-      final StringItem siPlatform = new StringItem("Client Model", data[6]);
+      final TextField tfNick = new TextField("Nick Name: ", data[0], 10, TextField.ANY);
+      final TextField tfPass = new TextField("Passwort: ", data[1], 10, TextField.ANY);
+      final TextField tfInfo = new TextField("Info (optional): ", data[2], 40, TextField.ANY);
+      final StringItem siPlatform = new StringItem("Client Model: ", data[3]);
 
       // add items to form
       frmPrefs.append(tfNick);
       frmPrefs.append(tfPass);
-      frmPrefs.append(tfWin);
-      frmPrefs.append(cLang);
       frmPrefs.append(tfInfo);
-      frmPrefs.append(cLoc);
       frmPrefs.append(siPlatform);
 
       // command handling
-      frmPrefs.addCommand(new Command("Save & Back", Command.BACK, 0));
-      frmPrefs.addCommand(new Command("Cancel", Command.CANCEL, 0));
+      frmPrefs.addCommand(new Command("Speichern", Command.BACK, 1));
+      frmPrefs.addCommand(new Command("Abbrechen", Command.CANCEL, 0));
 
       frmPrefs.setCommandListener(new CommandListener() {
          public void commandAction(Command c, Displayable d) {
             if (c.getCommandType() == Command.BACK) {
-               String[] newData =
-                  {
-                     tfNick.getString(),
-                     tfPass.getString(),
-                     tfWin.getString(),
-                     cLang.getString(cLang.getSelectedIndex()),
-                     tfInfo.getString(),
-                     cLoc.getString(cLoc.getSelectedIndex()),
-                     siPlatform.getText()};
+               String[] newData = { tfNick.getString(), tfPass.getString(),
+                  tfInfo.getString(),
+                  siPlatform.getText()};
                prefs.setSavedData(newData);
 
                try {
@@ -209,14 +147,9 @@ public class PrefForm extends List implements CommandListener {
 
                break;
 
-            case 1 : // Colors
+            case 1 : // Help
                break;
 
-            case 2 : // Options
-               break;
-
-            case 3 : // Help
-               break;
          }
 
          if (s != null) {

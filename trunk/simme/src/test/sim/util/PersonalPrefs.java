@@ -25,7 +25,7 @@ public class PersonalPrefs extends Prefs {
     * Creates new Preferences used to save personal information.
     */
    private PersonalPrefs() {
-      super(RECORD_NAME, (byte) 7);
+      super(RECORD_NAME, (byte) 4);
       savedData = new String[getNumberOfRecords()];
    }
 
