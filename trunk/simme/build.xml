@@ -23,7 +23,7 @@
     </target>
     
     <!-- build simme -->
-    <target name="build" depends="initbuild">
+    <target name="compile" depends="initbuild">
         <javac srcdir="${src}" destdir="${cls}">
             <classpath refid="project.class.path"/>
         </javac>
@@ -34,6 +34,22 @@
         <delete dir="${cls}"/>
     </target>
     
+    <target name="build" depends="compile">
+        <description>
+            Creates the simme-client libraries, without test classes.
+        </description>
+        <jar destfile="../lib/simme-client.jar" index="true" update="true">
+            <fileset dir="${cls}">
+                <!-- omitting test classes -->
+                <patternset id="non.test.classes">
+                    <include name="**/*.class"/>
+                    <exclude name="**/*Test*"/>
+                    <exclude name="**/tests/*"/>
+                </patternset>
+            </fileset>
+        </jar>
+    </target>
+
     <!-- deployment to wtk-104 -->
     <target name="deploy">
       <copy todir="${deploy-14.srcdir}">
