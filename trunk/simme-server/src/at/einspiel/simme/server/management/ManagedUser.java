@@ -45,6 +45,7 @@ public class ManagedUser extends User {
    public void setState(int state) {
       if ((state >= 0) && (state <= 2)) {
          this.state = state;
+         update();
       }
    }
 

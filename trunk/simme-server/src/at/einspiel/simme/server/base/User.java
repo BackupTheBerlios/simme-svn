@@ -64,7 +64,7 @@ public class User implements Comparable {
     *         be found
     */
    protected User(String nick) throws NoSuchUserException {
-      
+      setNick(nick);
    }
 
    /**

@@ -18,6 +18,9 @@ public class ServerTestSuite {
    public static Test suite() {
       TestSuite suite = new TestSuite("Test for Server");
       suite.addTest(new TestSuite(SessionManagerTest.class));
+
       return suite;
    }
+   
+   
 }
