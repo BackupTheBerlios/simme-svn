@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="SimME" default="deploy">
  
-    <property name="deploy.dir" value="D:/Devel/wtk-1.0.4/apps/SimME"/>
+    <property name="deploy.dir" value="D:/Devel/j2me-wtk104/apps/SimME"/>
     <property name="deploy.srcdir" value="${deploy.dir}/src"/>
+
+    <property name="deploy2.dir" value="D:/Devel/j2me-wtk/apps/SimME"/>
+    <property name="deploy2.srcdir" value="${deploy2.dir}/src"/>
 
     <property name="src" value="src"/>
     <property name="client-package" value="test/sim" />
@@ -12,7 +15,18 @@
 	  <copy todir="${deploy.srcdir}" >
 		<fileset dir="${src}">
 		  <include name="${client-package}/**/*.java"/>
+		  <include name="nanoxml/*.java"/>
 		</fileset>
       </copy>
     </target>
+
+    <target name="deploy2">
+	  <copy todir="${deploy2.srcdir}" >
+		<fileset dir="${src}">
+		  <include name="${client-package}/**/*.java"/>
+		  <include name="nanoxml/*.java"/>
+		</fileset>
+      </copy>
+    </target>
+
 </project>

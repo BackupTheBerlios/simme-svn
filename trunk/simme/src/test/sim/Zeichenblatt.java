@@ -5,6 +5,7 @@ import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
 class Zeichenblatt extends Canvas implements CommandListener {
@@ -42,12 +43,15 @@ class Zeichenblatt extends Canvas implements CommandListener {
    int node[][] = new int[6][2];
    String nodeNumber[] = new String[6];
 
-   int xPInfo1, xPInfo2, xPInfo3, xPInfo4, xPInfo5, xPInfo6;
-   int yPInfo1, yPInfo1middle, yPInfo2, yPInfo2middle;
+   private int xPInfo1, xPInfo2, xPInfo3, xPInfo4, xPInfo5, xPInfo6;
+   private int yPInfo1, yPInfo1middle, yPInfo2, yPInfo2middle;
 
-   int width, height;
+   private int width, height;
 
-   byte position[] = new byte[15];
+   private Font fntNodeLabel;
+   private int heightFntNodeLabel;
+   private Font fntPlayerInfo;
+   private int heightFntPlayerInfo;
 
    Zeichenblatt(Sim midlet) {
       this.sim = midlet;
@@ -79,7 +83,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
 
       width = getWidth();
       height = getHeight();
-		System.out.println("pointer events :" + hasPointerEvents());
+      System.out.println("pointer events :" + hasPointerEvents());
       setDisplayParameters();
 
    }
@@ -144,6 +148,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
          i++;
       }
 
+      g.setFont(fntNodeLabel);
       // Punkte zeichnen
       for (i = 0; i < 6; i++) {
          if (game.isDisabled(i)) {
@@ -167,11 +172,12 @@ class Zeichenblatt extends Canvas implements CommandListener {
             360,
             c1,
             c2);
-            
+
          g.setColor(0);
-         g.drawString(nodeNumber[i], node[i][0] - diameter / 6, node[i][1] - diameter / 2, 0);
+         g.drawString(nodeNumber[i], node[i][0] - diameter / 6, node[i][1] - heightFntNodeLabel / 2, 0);
       }
 
+      g.setFont(fntPlayerInfo);
       // Spielerbalken zeichnen
       g.setColor(p1c1);
       DrawUtils.drawLine(g, xPInfo1, yPInfo1middle, xPInfo2, yPInfo1middle, linewidththick);
@@ -227,19 +233,6 @@ class Zeichenblatt extends Canvas implements CommandListener {
       }
    }
 
-   private int getHeightSpace(Graphics g, int y) {
-      int height = getHeight();
-      System.out.println("calling heightspace");
-
-      return height - y;
-   }
-
-   private int getWidthSpace(Graphics g, int x) {
-      System.out.println("calling widthspace");
-
-      return width - x;
-   }
-
    /**
     * Looks at current width and height and sets drawing parameters accordingly.
     */
@@ -270,14 +263,13 @@ class Zeichenblatt extends Canvas implements CommandListener {
          node[3] = new int[] { col3, row3 };
          node[4] = new int[] { col2, row3 };
          node[5] = new int[] { col1, row2 };
-         
-			nodeNumber[0] = new String ("1");
-         nodeNumber[1] = new String ("2");
-			nodeNumber[2] = new String ("3");
-			nodeNumber[3] = new String ("4");
-			nodeNumber[4] = new String ("5");
-			nodeNumber[5] = new String ("6");
-						
+
+         nodeNumber[0] = new String("1");
+         nodeNumber[1] = new String("2");
+         nodeNumber[2] = new String("3");
+         nodeNumber[3] = new String("4");
+         nodeNumber[4] = new String("5");
+         nodeNumber[5] = new String("6");
 
          xPInfo1 = col1 - diameter / 2;
          xPInfo2 = col2 + diameter / 2;
@@ -291,6 +283,15 @@ class Zeichenblatt extends Canvas implements CommandListener {
 
          yPInfo1middle = yPInfo1 + (linewidththick);
          yPInfo2middle = yPInfo2 + (linewidththick);
+
+         System.out.println("Diameter: " + diameter);
+
+         int size = diameter < 16 ? Font.SIZE_SMALL : diameter < 22 ? Font.SIZE_MEDIUM : Font.SIZE_LARGE;
+
+         fntNodeLabel = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, size);
+         heightFntNodeLabel = fntNodeLabel.getHeight();
+         fntPlayerInfo = Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, size);
+         heightFntPlayerInfo = fntPlayerInfo.getHeight();
 
       }
 
