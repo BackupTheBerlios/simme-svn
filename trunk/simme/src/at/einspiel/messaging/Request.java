@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: Request.java
-//               $Date: 2004/06/07 09:27:25 $
-//           $Revision: 1.3 $
+//               $Date: 2004/08/25 15:38:35 $
+//           $Revision: 1.4 $
 //----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
@@ -41,7 +41,7 @@ public class Request {
      *  <li>http://www.einspiel.at/simme/ </li>
      * </ul>
      */
-    public static final String URL_BASE = Sim.getProperty("server.base");
+    public static final String URL_BASE = Sim.getProperty("simme.server.base");
     private static final int RESPONSE_INITIAL_SIZE = 1024;
     private static final int RESPONSE_GROWTH_FACTOR = 512;
 
