@@ -1,14 +1,15 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: ManagedGame.java
-//                  $Date: 2003/12/30 10:18:25 $
-//              $Revision: 1.3 $
+//                  $Date: 2003/12/30 23:04:47 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
 import at.einspiel.base.User;
-import at.einspiel.mgmt.StateListener;
 import at.einspiel.mgmt.StateEvent;
+import at.einspiel.mgmt.StateListener;
+import at.einspiel.simme.server.net.MoveMessageXML;
 
 /**
  * Represents a game that is managed by the server.
@@ -71,5 +72,29 @@ public class ManagedGame extends ServerGame implements StateListener {
          }
       }
    }
+   
 
+   /** @see at.einspiel.simme.server.ServerGame#selectEdge(at.einspiel.base.User, byte) */
+   public boolean selectEdge(User u, byte edge) {
+      boolean movePerformed = super.selectEdge(u, edge);
+      if (movePerformed) {
+         // send move message to other user.
+         if (u == getPlayer1()) {
+            setMoveMessage(getPlayer2(), edge);
+         } else if (u == getPlayer2()) {
+            setMoveMessage(getPlayer1(), edge);
+         }
+      }
+      // return super.selectEdge(User, byte)
+      return movePerformed;
+   }
+
+   /**
+    * Sets the message of the other users to the given move.
+    * @param user
+    * @param edge
+    */
+   private void setMoveMessage(ManagedUser user, byte edge) {
+      user.setClientMessage(new MoveMessageXML(edge));
+   }
 }

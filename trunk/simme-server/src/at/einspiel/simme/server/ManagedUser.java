@@ -1,15 +1,15 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: ManagedUser.java
-//                  $Date: 2003/12/30 10:18:25 $
-//              $Revision: 1.3 $
+//                  $Date: 2003/12/30 23:04:47 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
 import at.einspiel.base.Result;
 import at.einspiel.base.User;
 import at.einspiel.base.UserException;
-import at.einspiel.messaging.LoginResult;
+import at.einspiel.messaging.LoginMessage;
 import at.einspiel.messaging.Message;
 import at.einspiel.mgmt.IChangeSupport;
 import at.einspiel.mgmt.StateListener;
@@ -104,7 +104,7 @@ public class ManagedUser extends User implements IChangeSupport {
     * @param version the SimME version of the client in use.
     * @return the result of the login procedure.
     */
-   public LoginResult login(String version) {
+   public LoginMessage login(String version) {
       return SessionManager.getInstance().addUser(this, version);
    }
 
@@ -239,4 +239,19 @@ public class ManagedUser extends User implements IChangeSupport {
       state.removeStateListener(listener);
    }
 
+   /**
+    * Returns the message for the client.
+    * @return the client message.
+    */
+   public Message getClientMessage() {
+      return clientMessage;
+   }
+
+   /**
+    * Sets the client message for this user.
+    * @param msg the message to set.
+    */
+   public void setClientMessage(Message msg) {
+      this.clientMessage = msg;
+   }
 }

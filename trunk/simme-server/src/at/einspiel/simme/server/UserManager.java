@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: UserManager.java
-//                  $Date: 2003/12/30 10:18:25 $
-//              $Revision: 1.3 $
+//                  $Date: 2003/12/30 23:04:47 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 
 package at.einspiel.simme.server;
@@ -14,7 +14,7 @@ import java.util.*;
  * 
  * @author kariem
  */
-class UserManager {
+public class UserManager {
 
    private static final int DEF_UPDATE_INTERVAL = 30000; // 30 seconds
    private static final int DEF_GAME_INTERVAL = 10000; // 10 seconds
@@ -280,7 +280,7 @@ class UserManager {
     * 
     * @return Time in seconds.
     */
-   public static int getMaxSecondsIdle() {
+   static int getMaxSecondsIdle() {
       return maxSecondsIdle;
    }
 
@@ -290,7 +290,7 @@ class UserManager {
     * 
     * @param i Time in seconds.
     */
-   public static void setMaxSecondsIdle(int i) {
+   static void setMaxSecondsIdle(int i) {
       maxSecondsIdle = i;
    }
 
@@ -300,7 +300,7 @@ class UserManager {
     * 
     * @return Time in seconds.
     */
-   public static int getMaxSecondsWaiting() {
+   static int getMaxSecondsWaiting() {
       return maxSecondsWaiting;
    }
 
@@ -310,7 +310,7 @@ class UserManager {
     *
     * @param i Time in seconds.
     */
-   public static void setMaxSecondsWaiting(int i) {
+   static void setMaxSecondsWaiting(int i) {
       maxSecondsWaiting = i;
    }
 
@@ -320,7 +320,7 @@ class UserManager {
     * 
     * @return update interval.      
     */
-   public static int getUpdateInterval() {
+   static int getUpdateInterval() {
       return updateInterval;
    }
 
@@ -329,7 +329,7 @@ class UserManager {
     * 
     * @param i Interval to update the managed users in milliseconds.
     */
-   public static void setUpdateInterval(int i) {
+   static void setUpdateInterval(int i) {
       updateInterval = i;
    }
 
@@ -339,7 +339,7 @@ class UserManager {
     * 
     * @return the find game interval.
     */
-   protected static int getFindGameInterval() {
+   static int getFindGameInterval() {
       return findGameInterval;
    }
 
@@ -348,7 +348,7 @@ class UserManager {
     * 
     * @param findGameInterval the new interval.
     */
-   protected static void setFindGameInterval(int findGameInterval) {
+   static void setFindGameInterval(int findGameInterval) {
       UserManager.findGameInterval = findGameInterval;
    }
    

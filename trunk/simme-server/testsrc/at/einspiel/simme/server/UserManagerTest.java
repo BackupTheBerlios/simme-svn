@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: UserManagerTest.java
-//                  $Date: 2003/12/30 10:18:25 $
-//              $Revision: 1.1 $
+//                  $Date: 2003/12/30 23:04:47 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
@@ -23,7 +23,6 @@ public class UserManagerTest extends TestCase {
 
    // overwrite UserManager.DEF_GAME_INTERVAL
    private static final int TIMEOUT_1_SECOND = 1000;
-   private static final int TIMEOUT_5_SECONDS = 5000;
    private static final int TIMEOUT_100_MILLIS = 100;
 
    

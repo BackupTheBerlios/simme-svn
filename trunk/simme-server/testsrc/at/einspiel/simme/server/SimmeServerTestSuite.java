@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: SimmeServerTestSuite.java
-//                  $Date: 2003/12/30 10:18:25 $
-//              $Revision: 1.2 $
+//                  $Date: 2003/12/30 23:04:47 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
@@ -27,10 +27,11 @@ public class SimmeServerTestSuite {
 	 */
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for Server");
-		suite.addTestSuite(SessionManagerTest.class);
 		suite.addTestSuite(DatabaseTest.class);
 		suite.addTestSuite(ServerGameTest.class);
 		suite.addTestSuite(ManagedGameTest.class);
+		suite.addTestSuite(UserManagerTest.class);
+		suite.addTestSuite(SessionManagerTest.class);
 		return suite;
 	}
 }

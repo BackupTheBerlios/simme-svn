@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    [Simme-Server]
+         Menu XML File: menu.xml
+                 $Date: 2003/12/30 23:04:47 $
+             $Revision: 1.1 $
+-->
+<menus>
+    <menu title="Willkommen" id="0" list="true">
+        <child name="Sofort Spielen" id="1"/>
+        <child name="Gegner Wählen" id="4"/>
+        <child name="Wer ist online?" id="5"/>
+        <child name="Spielerliste" id="6"/>
+        <child name="Hilfe" id="7"/>
+    </menu>
+
+    <special title="Warte auf Gegenspieler" id="1"
+            type="wait"/>
+
+    <special title="Starte Spiel" id="2"
+            type="start"/>
+
+    <special title="SimME playing" id="3"
+            type="play"/>
+
+    <generate title="Gegner Wählen" id="4"
+            type="waiting"/>
+
+    <generate title="Spieler Online" id="5"
+            type="online"/>
+
+    <generate title="Spielerliste" id="6"
+            type="allusers"/>
+
+    <text title="Hilfe" id="7" msg="'Sofor Spielen' startet ein Spiel mit dem nächsten, möglichen Gegner."/>
+</menus>

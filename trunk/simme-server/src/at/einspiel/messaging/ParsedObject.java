@@ -249,6 +249,26 @@ public class ParsedObject {
       InputStream is = new ByteArrayInputStream(string.getBytes());
       return parse(is);
    }
+   
+   /**
+    * Loads a ParsedObject from an URI.
+    * 
+    * @param uri the address of the file to load.
+    * @return A newly created <code>ParsedObject</code> representing the same 
+    *          information found in the given XML file.
+    * 
+    * @throws SAXException If the XML data contains syntactic or semantic
+    *          errors. These are related to non-wellformedness, because
+    *          validation is disabled for this method.
+    * @throws ParserConfigurationException If the underlying XML implementation
+    *          and/or configuration throws errors.
+    * @throws IOException If the file does not exist or is not readable.
+    */
+   public static ParsedObject loadFromURI(String uri)
+   throws SAXException, ParserConfigurationException, IOException
+   {
+      return new ParsedObject(XmlParser.loadDocument(uri).getDocumentElement());
+   }   
 
    /**
     * Creates a new <code>ParsedObject</code> from the information found in an
@@ -319,6 +339,51 @@ public class ParsedObject {
       attributes.put(attrName, value);
    }
 
+   /**
+    * Returns the value of an attribute identified by its <code>attrName</code>
+    * as <code>byte</code>.
+    * 
+    * @param attrName The name of the attribute.
+    * @return A <code>byte</code> containing the value of the attribute
+    *          identified by <code>attrName</code>. If no such attribute can be
+    *          found <code>0</code> is returned.
+    * 
+    * @throws NumberFormatException if the string does not contain a parseable
+    *          integer.
+    * 
+    * @since 12 Jul 2003
+    */
+   public byte getAttributeByte(String attrName) throws NumberFormatException
+   {
+      return getAttributeByte(attrName, (byte) 0);
+   }
+
+   /**
+    * Returns the value of an attribute identified by its <code>attrName</code>
+    * as <code>byte</code>.
+    * 
+    * @param attrName The name of the attribute.
+    * @param defaultByte the default value, if <code>attrName</code> was not
+    *         found.
+    * @return An <code>int</code> containing the value of the attribute
+    *          identified by <code>attrName</code>. If no such attribute can be
+    *          found <code>defaultByte</code> is returned.
+    * 
+    * @throws NumberFormatException if the string does not contain a parseable
+    *          integer.
+    * 
+    * @see #getAttributeByte(String)
+    */
+   public byte getAttributeByte(String attrName, byte defaultByte) throws NumberFormatException
+   {
+      String s = getAttribute(attrName);
+      if (s == null)
+      {
+         return defaultByte;
+      }
+      return Byte.parseByte(s);
+   }
+   
    /**
     * Returns the name of this <code>ParsedObject</code>. This name corresponds
     * to the tagname of the DOM Element.
