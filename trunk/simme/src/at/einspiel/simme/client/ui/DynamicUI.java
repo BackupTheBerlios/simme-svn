@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: DynamicUI.java
-//                  $Date: 2004/09/07 13:24:22 $
-//              $Revision: 1.10 $
+//                  $Date: 2004/09/13 15:23:57 $
+//              $Revision: 1.11 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -26,7 +26,7 @@ import at.einspiel.simme.client.util.UIUtils;
  */
 public class DynamicUI implements IDynamicUI, CommandListener {
 
-	final SendableUI ui;
+	final SendableUI sui;
 	boolean updateNecessary;
 	Displayable disp;
 
@@ -44,9 +44,9 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 	public DynamicUI(String title, String message, String url) {
 		Logger.debug(getClass(), "message=" + message);
 
-		ui = new SendableUI(title, message);
-		ui.setDynamicUI(this);
-		ui.setCommPath(url);
+		sui = new SendableUI(title, message);
+		sui.setDynamicUI(this);
+		sui.setCommPath(url);
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 	private synchronized void connect() {
 		Logger.debug(getClass(), "called connect()");
 		if (updateNecessary) {
-			ui.update();
+			sui.update();
 		}
 	}
 
@@ -77,7 +77,7 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 			}
 
 			// dynamic user interface will be updated automatically
-			ui.update(r);
+			sui.update(r);
 		}
 	}
 
@@ -86,7 +86,7 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 	 * @return a request.
 	 */
 	private Request handleCommand() {
-		if (ui.isList()) {
+		if (sui.isList()) {
 			// find selected index
 			final List currentList = (List) disp;
 			final int selected = currentList.getSelectedIndex();
@@ -98,10 +98,7 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 			// send index to server
 			r.setParam(IConstants.PARAM_SEL, Integer.toString(selected));
 
-			// attach id of menu if possible
-			r.setParam(IConstants.PARAM_MENUID, Integer.toString(ui.getId()));
-
-			if (ui.hasMetaInfo()) {
+			if (sui.hasMetaInfo()) {
 				r.setParam(IConstants.PARAM_META, currentList.getString(selected));
 			}
 
@@ -114,21 +111,26 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 	 * Updates the display.
 	 */
 	public void updateDisplay() {
-		Displayable d = makeDisplayable(ui.getInfoObject());
+		Displayable d = makeDisplayable(sui.getInfoObject());
 
-		// add command listeners
-		// command to exit simme online
-		d.addCommand(UIUtils.CMD_CANCEL);
-		// command to go to the next page
-		if (updateNecessary) {
-			d.addCommand(UIUtils.CMD_CONTINUE);
+		if (d instanceof Zeichenblatt) {
+			// TODO add reference to this ui
+		} else {
+			// add command listeners
+			// command to exit simme online
+			d.addCommand(UIUtils.CMD_CANCEL);
+			// command to go to the next page
+			if (updateNecessary) {
+				d.addCommand(UIUtils.CMD_CONTINUE);
+			}
+			d.setCommandListener(this);
 		}
-		d.setCommandListener(this);
 
 		// point field disp to temporary display
 		this.disp = d;
 
 		Sim.getDisplay().setCurrent(disp);
+		Logger.debug(getClass(), "Display set to " + disp);
 	}
 
 	/**
@@ -144,9 +146,13 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 			newDisp = makeList(infoObject);
 		} else if (infoObject.isXml()) {
 			// build game with xml information
-			Game g = new NetworkGame(infoObject.getXmlInfo(), Sim.getNick(), ui.getCommPath());
+			final Game g = new NetworkGame(infoObject.getXmlInfo(), Sim.getNick(), sui
+					.getCommPath());
 			newDisp = new Zeichenblatt(false);
-			((Zeichenblatt) newDisp).setGame(g);
+			// start game in own thread, UI will be updated correctly
+			Thread t = new StartGameThread((Zeichenblatt) newDisp, g);
+			t.start();
+
 			updateNecessary = false;
 		} else {
 			newDisp = UIUtils.uneditableTextComponent(title, infoObject.getText());
@@ -189,5 +195,32 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 		// some elements are in the list, so return the rest
 		updateNecessary = false;
 		return l;
+	}
+
+	class StartGameThread extends Thread {
+
+		private final Zeichenblatt zeichenblatt;
+		private final Game g;
+
+		/**
+		 * Creates a new instance of <code>StartGameThread</code>.
+		 * @param zeichenblatt
+		 * @param g
+		 */
+		public StartGameThread(Zeichenblatt zeichenblatt, Game g) {
+			this.zeichenblatt = zeichenblatt;
+			this.g = g;
+		}
+
+		/** @see java.lang.Thread#run() */
+		public void run() {
+			try {
+				sleep(1500);
+			} catch (InterruptedException e) {
+				Logger.error("Error while trying to sleep thread", e);
+			}
+			zeichenblatt.setGame(g);
+		}
+
 	}
 }
