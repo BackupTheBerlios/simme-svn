@@ -1,14 +1,12 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: Sim.java
-//               $Date: 2004/09/13 15:26:53 $
-//           $Revision: 1.7 $
+//               $Date: 2004/09/22 18:23:58 $
+//           $Revision: 1.8 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client;
 
-import javax.microedition.lcdui.Display;
-import javax.microedition.lcdui.List;
-import javax.microedition.lcdui.Screen;
+import javax.microedition.lcdui.*;
 import javax.microedition.midlet.MIDlet;
 
 import at.einspiel.simme.client.ui.StartForm;
@@ -78,6 +76,14 @@ public class Sim extends MIDlet {
 	 */
 	public static Display getDisplay() {
 		return Display.getDisplay(instance);
+	}
+	
+	/**
+	 * Sets a new displayable for this MIDlet.
+	 * @param newDisplay the new displayable.
+	 */
+	public static void setDisplay(Displayable newDisplay) {
+		getDisplay().setCurrent(newDisplay);
 	}
 
 	/**

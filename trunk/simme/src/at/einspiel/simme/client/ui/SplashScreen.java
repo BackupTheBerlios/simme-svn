@@ -1,13 +1,18 @@
+//----------------------------------------------------------------------------
+//[Simme]
+//Java Source File: SplashScreen.java
+//           $Date: 2004/09/22 18:23:58 $
+//       $Revision: 1.3 $
+//----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
-
-import at.einspiel.simme.client.Sim;
 
 import java.io.IOException;
 
-import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.ImageItem;
+
+import at.einspiel.simme.client.Sim;
 
 /**
  * Splashscreen that runs before midlet.
@@ -47,8 +52,7 @@ public class SplashScreen extends Form {
                 System.err.println(ex.getMessage());
             }
 
-            Display d = Sim.getDisplay();
-            d.setCurrent(Sim.getMainScreen());
+            Sim.setDisplay(Sim.getMainScreen());
         }
     }
 }

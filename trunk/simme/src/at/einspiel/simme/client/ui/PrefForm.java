@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: PrefForm.java
-//               $Date: 2004/09/13 15:26:53 $
-//           $Revision: 1.7 $
+//               $Date: 2004/09/22 18:23:58 $
+//           $Revision: 1.8 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -130,7 +130,7 @@ public class PrefForm extends List implements CommandListener {
 				}
 
 				// show last display
-				Sim.getDisplay().setCurrent(myself);
+				Sim.setDisplay(myself);
 			}
 		});
 
@@ -147,7 +147,7 @@ public class PrefForm extends List implements CommandListener {
 		Alert alert = new Alert("Error", e.getMessage(), null, AlertType.ERROR);
 		alert.setTimeout(Alert.FOREVER);
 		// show error message
-		Sim.getDisplay().setCurrent(alert);
+		Sim.setDisplay(alert);
 	}
 
 	/**
