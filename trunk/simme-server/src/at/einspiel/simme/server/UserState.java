@@ -1,10 +1,12 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: UserState.java
-//                  $Date: 2003/12/30 10:18:25 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/09/02 10:20:38 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
+
+import java.io.Serializable;
 
 import at.einspiel.messaging.Message;
 import at.einspiel.messaging.SimpleClientMessage;
@@ -21,7 +23,7 @@ import at.einspiel.mgmt.*;
  * 
  * @author kariem
  */
-public class UserState implements IChangeSupport{
+public class UserState implements IChangeSupport, Serializable {
 
    private ChangeSupport changeSupport;
 
@@ -100,7 +102,7 @@ public class UserState implements IChangeSupport{
     * 
     * @return the state in string representation
     */
-   public String getStateAsString() {
+   public String toString() {
       String state = "unknown";
       switch (getStateCategory()) {
          case STATE_IDLE :

@@ -1,11 +1,12 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: ChangeSupport.java
-//                  $Date: 2004/02/21 23:03:13 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/09/02 10:20:38 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.mgmt;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -16,36 +17,37 @@ import java.util.Set;
  * 
  * @author kariem
  */
-public class ChangeSupport implements IChangeSupport {
+public class ChangeSupport implements IChangeSupport, Serializable {
 
-   // the state listeners
-   private Set listeners;
+	// the state listeners
+	private Set listeners;
 
-   /** @see IChangeSupport#addStateListener(StateListener) */
-   public void addStateListener(StateListener listener) {
-      if (listeners == null) {
-         listeners = new HashSet();
-      }
-      listeners.add(listener);
-   }
+	/** @see IChangeSupport#addStateListener(StateListener) */
+	public void addStateListener(StateListener listener) {
+		if (listeners == null) {
+			listeners = new HashSet();
+		}
+		listeners.add(listener);
+	}
 
-   /** @see IChangeSupport#removeStateListener(StateListener) */
-   public void removeStateListener(StateListener listener) {
-      if (listeners != null) {
-         listeners.remove(listener);
-      }
-   }
+	/** @see IChangeSupport#removeStateListener(StateListener) */
+	public void removeStateListener(StateListener listener) {
+		if (listeners != null) {
+			listeners.remove(listener);
+		}
+	}
 
-   /**
-    * Informs all state listeners of the state event.
-    * @param evt the event ot be sent.
-    */
-   public void fireStateEvent(StateEvent evt) {
-      if (listeners != null) {
-         for (Iterator i = listeners.iterator(); i.hasNext(); ) {
-            // propagate event to state listeners
-            ((StateListener) i.next()).updateState(evt);
-         }
-      }
-   }
+	/**
+	 * Informs all state listeners of the state event.
+	 * @param evt
+	 *            the event ot be sent.
+	 */
+	public void fireStateEvent(StateEvent evt) {
+		if (listeners != null) {
+			for (Iterator i = listeners.iterator(); i.hasNext();) {
+				// propagate event to state listeners
+				((StateListener) i.next()).updateState(evt);
+			}
+		}
+	}
 }
