@@ -85,12 +85,11 @@ class Zeichenblatt extends Canvas implements CommandListener {
 
         // start a new Game()
         if (singlePlayer) {
-            game = new GameRandomAI();
+           setGame(new GameRandomAI());
         } else {
-            game = new Game();
+           setGame(new Game());
             single = true;
         }
-        game.start();
 
         // add cancel command
         addCommand(CMD_CANCEL);
@@ -106,6 +105,16 @@ class Zeichenblatt extends Canvas implements CommandListener {
     Zeichenblatt() {
         this(false);
     }
+    
+    /**
+     * Sets the game for this zeichenblatt.
+     * @param g the game.
+     */
+    public void setGame(Game g) {
+       this.game = g;
+       game.start();
+    }
+    
 
     /**
      * @see Canvas#keyPressed(int)

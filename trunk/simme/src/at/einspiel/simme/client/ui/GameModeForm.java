@@ -148,7 +148,7 @@ public class GameModeForm extends List implements CommandListener {
                         System.out.println("login result: " + result);
 
                         if (result.isSucceed()) {
-                            DynamicUI dUI = new DynamicUI(result.getMessage(), result.getUrl());
+                            DynamicUI dUI = new DynamicUI("SimME online", result.getMessage(), result.getUrl());
                             d.setCurrent(dUI.getDisplayable());
                         } else {
                             // no success => show cause
