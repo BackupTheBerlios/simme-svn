@@ -30,6 +30,11 @@ public class Game {
    /** Indicates if the game is over */
    private boolean gameOver;
 
+	private byte moveNr;
+
+	private String p1Name, p2Name;
+	private String p1Info, p2Info;
+
    /**
     * Initializes a new game and starts it.
     * @see #start()
@@ -51,7 +56,15 @@ public class Game {
 
       activeNode = -1; // value, if there is no active node
       currentPlayer = true; // p1 is currentPlayer
+      moveNr = 1; // first move
       gameOver = false;
+      
+      
+      // set to some default values - has to be changed.
+      p1Name = "First Player";
+		p1Info = "AT";
+      p2Name = "Second One";
+		p2Info = "DE";      
    }
 
    /**
@@ -154,6 +167,10 @@ public class Game {
       
       currentPlayer = !currentPlayer;
    }
+   
+   public byte getPlayersTurn() {
+   	return currentPlayer ? PLAYER1 : PLAYER2; 
+   }
 
    public boolean isActivated(byte index) {
       if ((index < 0) || index > 5)
@@ -230,4 +247,39 @@ public class Game {
       boolean activated;
       boolean disabled;
    }
+   /**
+    * @return byte
+    */
+   public byte getMoveNr() {
+      return moveNr;
+   }
+
+   /**
+    * @return String
+    */
+   public String getP1Info() {
+      return p1Info;
+   }
+
+   /**
+    * @return String
+    */
+   public String getP1Name() {
+      return p1Name;
+   }
+
+   /**
+    * @return String
+    */
+   public String getP2Info() {
+      return p2Info;
+   }
+
+   /**
+    * @return String
+    */
+   public String getP2Name() {
+      return p2Name;
+   }
+
 }
