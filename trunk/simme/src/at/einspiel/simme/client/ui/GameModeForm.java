@@ -138,7 +138,7 @@ public class GameModeForm extends List implements CommandListener {
 						}
 
 						Logger.debug("sending message");
-						loginMsg.sendRequest("doLogin");
+						loginMsg.sendRequest(Sim.getProperty("simme.page.login"));
 
 						// get response
 						String response = new String(loginMsg.getResponse());
@@ -148,7 +148,7 @@ public class GameModeForm extends List implements CommandListener {
 
 						Logger.debug("login result: " + result);
 
-						if (result.isSucceed()) {
+						if (result.isSuccess()) {
 							final String url = result.getUrl();
 							// save nickname and url somewhere in order to be
 							// easily accessible
@@ -160,7 +160,7 @@ public class GameModeForm extends List implements CommandListener {
 
 						} else {
 							// no success => show cause
-							AlertType type = result.isSucceed()
+							AlertType type = result.isSuccess()
 									? AlertType.INFO
 									: AlertType.ERROR;
 							final String errorMessage = result.getMessage();

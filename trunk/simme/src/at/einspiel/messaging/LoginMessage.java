@@ -1,11 +1,10 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: LoginMessage.java
-//                  $Date: 2004/06/07 09:27:25 $
-//              $Revision: 1.4 $
+//                  $Date: 2004/08/25 15:39:38 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package at.einspiel.messaging;
-
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -15,162 +14,177 @@ import at.einspiel.simme.nanoxml.XMLElement;
 import at.einspiel.simme.nanoxml.XMLParseException;
 
 /**
- * The result of a login process.
- *
+ * The result of a login process. This message is returned after logging in with
+ * the server. The success of a login process may be retrieved via
+ * {@link #isSuccess()}. The corresponding status or information message is set
+ * in the field <code>info</code>, and may be accessed via {@link #getInfo()}.
+ * 
  * @author kariem
  */
 public class LoginMessage implements Message {
-    /** The element name of the string representation */
-    public static final String ELEMENT_NAME = "loginresult";
+	/** The element name of the string representation */
+	public static final String ELEMENT_NAME = "loginresult";
 
-    /** login succeeded */
-    private boolean succeed;
+	/**
+	 * <code>true</code> if the login has succeeded, <code>false</code>
+	 * otherwise.
+	 */
+	private boolean success;
 
-    /** login message */
-    private String info;
+	/** login message */
+	private String info;
 
-    /** response url */
-    private String url;
+	/** response url */
+	private String url;
 
-    /** Login was successful. */
-    byte LOGIN_OK = 1; 
-    /** Login failed. */
-    byte LOGIN_FAILED = 2;
-    
-    /**
-     * Creates a new <code>LoginResult</code> from the data in the xml string. If
-     * <code>xmlString</code> does not contain valid data, the login result is
-     * set to not succeeded and the message contains a general error message.
-     *
-     * @param xmlString the string containing data in XML format.
-     */
-    public LoginMessage(String xmlString) {
-        XMLElement element = new XMLElement();
+	/** Login was successful. */
+	byte LOGIN_OK = 1;
+	/** Login failed. */
+	byte LOGIN_FAILED = 2;
 
-        try {
-            element.parseString(xmlString.trim());
-            byte id = (byte) element.getAttributeInt("succeed", LOGIN_FAILED);
-            setSucceed(id == LOGIN_OK); // set to true, if login was ok
-            setInfo(element.getAttribute("info"));
-            setUrl(element.getAttribute("url"));
-        } catch (XMLParseException xex) {
-            setSucceed(false);
-            setInfo("Reply had errors.");
-        }
-    }
+	/**
+	 * Creates a new <code>LoginResult</code> from the data in the xml string.
+	 * If <code>xmlString</code> does not contain valid data, the login result
+	 * is set to not succeeded and the message contains a general error message.
+	 * 
+	 * @param xmlString
+	 *            the string containing data in XML format.
+	 */
+	public LoginMessage(String xmlString) {
+		XMLElement element = new XMLElement();
 
-    /**
-     * Creates a new <code>LoginResult</code> from the given properties.
-     *
-     * @param succeeded <code>true</code> if the login process succeeded,
-     *         otherwise <code>false</code>.
-     * @param url the new url to load.
-     * @param msg the message with additional information.
-     */
-    public LoginMessage(boolean succeeded, String msg, String url) {
-        setSucceed(succeeded);
-        setInfo(msg);
-        setUrl(url);
-    }
+		try {
+			element.parseString(xmlString.trim());
+			byte id = (byte) element.getAttributeInt("success", LOGIN_FAILED);
+			setSuccess(id == LOGIN_OK); // set to true, if login was ok
+			setInfo(element.getAttribute("info"));
+			setUrl(element.getAttribute("url"));
+		} catch (XMLParseException xex) {
+			setSuccess(false);
+			setInfo("Reply had errors.");
+		}
+	}
 
-    /**
-     * @return an XML representation of this result or <code>null</code> if a
-     *          problem occured while generating XML.
-     *
-     * @see Object#toString()
-     */
-    public String toString() {
-        XMLElement element = new XMLElement();
-        element.setName(ELEMENT_NAME);
-        if (succeed) {
-            element.setAttribute("succeed", Integer.toString(LOGIN_OK));
-            // only write URL if succeed == true
-            element.setAttribute("url", url);
-        } else {
-            element.setAttribute("succeed", Integer.toString(LOGIN_FAILED));
-        }
-        element.setAttribute("info", info);
+	/**
+	 * Creates a new <code>LoginResult</code> from the given properties.
+	 * 
+	 * @param succeeded
+	 *            <code>true</code> if the login process succeeded, otherwise
+	 *            <code>false</code>.
+	 * @param url
+	 *            the new url to load.
+	 * @param msg
+	 *            the message with additional information.
+	 */
+	public LoginMessage(boolean succeeded, String msg, String url) {
+		setSuccess(succeeded);
+		setInfo(msg);
+		setUrl(url);
+	}
 
-        ByteArrayOutputStream bas = new ByteArrayOutputStream();
-        OutputStreamWriter writer = new OutputStreamWriter(bas);
+	/**
+	 * @return an XML representation of this result or <code>null</code> if a
+	 *         problem occured while generating XML.
+	 * 
+	 * @see Object#toString()
+	 */
+	public String toString() {
+		XMLElement element = new XMLElement();
+		element.setName(ELEMENT_NAME);
+		if (success) {
+			element.setAttribute("success", Integer.toString(LOGIN_OK));
+			// only write URL if success == true
+			element.setAttribute("url", url);
+		} else {
+			element.setAttribute("success", Integer.toString(LOGIN_FAILED));
+		}
+		element.setAttribute("info", info);
 
-        try {
-            element.write(writer);
-            writer.flush();
-        } catch (IOException e) {
-            return null;
-        }
+		ByteArrayOutputStream bas = new ByteArrayOutputStream();
+		OutputStreamWriter writer = new OutputStreamWriter(bas);
 
-        return bas.toString();
-    }
+		try {
+			element.write(writer);
+			writer.flush();
+		} catch (IOException e) {
+			return null;
+		}
 
-    /**
-     * Returns the message.
-     *
-     * @return the message contained in this <code>LoginResult</code>.
-     */
-    public String getInfo() {
-        return info;
-    }
+		return bas.toString();
+	}
 
-    /**
-     * Shows success or failure of the login process.
-     *
-     * @return <code>true</code> if the process succeeded, otherwise
-     *         <code>false</code>.
-     */
-    public boolean isSucceed() {
-        return succeed;
-    }
+	/**
+	 * Returns the message.
+	 * 
+	 * @return the message contained in this <code>LoginResult</code>.
+	 */
+	public String getInfo() {
+		return info;
+	}
 
-    /**
-     * Returns the url.
-     *
-     * @return the url which will be used after a successful login.
-     */
-    public String getUrl() {
-        return url;
-    }
+	/**
+	 * Shows success or failure of the login process.
+	 * 
+	 * @return <code>true</code> if the process succeeded, otherwise
+	 *         <code>false</code>.
+	 */
+	public boolean isSuccess() {
+		return success;
+	}
 
-    /**
-     * Sets the information string.
-     * @param string the message to set.
-     */
-    public void setInfo(String string) {
-        info = string;
-    }
+	/**
+	 * Returns the url.
+	 * 
+	 * @return the url which will be used after a successful login.
+	 */
+	public String getUrl() {
+		return url;
+	}
 
-    /**
-     * Sets the succeeded value.
-     *
-     * @param b succeeded or failed.
-     */
-    public void setSucceed(boolean b) {
-        succeed = b;
-    }
+	/**
+	 * Sets the information string.
+	 * 
+	 * @param string
+	 *            the message to set.
+	 */
+	public void setInfo(String string) {
+		info = string;
+	}
 
-    /**
-     * Sets the url.
-     * @param string the url to set.
-     */
-    public void setUrl(String string) {
-        url = string;
-    }
+	/**
+	 * Sets the succeeded value.
+	 * 
+	 * @param b
+	 *            succeeded or failed.
+	 */
+	public void setSuccess(boolean b) {
+		success = b;
+	}
 
-    //
-    // missing Message implementation
-    //
+	/**
+	 * Sets the url.
+	 * 
+	 * @param string
+	 *            the url to set.
+	 */
+	public void setUrl(String string) {
+		url = string;
+	}
 
-    /** @see Message#getMessage() */
-    public String getMessage() {
-        return toString();
-    }
+	//
+	// missing Message implementation
+	//
 
-    /** @see Message#getId() */
-    public byte getId() {
-        if (succeed) {
-            return LOGIN_OK;
-        }
-        return LOGIN_FAILED;
-    }
+	/** @see Message#getMessage() */
+	public String getMessage() {
+		return getInfo();
+	}
+
+	/** @see Message#getId() */
+	public byte getId() {
+		if (success) {
+			return LOGIN_OK;
+		}
+		return LOGIN_FAILED;
+	}
 }
