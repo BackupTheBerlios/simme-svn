@@ -14,9 +14,15 @@
 		</servlet-class>
 	</servlet>
 	<servlet>
-		<servlet-name>sessionMgr</servlet-name>
+		<servlet-name>SessionMgr</servlet-name>
 		<servlet-class>
 			at.einspiel.simme.server.servlet.SessionMgrServlet
+		</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>Gameplay</servlet-name>
+		<servlet-class>
+			at.einspiel.simme.server.servlet.GamePlayServlet
 		</servlet-class>
 	</servlet>
 	<servlet-mapping>
@@ -24,8 +30,12 @@
 		<url-pattern>/Login</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>sessionMgr</servlet-name>
-		<url-pattern>/sessionMgr</url-pattern>
+		<servlet-name>SessionMgr</servlet-name>
+		<url-pattern>/SessionMgr</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Gameplay</servlet-name>
+		<url-pattern>/Gameplay</url-pattern>
 	</servlet-mapping>
 
 	<session-config>

@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: LoginServlet.java
-//                  $Date: 2004/09/07 13:30:36 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/09/13 15:11:27 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.servlet;
 
@@ -32,8 +32,7 @@ public class LoginServlet extends AbstractServlet {
 	 * loaded yet, the menu's URL local to the server is resolved, and the menu
 	 * is loaded. The request is then forwarded to the login JSP page.
 	 * 
-	 * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse)
+	 * @see AbstractServlet#doPost(HttpServletRequest, HttpServletResponse)
 	 */
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
