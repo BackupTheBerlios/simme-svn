@@ -10,7 +10,7 @@ import junit.framework.TestCase;
  * @author kariem
  */
 public class NetTest extends TestCase {
-	private static final String LOGIN_PAGE = "doLogin";
+	private static final String LOGIN_PAGE = "Login";
 
 	private static final String SERVER = "http://localhost:8080/simme/";
 	//private static final String SERVER =
