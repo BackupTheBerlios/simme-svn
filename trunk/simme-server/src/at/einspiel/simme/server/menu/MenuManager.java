@@ -1,33 +1,114 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: MenuManager.java
-//                  $Date: 2003/12/30 23:04:47 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/02/21 23:03:13 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-import at.einspiel.messaging.ParsedObject;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+
+import at.einspiel.util.XMLUtils;
 
 /**
- * Manages the menu, and access to this menu.
+ * Manages the menu, and access to this menu. Here is an example for the XML
+ * file.
+ * 
+ * <pre>
+ * &lt;menus [default="default-id"]&gt;
+ *  &lt;list title="List Title" id="list-id" list="true"&gt;
+ *      &lt;child name="Entry 1" id="entry1-id"/&gt;
+ *      &lt;child name="Entry 2" id="entry2-id"/&gt;
+ *  &lt;/list&gt;
+ *
+ *  &lt;text title="Entry 1 Title" id="entry1-id" msg="Entry 1 message"/&gt;
+ *
+ *  &lt;text title="Entry 2 Title" id="entry2-id"&gt;
+ *      &lt;msg&gt;
+ *        Entry 2 message
+ *      &lt;/msg&gt;
+ *  &lt;/text&gt;
+ * 
+ *  ...
+ * &lt;/menus&gt;
+ * </pre>
+ * 
+ * The attribute <code>default</code> is optional. It defines the default menu
+ * for the <code>MenuManager</code>. If omitted, {@linkplain IMenu#DEFAULT_ID}
+ * is taken.
+ * 
  * @author kariem
  */
 public class MenuManager {
 
+   private static final String ATTR_DEFAULT_MENU = "default";
+   
    private static Map menuManagers = new HashMap(4);
-   
-   
+   private static DocumentBuilder builder;
+
+   static {
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      try {
+         builder = factory.newDocumentBuilder();
+      } catch (ParserConfigurationException e) {
+         e.printStackTrace();
+      }
+   }
+
    private Map menus;
+   private final String defaultMenu;
    
+   /**
+    * Creates a new instance of <code>MenuManager</code> from a given url
+    * pointing to an XML document.
+    * @param menuURL the url of an xml document.
+    * @throws MenuCreateException if the file could not be found, parsed or
+    *          contained no menu information. 
+    */
+   private MenuManager(URL menuURL) throws MenuCreateException {
+       menus = new HashMap();
+       synchronized (builder) {
+          try {
+             Document document = builder.parse(menuURL.toString());
+             Element root = document.getDocumentElement();
+             // set the default menu
+             String defMenu = root.getAttribute(ATTR_DEFAULT_MENU);
+             if (defMenu.equals("")) {
+                defMenu = IMenu.DEFAULT_ID;
+             }
+             this.defaultMenu = defMenu;
+             // parse the rest
+             parse(root);
+          } catch (SAXException e1) {
+             throw new MenuCreateException(e1);
+          } catch (IOException e1) {
+             throw new MenuCreateException(e1);
+          }
+       }
+       if (menus.isEmpty()) {
+          throw new MenuCreateException("The url " + menuURL + " does not " +
+               "contain menu information.");
+       }
+    }
+
+
    /**
     * Creates a new menu manager for the given URL.
     * @param url the url pointing to an xml file.
     * @return the corresponding menu manager.
+    * @throws MenuCreateException if the MenuManager could not be created.
     */
-   public static MenuManager getMenuManager(URL url) {
+   public static MenuManager getMenuManager(URL url) throws MenuCreateException {
       MenuManager mgr = (MenuManager) menuManagers.get(url);
       if (mgr == null) {
          mgr = new MenuManager(url);
@@ -36,33 +117,46 @@ public class MenuManager {
       return mgr;
    }
 
-   
-   private MenuManager(URL menu) {
-      menus = new HashMap();
-      try {
-         ParsedObject po = ParsedObject.loadFromURI(menu.toString());
-         parse(po);
-      } catch (Exception e) {
-         e.printStackTrace();
-      }
-   }
-
-   private void parse(ParsedObject po) {
-      List children = po.getChildren();
-      for (Iterator i = children.iterator(); i.hasNext(); ) {
-         final ParsedObject poMenu = (ParsedObject) i.next();
+   private void parse(Element element) {
+      List children = XMLUtils.getDirectChildren(element);
+      for (Iterator i = children.iterator(); i.hasNext();) {
+         final Element poMenu = (Element) i.next();
          final IMenu menu;
-         final String name = poMenu.getName();
-         if (name.equals("menu")) {
+         final String name = poMenu.getNodeName();
+         if (name.equals("list")) {
             menu = new ListMenu(poMenu);
          } else if (name.equals("text")) {
             menu = new TextMenu(poMenu);
          } else if (name.equals("generate")) {
-            menu = null; // TODO implement GeneratedMenu
+            menu = new GenerateMenu(poMenu);
          } else { // if name.equals special
-            menu = null; // TODO implement SpecialMenu
+            menu = new SpecialMenu(poMenu);
          }
          menus.put(menu.getId(), menu);
       }
+   }
+
+   /**
+    * Returns the default menu.
+    * @return the default menu for this manager.
+    */
+   public IMenu getMenu() {
+      return getMenu(null);
+   }
+
+   /**
+    * Returns the menu identified by <code>id</code>.
+    * @param id the id for the menu. If <code>id</code> is <code>null</code>,
+    *         then the default menu will be returned. The default menu is equal
+    *         to {@linkplain IMenu#DEFAULT_ID}, unless otherwise specified.
+    * 
+    * @return the menu associated with <code>id</code>, or <code>null</code>,
+    *          if no such menu exists.
+    */
+   public IMenu getMenu(String id) {
+      if (id == null) {
+         id = defaultMenu;
+      }
+      return (IMenu) menus.get(id);
    }
 }

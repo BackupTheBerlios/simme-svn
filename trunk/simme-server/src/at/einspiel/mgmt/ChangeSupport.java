@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: ChangeSupport.java
-//                  $Date: 2003/12/30 10:18:25 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/02/21 23:03:13 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.mgmt;
 
@@ -12,7 +12,7 @@ import java.util.Set;
 
 /**
  * Changesupport that implements {@link at.einspiel.mgmt.IChangeSupport}. This
- * class may be used be classes implementing the same interface.
+ * class may be used by classes implementing the same interface.
  * 
  * @author kariem
  */

@@ -1,18 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
     [Simme-Server]
          Menu XML File: menu.xml
-                 $Date: 2003/12/30 23:04:47 $
-             $Revision: 1.1 $
+                 $Date: 2004/02/21 23:03:13 $
+             $Revision: 1.2 $
 -->
 <menus>
-    <menu title="Willkommen" id="0" list="true">
+    <list title="Willkommen" id="0" list="true">
         <child name="Sofort Spielen" id="1"/>
         <child name="Gegner Wählen" id="4"/>
         <child name="Wer ist online?" id="5"/>
         <child name="Spielerliste" id="6"/>
         <child name="Hilfe" id="7"/>
-    </menu>
+    </list>
 
     <special title="Warte auf Gegenspieler" id="1"
             type="wait"/>
@@ -21,7 +21,7 @@
             type="start"/>
 
     <special title="SimME playing" id="3"
-            type="play"/>
+            type="ready"/>
 
     <generate title="Gegner Wählen" id="4"
             type="waiting"/>
@@ -32,5 +32,22 @@
     <generate title="Spielerliste" id="6"
             type="allusers"/>
 
-    <text title="Hilfe" id="7" msg="'Sofor Spielen' startet ein Spiel mit dem nächsten, möglichen Gegner."/>
+    <text title="Hilfe" id="7">
+        <msg>
+        "Sofort Spielen" startet ein Spiel so schnell wie möglich. Ist ein
+        Gegner verfügbar, kann man sofort gegen diesen spielen.
+
+        "Gegner wählen" hier kann man sich seinen Gegenspieler aussuchen und ihn
+        herausfordern.
+
+        "Wer ist online?" verrät, welche Spieler gerade online sind. Man sieht
+        auch, wer gerade spielt und wer frei ist.
+
+        "Spielerliste" zeigt eine Liste mit allen Spielern an. Hier kann man
+        nachsehen, wo man im Vergleich zu den anderen Spielern liegt. Bei vielen
+        registrierten Benutzern, kann das Laden ein bisschen länger dauern.
+
+        Viel Spaß!
+        </msg>
+    </text>
 </menus>
