@@ -5,16 +5,16 @@ import junit.framework.TestSuite;
 
 
 /**
- * DOCUMENT ME!
+ * Testing simme module
  *
  * @author kariem
  */
 public class SimmeTestSuite {
 
    /**
-    * DOCUMENT ME!
-    *
-    * @return DOCUMENT ME!
+    * Runs tests.
+    * 
+    * @return the Test which is executed.
     */
    public static Test suite() {
       TestSuite suite = new TestSuite();

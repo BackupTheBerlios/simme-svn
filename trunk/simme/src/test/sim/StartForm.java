@@ -10,7 +10,7 @@ import javax.microedition.lcdui.List;
 
 
 /**
- * DOCUMENT ME!
+ * A Form that shows some options - main menu of the game.
  *
  * @author Jorge
  */
@@ -21,12 +21,12 @@ public class StartForm extends List implements CommandListener {
 
 
    private Sim sim;
-   private Zeichenblatt zeichenblatt;
+   private GameModeForm gamemode;
 
    /**
     * Creates a new StartForm object.
     *
-    * @param sim DOCUMENT ME!
+    * @param sim The main MIDlet
     */
    public StartForm(Sim sim) {
       super("SimME", List.IMPLICIT, CHOICES, null);
@@ -52,9 +52,8 @@ public class StartForm extends List implements CommandListener {
 
          switch (getSelectedIndex()) {
             case 0 : // Neues Spiel
-               zeichenblatt = new Zeichenblatt(sim);
-               d.setCurrent(zeichenblatt);
-
+               gamemode = new GameModeForm(sim);
+               d.setCurrent(gamemode);
                break;
 
             case 1 : // Einstellungen

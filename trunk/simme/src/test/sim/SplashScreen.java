@@ -28,6 +28,7 @@ public class SplashScreen extends Form {
       try {
          image = Image.createImage("/icons/Splash_k.png");
       } catch (Exception ex) {
+         ; // ??
       }
 
       ImageItem item = new ImageItem(null, image, ImageItem.LAYOUT_CENTER, null);
@@ -38,13 +39,14 @@ public class SplashScreen extends Form {
       thread.start();
    }
 
-   public class Task implements Runnable {
+   private class Task implements Runnable {
       private static final int DELAY = 1000;
 
       public void run() {
          try {
             Thread.sleep(DELAY);
          } catch (Exception ex) {
+            ; // ??
          }
 
          Display d = Display.getDisplay(sim);

@@ -5,16 +5,13 @@ import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 
 /**
- * DOCUMENT ME!
+ * Shows information on this game.
  *
- * @author Jorge De Mar To change this generated comment edit the template
- *         variable "typecomment": Window>Preferences>Java>Templates. To
- *         enable and disable the creation of type comments go to
- *         Window>Preferences>Java>Code Generation.
+ * @author jorge
  */
 public class Info {
 
-   private static String howto =
+   private static final String howto =
       "Das Spiel besteht aus 6 Knoten die jeder mit jedem "
          + "verbunden sind. Der Spieler der an der Reihe ist wählt "
          + "eine Verbindung zwischen 2 Knoten aus. Diese wird dann in "
@@ -39,9 +36,9 @@ public class Info {
    }
 
    /**
-    * DOCUMENT ME!
+    * Shows the information
     *
-    * @param display DOCUMENT ME!
+    * @param display The display, where the information is to be shown.
     */
    public static void showInfo(Display display) {
       Alert alert = new Alert("SimME HowTo");
