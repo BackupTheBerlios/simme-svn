@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: SimulatedPlayer.java
-//                  $Date: 2004/09/13 23:41:11 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/09/22 18:22:05 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client.net;
 
@@ -13,10 +13,10 @@ import java.util.List;
 
 import at.einspiel.logging.Logger;
 import at.einspiel.messaging.*;
+import at.einspiel.midp.ui.IDynamicUI;
 import at.einspiel.simme.client.Game;
 import at.einspiel.simme.client.GameInfo;
 import at.einspiel.simme.client.Move;
-import at.einspiel.simme.client.ui.IDynamicUI;
 
 /**
  * A class that simulates a player in SimME.
@@ -125,7 +125,7 @@ public class SimulatedPlayer implements IDynamicUI {
 		return game;
 	}
 
-	/** @see at.einspiel.simme.client.ui.IDynamicUI#updateDisplay() */
+	/** @see at.einspiel.midp.ui.IDynamicUI#updateDisplay() */
 	public void updateDisplay() {
 		ISimpleInfo info = sUI.getInfoObject();
 		if (info instanceof InfoXml) {

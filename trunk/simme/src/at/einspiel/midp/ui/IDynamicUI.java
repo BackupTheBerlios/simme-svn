@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: IDynamicUI.java
-//                  $Date: 2004/09/07 13:24:22 $
+//                  $Date: 2004/09/22 18:21:28 $
 //              $Revision: 1.1 $
 // ----------------------------------------------------------------------------
-package at.einspiel.simme.client.ui;
+package at.einspiel.midp.ui;
 
 
 /**
@@ -13,8 +13,6 @@ package at.einspiel.simme.client.ui;
  */
 public interface IDynamicUI {
 
-	/**
-	 * Updates the display.
-	 */ 
+	/** Updates the display. */ 
 	void updateDisplay();
 }
