@@ -2,8 +2,8 @@
 <!-- 
   [Simme]
     Ant build file: build.xml
-             $Date: 2004/09/21 16:25:20 $
-         $Revision: 1.21 $
+             $Date: 2004/09/22 18:27:34 $
+         $Revision: 1.22 $
 
 	This ant build file is used to build the sources for SimME. The Targets
 	include means to compile the sources and build the package with optional 
@@ -47,10 +47,10 @@
 		<wtkpackage jarfile="${param.jar}"
 		            jadfile="${param.jad}"
 		            obfuscate="${param.obfuscate}"
+		            preverify="${var.preverify}"
 		>
 			<fileset dir="${resources}" />
 			<fileset dir="${cls-client}" />
-			<preserve class="at.einspiel.simme.client.Sim" />
 		</wtkpackage>
 	</target>
 
@@ -71,7 +71,7 @@
 		<antcall target="-make-package">
 			<param name="param.jar" value="${jar.run}" />
 			<param name="param.jad" value="${jad.run}" />
-			<param name="param.obfuscate" value="false" />
+			<param name="param.obfuscate" value="true" />
 		</antcall>
 	</target>
 
