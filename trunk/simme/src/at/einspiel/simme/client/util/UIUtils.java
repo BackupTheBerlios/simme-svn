@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: UIUtils.java
-//                  $Date: 2004/09/07 13:24:47 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/09/21 16:20:39 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client.util;
 
@@ -21,11 +21,11 @@ public class UIUtils {
 	/** Cancel command to leave from current menu or exit from simme online. */
 	public static final Command CMD_CANCEL = new Command("Abbr.", Command.CANCEL, 1);
 	/** Goes back. */
-	public static final Command CMD_BACK = new Command("Zurück", Command.BACK, 2);
+	public static final Command CMD_BACK = new Command("Zurück", Command.BACK, 3);
 	/** Chooses current selection. */
-	public static final Command CMD_CHOOSE = new Command("Wählen", Command.OK, 3);
+	public static final Command CMD_CHOOSE = new Command("Wählen", Command.OK, 4);
 	/** Command that continues to the next screen. */
-	public static final Command CMD_CONTINUE = new Command("Weiter", Command.SCREEN, 4);
+	public static final Command CMD_CONTINUE = new Command("Weiter", Command.SCREEN, 5);
 
 	/** Private constructor for utility class. */
 	private UIUtils() {

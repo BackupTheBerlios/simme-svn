@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: DynamicUI.java
-//                  $Date: 2004/09/16 08:29:35 $
-//              $Revision: 1.12 $
+//                  $Date: 2004/09/21 16:20:39 $
+//              $Revision: 1.13 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -29,6 +29,7 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 	final SendableUI sui;
 	boolean updateNecessary;
 	Displayable disp;
+	private static final Command CMD_MAIN = new Command("Main", Command.SCREEN, 2);
 
 	/**
 	 * Creates a new dynamic user interface. A subsequent call to
@@ -57,6 +58,7 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 	private synchronized void connect() {
 		Logger.debug(getClass(), "called connect()");
 		if (updateNecessary) {
+			updateNecessary = false;
 			sui.update();
 		}
 	}
@@ -68,9 +70,14 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 			// exit simme online
 			Sim.getDisplay().setCurrent(Sim.getMainScreen());
 		} else if (cmd == UIUtils.CMD_CONTINUE) {
-			// go to the main screen
+			// refresh the current display
 			connect();
-		} else {
+		} else if (cmd == CMD_MAIN) {
+			// reconnect ot default id (main menu)
+			sui.getInfoObject().setDefaultId();
+			updateNecessary = true;
+			connect();
+		} else { // only list selection left
 			Request r = handleCommand();
 			if (r == null) {
 				return;
@@ -193,6 +200,13 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 					"Zur Zeit befinden sich hier noch keine Einträge.");
 		}
 
+		//l.addCommand(List.SELECT_COMMAND);
+		
+		// add a "main menu" button to the list, if its id is not the default id
+		if (infoObject.getId() != ISimpleInfo.DEFAULT_ID) {
+			l.addCommand(CMD_MAIN);
+		}
+		
 		// some elements are in the list, so return the rest
 		updateNecessary = false;
 		return l;
