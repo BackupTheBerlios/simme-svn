@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: MenuManagerTest.java
-//                  $Date: 2004/02/21 23:04:20 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/02/23 10:55:39 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
@@ -19,7 +19,8 @@ public class MenuManagerTest extends TestCase {
 
     /**
      * Tests the static method to build a menu manager. It should throw an
-     * exception, if the XML file could not be found or could not be parsed.
+     * exception, if the XML file could not be found or could not be parsed, or
+     * does not contain any menu data.
      */
     public final void testGetMenuManagerSimple() {
         // test with empty URL
@@ -29,7 +30,7 @@ public class MenuManagerTest extends TestCase {
         } catch (MalformedURLException e) {
             throw new AssertionError("Should not be thrown");
         }
-        
+
         Exception shouldBeThrown = null;
         MenuManager mm = null;
         try {
@@ -39,8 +40,8 @@ public class MenuManagerTest extends TestCase {
         }
         assertNotNull(shouldBeThrown);
         assertNull(mm);
-        
-        
+
+
         // test with invalid (unparseable) data
         url = MenuManagerTest.class.getResource("test-menumanager-incorrect.xml");
         shouldBeThrown = null;
@@ -52,7 +53,7 @@ public class MenuManagerTest extends TestCase {
         }
         assertNotNull(shouldBeThrown);
         assertNull(mm);
-        
+
         // test with no data (empty document)
         url = MenuManagerTest.class.getResource("test-menumanager-incorrect2.xml");
         shouldBeThrown = null;
@@ -81,25 +82,26 @@ public class MenuManagerTest extends TestCase {
      */
     public final void testSimpleMenuNavigation() {
        URL xmlUrl = MenuManagerTest.class.getResource("test-menumanager-simplenavigation.xml");
-       MenuManager mm = null; 
+       MenuManager mm = null;
        try {
          mm = MenuManager.getMenuManager(xmlUrl);
       } catch (MenuCreateException e) {
          throw new AssertionError("Should not be thrown");
       }
-      
+
       // get the "default" menu
       IMenu menu = mm.getMenu();
       assertEquals("The default menu should have \"0\" as id", menu.getId(), IMenu.DEFAULT_ID);
-      
+
       IMenu newMenu = menu;
       for (int i = 0; i < 20; i++) {
          // try random selections
-         
+
          // retrieve a random element from the menu's options
          String selection = getRandomElement(newMenu.getOptions());
          // select the new menu
          newMenu = mm.getMenu(menu.getIdFor(selection));
+         //System.out.println(newMenu.getTitle() + "\t-\t" + newMenu.getId());
       }
     }
 

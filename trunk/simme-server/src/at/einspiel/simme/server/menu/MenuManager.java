@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: MenuManager.java
-//                  $Date: 2004/02/21 23:03:13 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/02/23 10:55:39 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
@@ -52,7 +52,7 @@ import at.einspiel.util.XMLUtils;
 public class MenuManager {
 
    private static final String ATTR_DEFAULT_MENU = "default";
-   
+
    private static Map menuManagers = new HashMap(4);
    private static DocumentBuilder builder;
 
@@ -65,9 +65,11 @@ public class MenuManager {
       }
    }
 
-   private Map menus;
-   private final String defaultMenu;
-   
+   private final Map menus;
+   private String defaultMenu;
+
+   private URL menuURL;
+
    /**
     * Creates a new instance of <code>MenuManager</code> from a given url
     * pointing to an XML document.
@@ -76,37 +78,60 @@ public class MenuManager {
     *          contained no menu information. 
     */
    private MenuManager(URL menuURL) throws MenuCreateException {
-       menus = new HashMap();
-       synchronized (builder) {
-          try {
-             Document document = builder.parse(menuURL.toString());
-             Element root = document.getDocumentElement();
-             // set the default menu
-             String defMenu = root.getAttribute(ATTR_DEFAULT_MENU);
-             if (defMenu.equals("")) {
-                defMenu = IMenu.DEFAULT_ID;
-             }
-             this.defaultMenu = defMenu;
-             // parse the rest
-             parse(root);
-          } catch (SAXException e1) {
-             throw new MenuCreateException(e1);
-          } catch (IOException e1) {
-             throw new MenuCreateException(e1);
-          }
-       }
-       if (menus.isEmpty()) {
-          throw new MenuCreateException("The url " + menuURL + " does not " +
-               "contain menu information.");
-       }
-    }
+      this.menuURL = menuURL;
+      menus = new HashMap();
+      parse();
+      if (menus.isEmpty()) {
+         throw new MenuCreateException("The url " + menuURL + " does not "
+               + "contain menu information.");
+      }
+   }
+   
+   /**
+    * Reloads the menu manager from its url.
+    * @throws MenuCreateException if the file could not be found, parsed or
+    *          contained no menu information. 
+    */
+   public void reload() throws MenuCreateException {
+      menus.clear();
+      parse();
+      if (menus.isEmpty()) {
+         throw new MenuCreateException("The url " + menuURL + " does not "
+               + "contain menu information.");
+      }
+   }
 
+   /**
+    * Parses the current url and loads the menus.
+    * @throws MenuCreateException if the file could not be found, or parsed.
+    */
+   private void parse() throws MenuCreateException {
+      synchronized (builder) {
+         try {
+            Document document = builder.parse(menuURL.toString());
+            Element root = document.getDocumentElement();
+            // set the default menu
+            String defMenu = root.getAttribute(ATTR_DEFAULT_MENU);
+            if (defMenu.equals("")) {
+               defMenu = IMenu.DEFAULT_ID;
+            }
+            this.defaultMenu = defMenu;
+            // parse the rest
+            parse(root);
+         } catch (SAXException e1) {
+            throw new MenuCreateException(e1);
+         } catch (IOException e1) {
+            throw new MenuCreateException(e1);
+         }
+      }
+   }
 
    /**
     * Creates a new menu manager for the given URL.
     * @param url the url pointing to an xml file.
     * @return the corresponding menu manager.
-    * @throws MenuCreateException if the MenuManager could not be created.
+    * @throws MenuCreateException if the MenuManager could not be created, or
+    *          does not contain any menu data.
     */
    public static MenuManager getMenuManager(URL url) throws MenuCreateException {
       MenuManager mgr = (MenuManager) menuManagers.get(url);
