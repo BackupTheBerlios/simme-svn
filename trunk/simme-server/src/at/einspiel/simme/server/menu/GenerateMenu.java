@@ -1,15 +1,15 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: GenerateMenu.java
-//                  $Date: 2004/02/21 23:04:20 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/04/06 22:27:05 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
 import org.w3c.dom.Element;
 
 /**
- * A menu that generates its contents.
+ * A menu that generates its contents from the database.
  * @author kariem
  */
 class GenerateMenu extends AbstractMenu implements IMenu {

@@ -1,28 +1,21 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: MenuTester.java
-//                  $Date: 2004/04/03 23:40:00 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/04/06 22:27:05 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 
-import javax.swing.JButton;
-import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 import at.einspiel.simme.nanoxml.XMLElement;
@@ -33,77 +26,108 @@ import at.einspiel.simme.nanoxml.XMLElement;
  */
 public class MenuTester extends JFrame {
 
-    private static final URL MENU_URL = MenuTester.class.getResource("test-menumanager-simplenavigation.xml");
+    static final URL MENU_URL = MenuTester.class
+            .getResource("test-menumanager-simplenavigation.xml");
 
     private MenuManager mgr;
     private JPanel contentPane;
     private JPanel centerPane;
-    private JButton backButton;
+    // back button on top
+    JButton backButton;
+    JFileChooser fileChooser;
+    JEditorPane textPane;
 
     private JPanel oldPanel;
-    
+
     /**
      * Creates a new instance of <code>MenuTester</code>.
      * @param menuUrl the menu's URL.
      * @throws MenuCreateException if an error occurs while creating the menu.
+     * @throws IOException if the URL does not resolve to a readable text file.
      */
     public MenuTester(URL menuUrl) throws MenuCreateException, IOException {
         super("Menu Tester");
-        mgr = MenuManager.getMenuManager(menuUrl);
 
         contentPane = new JPanel(new BorderLayout());
         setContentPane(contentPane);
-        
+
         // editor pane
-        JEditorPane textPane = new JEditorPane(menuUrl);
+        textPane = new JEditorPane();
         JScrollPane scroll = new JScrollPane(textPane);
         scroll.setPreferredSize(new Dimension(300, 500));
         scroll.setBorder(new TitledBorder("Source"));
         contentPane.add(scroll, BorderLayout.WEST);
-        
+
         // center pane
         centerPane = new JPanel();
         contentPane.add(centerPane, BorderLayout.CENTER);
-        
+
         // meta controls
         JPanel controls = new JPanel();
+        controls.setLayout(new BoxLayout(controls, BoxLayout.LINE_AXIS));
+        JButton btnLoadMenu = new JButton("Load menu...");
+        btnLoadMenu.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (fileChooser == null) {
+                    fileChooser = new JFileChooser(new File(MENU_URL.getPath()));
+                }
+                fileChooser.showOpenDialog(MenuTester.this);
+                File f = fileChooser.getSelectedFile();
+                if (f != null) {
+                    try {
+                        loadMenuFile(f.toURL());
+                    } catch (IOException e1) {
+                        JOptionPane.showMessageDialog(MenuTester.this, "Menu not found");
+                        e1.printStackTrace();
+                    } catch (MenuCreateException e1) {
+                        JOptionPane.showMessageDialog(MenuTester.this, "Menu could not be created");
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        });
+        controls.add(btnLoadMenu);
+        controls.add(Box.createHorizontalGlue());
         backButton = new JButton("Go to last");
         backButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				goBack();
-			}
-		});
+            public void actionPerformed(ActionEvent e) {
+                goBack();
+            }
+        });
         backButton.setEnabled(false);
         controls.add(backButton);
         contentPane.add(controls, BorderLayout.NORTH);
-		
-		
-		// load interior menu
+
+        // load interior menu
+        loadMenuFile(menuUrl);
+    }
+
+    void loadMenuFile(URL menuUrl) throws IOException, MenuCreateException {
+        textPane.setPage(menuUrl);
+        mgr = MenuManager.getMenuManager(menuUrl);
         loadMenu(mgr.getMenu());
-        
     }
 
-	void goBack() {
-		if (oldPanel != null) {
-			loadPanel(oldPanel);
-		}
-		backButton.setEnabled(false);
-	}
-
-
-	private void loadMenu(IMenu menu) {
-		loadPanel(createPanel(menu));
+    void goBack() {
+        if (oldPanel != null) {
+            loadPanel(oldPanel);
+        }
+        backButton.setEnabled(false);
     }
 
-	private void loadPanel(JPanel panel) {
-		oldPanel = centerPane;
-    	contentPane.remove(centerPane);
-    	centerPane = panel;
-		contentPane.add(centerPane, BorderLayout.CENTER);
+    private void loadMenu(IMenu menu) {
+        loadPanel(createPanel(menu));
+    }
+
+    private void loadPanel(JPanel panel) {
+        oldPanel = centerPane;
+        contentPane.remove(centerPane);
+        centerPane = panel;
+        contentPane.add(centerPane, BorderLayout.CENTER);
         pack();
-	}
+    }
 
-	/**
+    /**
      * Creates a clickable panel from a menu.
      * @param menu the menu.
      * @return the newly created panel.
@@ -121,6 +145,7 @@ public class MenuTester extends JFrame {
      * Runs the menu tester.
      * @param args command line arguments.
      * @throws MenuCreateException if an error occurs while creating the frame.
+     * @throws IOException if the default URL does not work.
      */
     public static void main(String[] args) throws MenuCreateException, IOException {
         MenuTester frame = new MenuTester(MENU_URL);
@@ -171,24 +196,29 @@ public class MenuTester extends JFrame {
                 if (text == null || text.length() == 0) {
                     if (xml.countChildren() > 0) {
                         text = ((XMLElement) xml.getChildren().elementAt(0)).getContent();
+                    } else {
+                        // fall-back instead of showing nothing
+                        text = "## no text ##";
                     }
-                    // fall-back instead of showing nothing
-                    text = "## no text ##";
                 }
-                JLabel lblText = new JLabel(text);
-                add(lblText, BorderLayout.CENTER);
+                JTextArea taText = new JTextArea();
+                taText.setEditable(false);
+                taText.setWrapStyleWord(true);
+                taText.setLineWrap(true);
+                taText.setText(text);
+                add(taText, BorderLayout.CENTER);
                 backButton.setEnabled(true);
             }
         }
 
         private final class ButtonListener implements ActionListener {
-            
+
             private int itemPos;
 
             ButtonListener(int itemPos) {
                 this.itemPos = itemPos;
             }
-            
+
             /** @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent) */
             public void actionPerformed(ActionEvent e) {
                 load(menuId, itemPos);

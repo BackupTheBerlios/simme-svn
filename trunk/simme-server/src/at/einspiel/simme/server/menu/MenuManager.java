@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: MenuManager.java
-//                  $Date: 2004/04/03 23:39:13 $
-//              $Revision: 1.4 $
+//                  $Date: 2004/04/06 22:27:05 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
@@ -26,24 +26,24 @@ import at.einspiel.util.XMLUtils;
  * 
  * <pre>
  * &lt;menus [default="default-id"]&gt;
- *  &lt;list title="List Title" id="list-id" list="true"&gt;
- *      &lt;child name="Entry 1" id="entry1-id"/&gt;
- *      &lt;child name="Entry 2" id="entry2-id"/&gt;
- *  &lt;/list&gt;
+ *   &lt;list title="List Title" id="list-id" list="true"&gt;
+ *      &lt;child id="entry1-id"&gt;Entry 1&lt;/child&gt;
+ *      &lt;child id="entry2-id"&gt;Entry 2&lt;/child&gt;
+ *   &lt;/list&gt;
  *
- *  &lt;text title="Entry 1 Title" id="entry1-id" msg="Entry 1 message"/&gt;
+ *   &lt;text title="Entry 1 Title" id="entry1-id" msg="Entry 1 message"/&gt;
  *
- *  &lt;text title="Entry 2 Title" id="entry2-id"&gt;
+ *   &lt;text title="Entry 2 Title" id="entry2-id"&gt;
  *      &lt;msg&gt;
  *        Entry 2 message
  *      &lt;/msg&gt;
- *  &lt;/text&gt;
+ *   &lt;/text&gt;
  * 
- *  ...
+ *   ...
  * &lt;/menus&gt;
  * </pre>
  * 
- * The attribute <code>default</code> is optional. It defines the default menu,
+ * The attribute <code>default</code> is optional. It declares the default menu,
  * i.e. the first menu to be shown, for the <code>MenuManager</code>. If
  * omitted, {@linkplain IMenu#DEFAULT_ID} is taken.
  * 

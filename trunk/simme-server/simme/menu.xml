@@ -2,16 +2,16 @@
 <!--
     [Simme-Server]
          Menu XML File: menu.xml
-                 $Date: 2004/02/21 23:03:13 $
-             $Revision: 1.2 $
+                 $Date: 2004/04/06 22:27:05 $
+             $Revision: 1.3 $
 -->
 <menus>
     <list title="Willkommen" id="0" list="true">
-        <child name="Sofort Spielen" id="1"/>
-        <child name="Gegner Wählen" id="4"/>
-        <child name="Wer ist online?" id="5"/>
-        <child name="Spielerliste" id="6"/>
-        <child name="Hilfe" id="7"/>
+        <child id="1">Sofort Spielen</child>
+        <child id="4">Gegner Wählen</child>
+        <child id="5">Wer ist online?</child>
+        <child id="6">Spielerliste</child>
+        <child id="7">Hilfe</child>
     </list>
 
     <special title="Warte auf Gegenspieler" id="1"
