@@ -227,7 +227,7 @@ public class DrawUtils {
 		int y,
 		int anchor) {
 		g.drawString(str, x, y, anchor);
-		g.drawRect(x - str.length() *5 , y - 10, 9 * str.length(), 11);
+		g.drawRect(x - str.length() * 4 - 1, y - 10, 8 * str.length(), 11);
 	}
 
 	/* not needed currently
