@@ -1,4 +1,4 @@
-MIDlet-1: SimME, /res/icons/SimME.png, test.sim.Sim 
+MIDlet-1: SimME, /res/icons/SimME.png, at.einspiel.simme.client.Sim 
 MIDlet-Jar-URL: build/bin/SimME.jar
 server.base: http://localhost:8080/simme/ 
 MicroEdition-Configuration: CLDC-1.0 
