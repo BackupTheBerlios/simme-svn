@@ -46,13 +46,21 @@ public class Request {
      * @param timeout The timeout in milliseconds.
      */
     public Request(Hashtable parameters, int timeout) {
+        init(parameters);
+        this.timeout = timeout;
+    }
+    
+    private void init(Hashtable parameters) {
         this.params = parameters;
 
         if (params == null) {
             params = new Hashtable();
         }
-
-        this.timeout = timeout;
+    }
+    
+    /** Resets this requests parameters */
+    public void reset() {
+        init(null);
     }
 
     /**
@@ -188,15 +196,24 @@ public class Request {
         }
         return null;
     }
-
+    
     /**
      * Sets the response of this request
      *
-     * @return the response.
+     * @param response the response.
      */
     protected synchronized void setResponse(byte[] response) {
         this.response = response;
         notifyAll();
+    }
+
+    /**
+     * Cancels the request. This is used to unblock the method waiting for the
+     * request's response. Usually the method {@linkplain #getResponse()}
+     * returns <code>null</code> after a call to the cancel method.
+     */
+    public void cancel() {
+        sender.destroy();
     }
 
     /**
@@ -246,6 +263,7 @@ public class Request {
         private boolean post;
         private StringBuffer url;
         private boolean started;
+        private boolean cancelled = false;
 
         /**
          * @param urlBase the server address (plus protocol, port, ...).
@@ -280,6 +298,22 @@ public class Request {
                 sendRequest();
             } catch (IOException e) {
                 setOccurredException(e);
+            }
+        }
+        
+        /** 
+         * This method tries to cancel the current thread by closing the input
+         * stream.
+         * @see java.lang.Thread#destroy()
+         */
+        public void destroy() {
+            cancelled = true;
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -317,6 +351,10 @@ public class Request {
                     throw new IOException("Response: " + rc);
                 }
 
+                if (cancelled) {
+                    throw new IOException("Request cancelled");
+                }
+
                 //receive response
                 is = c.openDataInputStream();
 
@@ -326,7 +364,8 @@ public class Request {
                 byte[] localResponse = new byte[RESPONSE_INITIAL_SIZE];
                 int length = RESPONSE_INITIAL_SIZE;
 
-                while ((current = (byte) is.read()) != -1) {
+                // read until the end of the stream
+                while (((current = (byte) is.read()) != -1)) {
                     if (counter > (length - 1)) {
                         // update length and copy current contents into bigger array
                         byte[] responseCopy = new byte[length + RESPONSE_GROWTH_FACTOR];
@@ -338,7 +377,7 @@ public class Request {
                     localResponse[counter] = current;
                     counter++;
                 }
-
+                
                 // fit response to correct size
                 byte[] responseCopy = new byte[counter];
                 System.arraycopy(localResponse, 0, responseCopy, 0, counter);

@@ -12,6 +12,7 @@ import java.io.IOException;
  */
 public class PersonalPrefs extends Prefs {
   private static final String RECORD_NAME = "personal";
+  private static final byte NB_RECORDS = 4;
   private static PersonalPrefs instance = null;
   String[] savedData;
   byte[] recIds;
@@ -20,7 +21,7 @@ public class PersonalPrefs extends Prefs {
    * Creates new Preferences used to save personal information.
    */
   private PersonalPrefs() {
-    super(RECORD_NAME, (byte) 4);
+    super(RECORD_NAME, NB_RECORDS);
     savedData = new String[getNbRecs()];
   }
 
@@ -81,10 +82,10 @@ public class PersonalPrefs extends Prefs {
     try {
       //System.out.println("loading");
       byte[] b = readNext();
-      DataInputStream dis = new DataInputStream(new ByteArrayInputStream(b));
+      DataInputStream inputStream = new DataInputStream(new ByteArrayInputStream(b));
 
       for (int i = 0; i < savedData.length; i++) {
-        savedData[i] = dis.readUTF();
+        savedData[i] = inputStream.readUTF();
 
         //System.out.println("loaded: " + savedData[i]);
       }

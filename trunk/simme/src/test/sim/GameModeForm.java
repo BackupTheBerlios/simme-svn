@@ -119,7 +119,7 @@ public class GameModeForm extends List implements CommandListener {
 
                         // construct login message
                         String version = Sim.getProperty("MIDlet-Version");
-                        System.out.println(version);
+                        System.out.println("version: " + version);
 
                         LoginMessage loginMsg = null;
 

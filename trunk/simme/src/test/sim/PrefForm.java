@@ -34,7 +34,7 @@ public class PrefForm extends List implements CommandListener {
   }
 
   private void init() {
-    addCommand(new Command("Zur?ck", Command.BACK, 0));
+    addCommand(new Command("Zurück", Command.BACK, 0));
     addCommand(new Command("OK", Command.OK, 1));
     setCommandListener(this);
     myself = this;

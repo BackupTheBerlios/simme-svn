@@ -99,6 +99,7 @@ public class DrawUtils {
    * @param thickness Thickness of the line. Should be greater than 2
    * @param innerColor Color for inner part of line.
    * @param outerColor Color for line border.
+   * @param dotted whether to draw the line dotted.
    */
   public static void drawLineWithBorder(
     Graphics g,

@@ -81,7 +81,7 @@ public class DynamicUI implements CommandListener {
         if (cmd.getCommandType() == Command.EXIT) {
             d.setCurrent(Sim.getMainScreen());
         } else {
-            Request r = handleCommand(cmd, displayable);
+            Request r = handleCommand();
             if (r == null) {
                 return;
             }
@@ -106,11 +106,9 @@ public class DynamicUI implements CommandListener {
     /**
      * A request that is generated, if a certain command has been executed.
      * 
-     * @param cmd the command.
-     * @param displayable the displayable prior to the command.
      * @return a request.
      */
-    private Request handleCommand(Command cmd, Displayable displayable) {
+    private Request handleCommand() {
         if (ui.isList()) {
             // find selected index
             int selected = ((List) disp).getSelectedIndex();
