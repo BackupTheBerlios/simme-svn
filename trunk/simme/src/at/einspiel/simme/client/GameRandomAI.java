@@ -11,7 +11,7 @@ import java.util.Random;
 public class GameRandomAI extends Game {
 
     /** @see Game#performComputerMove() */
-    void performComputerMove() {
+    protected void performComputerMove() {
         if (!gameOver) {
             Random random = new Random();
             byte edge = (byte) Math.abs(random.nextInt() % NB_EDGES);

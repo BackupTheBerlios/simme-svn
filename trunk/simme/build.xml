@@ -21,6 +21,7 @@
     <property name="dir.preverify" value="${build}/preverify"/>
     <property name="resources" value="res"/>
     <property name="src" value="src"/>
+    <property name="testsrc" value="testsrc"/>
 
     <!-- misc libraries for building -->
     <property name="lib.junit" value="../lib/junit.jar"/>
@@ -42,7 +43,6 @@
     <target name="compile-client">
         <mkdir dir="${cls-client}"/>
         <javac srcdir="${src}" destdir="${cls-client}" target="1.1"
-               excludes="**/*Test*,**/tests/*"
                bootclasspath="${lib.midp}" />
     </target>
     

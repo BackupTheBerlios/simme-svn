@@ -16,7 +16,13 @@ import javax.microedition.io.HttpConnection;
  * @author kariem
  */
 public class Request {
-    /** This request's default timeout in milliseconds */
+   
+   /** String to answer with ok. */
+   public static String ANSWER_OK = "OK";
+   /** String to answer with error. */
+   public static String ANSWER_ERR = "ERR";
+   
+   /** This request's default timeout in milliseconds */
     public static final int DEFAULT_TIMEOUT = 5000;
 
     /** The base url where <code>Request</code>s are sent to. */

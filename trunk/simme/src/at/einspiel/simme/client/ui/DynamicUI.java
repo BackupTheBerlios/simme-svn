@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------------
+// [Simme]
+//       Java Source File: DynamicUI.java
+//                  $Date: 2003/12/30 23:05:29 $
+//              $Revision: 1.4 $
+// ----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
 import at.einspiel.messaging.Request;
@@ -120,7 +126,7 @@ public class DynamicUI implements CommandListener {
             r.setParam("selected", Integer.toString(selected));
 
             // attach id if possible
-            r.setParam("id", Byte.toString(ui.getId()));
+            r.setParam("id", Integer.toString(ui.getId()));
 
             return r;
         }

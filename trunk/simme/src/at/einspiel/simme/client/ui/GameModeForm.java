@@ -1,7 +1,7 @@
 package at.einspiel.simme.client.ui;
 
+import at.einspiel.messaging.LoginRequest;
 import at.einspiel.messaging.LoginMessage;
-import at.einspiel.messaging.LoginResult;
 import at.einspiel.simme.client.Sim;
 import at.einspiel.simme.client.util.PersonalPrefs;
 import at.einspiel.simme.client.util.PrefsException;
@@ -123,11 +123,11 @@ public class GameModeForm extends List implements CommandListener {
                         String version = Sim.getProperty("MIDlet-Version");
                         System.out.println("version: " + version);
 
-                        LoginMessage loginMsg = null;
+                        LoginRequest loginMsg = null;
 
                         try {
                             loginMsg =
-                                new LoginMessage(
+                                new LoginRequest(
                                     loginData[0],
                                     loginData[1],
                                     loginData[3],
@@ -143,7 +143,7 @@ public class GameModeForm extends List implements CommandListener {
                         String response = new String(loginMsg.getResponse());
 
                         // use response to build result
-                        LoginResult result = new LoginResult(response);
+                        LoginMessage result = new LoginMessage(response);
 
                         System.out.println("login result: " + result);
 

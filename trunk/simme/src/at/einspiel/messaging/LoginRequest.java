@@ -1,12 +1,18 @@
+// ----------------------------------------------------------------------------
+// [Simme]
+//       Java Source File: LoginRequest.java
+//                  $Date: 2003/12/30 23:05:29 $
+//              $Revision: 1.1 $
+// ----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
 
 /**
- * A message that is sent to transmit information for the login process.
+ * A request that is sent to transmit information for the login process.
  *
  * @author kariem
  */
-public class LoginMessage extends Request {
+public class LoginRequest extends Request {
    /**
     * Creates a new message with the given properties.
     *
@@ -15,7 +21,7 @@ public class LoginMessage extends Request {
     * @param clientmodel client model.
     * @param version version number.
     */
-   public LoginMessage(String nick, String pwd, String clientmodel, String version) {
+   public LoginRequest(String nick, String pwd, String clientmodel, String version) {
       super();
       setParam("user", nick);
       setParam("pwd", pwd);
@@ -30,7 +36,7 @@ public class LoginMessage extends Request {
     * @param pwd password corresponding to the nick name.
     * @param version version number.
     */
-   public LoginMessage(String nick, String pwd, String version) {
+   public LoginRequest(String nick, String pwd, String version) {
       this(nick, pwd, "", version);
    }
 

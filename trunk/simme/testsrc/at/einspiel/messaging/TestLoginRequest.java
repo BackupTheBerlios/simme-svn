@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------------
+// [Simme]
+//       Java Source File: TestLoginRequest.java
+//                  $Date: 2003/12/30 23:05:29 $
+//              $Revision: 1.1 $
+// ----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
 import java.io.IOException;
@@ -5,7 +11,7 @@ import java.net.URL;
 
 import javax.microedition.io.HttpConnection;
 
-import at.einspiel.messaging.LoginMessage;
+import at.einspiel.messaging.LoginRequest;
 
 /**
  * Uses a different connection mechanism which is the only method overriden
@@ -13,15 +19,15 @@ import at.einspiel.messaging.LoginMessage;
  *
  * @author kariem
  */
-public class TestLoginMessage extends LoginMessage {
+public class TestLoginRequest extends LoginRequest {
    
-   /** @see LoginMessage#LoginMessage(String, String, String, String) */
-   public TestLoginMessage(String nick, String pwd, String clientmodel, String version) {
+   /** @see LoginRequest#LoginRequest(String, String, String, String) */
+   public TestLoginRequest(String nick, String pwd, String clientmodel, String version) {
       super(nick, pwd, clientmodel, version);
    }
 
-   /** @see LoginMessage#LoginMessage(String, String, String) */
-   public TestLoginMessage(String nick, String pwd, String version) {
+   /** @see LoginRequest#LoginRequest(String, String, String) */
+   public TestLoginRequest(String nick, String pwd, String version) {
       this(nick, pwd, null, version);
    }
 

@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------------
+// [Simme]
+//       Java Source File: SendableUI.java
+//                  $Date: 2003/12/30 23:05:29 $
+//              $Revision: 1.2 $
+// ----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
 import java.util.Enumeration;
@@ -16,7 +22,7 @@ import at.einspiel.simme.nanoxml.XMLParseException;
  *      further information. Alternatively this string may be passed as a
  *      parameter to the constructor.</li>
  *  <li>The second possibility is provided by means of {@linkplain
- *      #setTitle(String)} and {@linkplain #setId(String)} to create a simple
+ *      #setTitle(String)} and {@linkplain #setId(byte)} to create a simple
  *      UI object. The methods {@linkplain #setText(String)} and {@linkplain
  *      #setListElements(Vector)} are used to fill in contents.
  * </ol>
@@ -60,20 +66,20 @@ public class SendableUI {
      * @param xmlString should be for the format.
      * <p>
      * <pre>
-     *    &lt;element title="title" id="ID" list="true" &gt;
-     *        &lt;child name="name1" /&gt;
-     *        &lt;child name="name2" /&gt;
-     *        &lt;child name="name3" /&gt;
-     *    &lt;element/&gt;
+     *    &lt;element title="title" id="ID" list="true"&gt;
+     *        &lt;child name="name1"/&gt;
+     *        &lt;child name="name2"/&gt;
+     *        &lt;child name="name3"/&gt;
+     *    &lt;/element&gt;
      * </pre>
      * </p>
      * or
      * <p>
      * <pre>
      *    &lt;element title="title"
-     *                id="ID"
-     *                list="false"
-     *                msg="Text /&gt;
+     *             id="ID"
+     *             list="false"
+     *             msg="Text"/&gt;
      * </pre>
      * </p>
      */
@@ -229,7 +235,7 @@ public class SendableUI {
         XMLElement xml = new XMLElement();
         xml.setName("sendable");
         xml.setAttribute("title", title);
-        xml.setAttribute("id", Byte.toString(id));
+        xml.setAttribute("id", Integer.toString(id));
         if ((list) && (listElements != null) && (!listElements.isEmpty())) {
             xml.setAttribute("list", XMLElement.TRUE);
             Enumeration enum = listElements.elements();

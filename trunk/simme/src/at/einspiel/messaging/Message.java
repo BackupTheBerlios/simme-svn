@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------------
+// [Simme]
+//       Java Source File: Message.java
+//                  $Date: 2003/12/30 23:05:29 $
+//              $Revision: 1.2 $
+// ----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
 /**
@@ -9,14 +15,13 @@ public interface Message {
 
     /** Message does not have an id. */
     byte NO_ID = 0;
-    /** Login was successful. */
-    byte LOGIN_OK = 1; 
-    /** Login failed. */
-    byte LOGIN_FAILED = 2; 
+    
+    /** Attribute name for id. */ 
+    String ID = "id";
 
     /**
-     * String representation of this message. Ususally this is the form to be
-     * sent throught serialization
+     * String representation of this message. Usually this is the form to be
+     * sent through serialization
      * 
      * @return String representation.
      */
@@ -37,5 +42,4 @@ public interface Message {
      * @return a string containing user readable information.
      */
     String getInfo();
-        
 }

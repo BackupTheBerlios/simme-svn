@@ -218,7 +218,7 @@ public class Game {
     * Performs a computer move. This method has to be implemented in subclasses
     * in order to perform any computer move.
     */
-   void performComputerMove() {
+   protected void performComputerMove() {
       // implement this in subclasses
    }
 

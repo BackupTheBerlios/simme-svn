@@ -5,10 +5,25 @@
             use="true" notree="false" nonavbar="false" noindex="false"
             splitindex="true" author="true" version="true"
             nodeprecatedlist="true" nodeprecated="true"
-            packagenames="at.einspiel.simme.*"
+            packagenames="at.einspiel.*"
             sourcepath="src"
             classpath="cls;SimME.jar;../lib/junit.jar;../lib/midpapi.zip"
             doctitle="SimME API Documentation">
+        </javadoc>
+    </target>
+    
+    <target name="testsources">
+        <javadoc destdir="doc\api" access="protected" source="1.4"
+            use="true" notree="false" nonavbar="false" noindex="false"
+            splitindex="true" author="true" version="true"
+            nodeprecatedlist="true" nodeprecated="true"
+            packagenames="at.einspiel.*"
+            classpath="cls;SimME.jar;../lib/junit.jar;../lib/midpapi.zip"
+            doctitle="SimME API Documentation">
+            <sourcepath>
+            	<pathelement location="src"/>
+            	<pathelement location="testsrc"/>
+            </sourcepath>
         </javadoc>
     </target>
 </project>

@@ -68,7 +68,7 @@ public class NetTest extends TestCase {
     * @throws IOException if a problem has occured while sending the request.
     */
    public void testLoginMessage() throws IOException {
-      TestLoginMessage login = new TestLoginMessage("loginTest", "password", "eclipse", "1.0");
+      TestLoginRequest login = new TestLoginRequest("loginTest", "password", "eclipse", "1.0");
 
       /*
       PrintWriter sysOut = new PrintWriter(System.out);
