@@ -5,7 +5,7 @@ package at.einspiel.simme.server.messaging;
  * 
  * @author kariem
  */
-public class LoginResult extends Message {
+public class LoginResult implements Message {
 
    /** login succeeded */
    public static final int LOGIN_OK = 0;
@@ -38,4 +38,7 @@ public class LoginResult extends Message {
       return null;
    }
 
+   public String getMessage() {
+       return toString();
+   }
 }

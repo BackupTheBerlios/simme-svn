@@ -27,11 +27,14 @@ public class SessionManager {
    private static int updateInterval = 30000;  // 30 seconds
    private static int maxSecondsIdle = 300;    // 5 minutes
    private static int maxSecondsWaiting = 600; // 10 minutes
+   private static final String MGMT_PAGE = "sessionsMgr.jsp";
 
    SortedMap users;
    Thread updater;
 
    private static SessionManager instance;
+   
+   private String baseUrl;
 
    /**
     * Ensures singleton
@@ -81,7 +84,7 @@ public class SessionManager {
          success = false;
          response = e.getMessage();
       } finally {
-         return new LoginResult(success, response);
+         return new LoginResult(success, response, baseUrl + MGMT_PAGE);
       }
    }
 
@@ -104,7 +107,7 @@ public class SessionManager {
          success = false;
          response = e.getMessage();
       } finally {
-         return new LoginResult(success, response);
+         return new LoginResult(success, response, baseUrl +MGMT_PAGE);
       }
    }
 
@@ -142,6 +145,13 @@ public class SessionManager {
     */
    public int getNumberOfUsers() {
       return users.size();
+   }
+   
+   public void setBaseUrl(String string) {
+       if (!string.endsWith("/")) {
+           string = string + "/";
+       }
+       this.baseUrl = string;
    }
 
    /**
@@ -308,5 +318,4 @@ public class SessionManager {
    public SortedMap getUsers() {
       return users;
    }
-
 }
