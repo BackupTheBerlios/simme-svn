@@ -52,7 +52,7 @@ public class ColorMgmt {
       nsc2 = 0;          //d.getColor(Display.COLOR_BORDER);
 
       ndc1 = 0;          //d.getColor(Display.COLOR_FOREGROUND);
-      ndc1 = 0x00888888; //d.getColor(Display.COLOR_BACKGROUND);
+      ndc2 = 0x00888888; //d.getColor(Display.COLOR_BACKGROUND);
 
 		bg = 0xA0AFFF;
 
