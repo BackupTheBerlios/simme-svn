@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
-//       Java Source File: StateListener.java
-//                  $Date: 2003/12/30 10:18:25 $
+//       Java Source File: IStateListener.java
+//                  $Date: 2004/09/07 13:29:29 $
 //              $Revision: 1.1 $
 // ----------------------------------------------------------------------------
 package at.einspiel.mgmt;
@@ -10,7 +10,7 @@ package at.einspiel.mgmt;
  * Listens to state changes.
  * @author kariem
  */
-public interface StateListener {
+public interface IStateListener {
    /**
     * Updates with an event.
     * @param event the event.
