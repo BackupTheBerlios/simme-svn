@@ -2,6 +2,8 @@ package at.einspiel.simme.client.ui;
 
 import javax.microedition.lcdui.Display;
 
+import at.einspiel.logging.Logger;
+
 /**
  * This class allows for easy color definitions and should contain methods to
  * efficiently display the game using a rich color set suitable for all
@@ -104,21 +106,21 @@ public class ColorMgmt {
       if (d.isColor()) {
          if (d.numColors() >= 16) {
             setColors(COLORS_FULL);
-            System.out.println("running with full colors");
+            Logger.debug("running with full colors");
 
             return;
          }
       } else {
          if (d.numColors() >= 16) {
             setColors(COLORS_GREY16);
-            System.out.println("running with grey16");
+            Logger.debug("running with grey16");
 
             return;
          }
       }
 
       setColors(COLORS_GREY8);
-      System.out.println("running with grey8");
+      Logger.debug("running with grey8");
    }
 
    private static void setColors(int[] a) {
