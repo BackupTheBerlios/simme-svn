@@ -5,6 +5,7 @@ http://simme.berlios.de
 This is the first release for SimME server. This release is available in two
 different flavours, which will be explained in more detail below.
 
+#################
 ## Binary Release
 
 The archive consists of the changelog, release notes and the web archive (WAR).
@@ -22,6 +23,7 @@ to your database configuration. This is due to changes, and database
 authentication will soon be directly controlled via "web.xml".
 
 
+#################
 ## Source Release
 
 This release nearly contains all the files, which are currently under CVS
@@ -43,7 +45,16 @@ For testing you will additionally need:
 The property client classes should point to the classes directory of the project
 SimME (client). In order to deploy directly to an application server, please set
 the properties $deploy.user, $deploy.pass and $deploy.url according to your
-configuration.
+configuration. They are set in the order indicated in build.xml
+
+
+########################
+## Bugs and Known Issues
+
+Please consult the bug pages at
+
+http://developer.berlios.de/bugs/index.php?group_id=730
+
 
 
 
