@@ -1,18 +1,29 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: IConstants.java
-//                  $Date: 2004/09/07 13:23:06 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/09/13 15:26:53 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
 /**
- * Contains several constants which are used for communication.
+ * Contains several constants which are used for communication between client
+ * and server.
  * 
  * @author kariem
  */
 public interface IConstants {
 
+	/**
+	 * The name of the <i>edge </i> parameter. This is currently set to
+	 * <code>edge</code>.
+	 */
+	String PARAM_EDGE = "edge";
+	/**
+	 * The name of the <i>game id </i> parameter. This is currently set to
+	 * <code>gameid</code>.
+	 */
+	String PARAM_GAMEID = "gameid";
 	/**
 	 * The name of the <i>menu id </i> parameter. This is currently set to
 	 * <code>menuid</code>.

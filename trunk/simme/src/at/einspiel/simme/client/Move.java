@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: Move.java
-//               $Date: 2004/06/07 09:27:25 $
-//           $Revision: 1.4 $
+//               $Date: 2004/09/13 15:26:53 $
+//           $Revision: 1.5 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client;
 
@@ -222,4 +222,9 @@ public class Move {
     public boolean equals(Move m) {
         return n1 == m.n1 && n2 == m.n2 && edge == m.edge;
     }
+    
+    /** @see java.lang.Object#toString() */
+	public String toString() {
+		return "Move (" + edge + ")@" + hashCode();
+	}
 }

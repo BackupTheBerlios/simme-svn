@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: PrefForm.java
-//               $Date: 2004/09/07 13:26:55 $
-//           $Revision: 1.6 $
+//               $Date: 2004/09/13 15:26:53 $
+//           $Revision: 1.7 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -48,7 +48,6 @@ public class PrefForm extends List implements CommandListener {
 
 	private void init() {
 		addCommand(UIUtils.CMD_BACK);
-		addCommand(UIUtils.CMD_CHOOSE);
 		setCommandListener(this);
 		myself = this;
 	}

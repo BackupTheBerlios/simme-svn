@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: GameModeForm.java
-//               $Date: 2004/09/07 13:26:55 $
-//           $Revision: 1.12 $
+//               $Date: 2004/09/13 15:26:53 $
+//           $Revision: 1.13 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -47,7 +47,6 @@ public class GameModeForm extends List implements CommandListener {
 	public GameModeForm() {
 		super("Game Mode", List.IMPLICIT, CHOICES, null);
 		addCommand(UIUtils.CMD_BACK);
-		addCommand(UIUtils.CMD_CHOOSE);
 		setCommandListener(this);
 	}
 
@@ -103,7 +102,7 @@ public class GameModeForm extends List implements CommandListener {
 		 */
 		ConnectionAlert(String[] data) {
 			super("Verbinde ...");
-			setString("Verbindung zum Server wird hergestellt.");
+			setString("... mit dem Server.");
 			// Alert will be substituted by result message
 			setTimeout(Alert.FOREVER);
 			loginData = data;

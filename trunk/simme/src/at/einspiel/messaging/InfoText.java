@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: InfoText.java
-//                  $Date: 2004/09/07 13:23:06 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/09/13 15:26:53 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
@@ -76,6 +76,7 @@ public class InfoText extends AbstractInfo implements ISimpleInfo {
 	public InfoText(String xmlString, XMLParseException xex) {
 		this("Information", xmlString);
 		Logger.debug("InfoText created with errors: " + xex.getMessage());
+		xex.printStackTrace();
 	}
 
 	/** @see at.einspiel.messaging.ISimpleInfo#getText() */

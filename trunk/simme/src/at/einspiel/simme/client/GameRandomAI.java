@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: GameRandomAI.java
-//               $Date: 2004/08/13 13:58:23 $
-//           $Revision: 1.7 $
+//               $Date: 2004/09/13 15:26:53 $
+//           $Revision: 1.8 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client;
 
@@ -34,6 +34,8 @@ public class GameRandomAI extends GameOnePlayer {
 			playerName = playerInfo[0];
 		} catch (PrefsException e) {
 			// ignore Exception at this point
+		} catch (NullPointerException ex) {
+			// can only be executed within MIDP environment .. this is for tests
 		}
 		info.setP1Name(playerName);
 		info.setP2Name("Computer");

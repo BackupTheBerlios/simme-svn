@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: Zeichenblatt.java
-//               $Date: 2004/09/07 13:27:21 $
-//           $Revision: 1.10 $
+//               $Date: 2004/09/13 15:26:53 $
+//           $Revision: 1.11 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -301,7 +301,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
 			node[5] = new int[]{col1, row2};
 		}
 
-		Logger.debug("Diameter: " + diameter);
+		Logger.debug(getClass(), "Diameter: " + diameter);
 
 	}
 

@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: LoginMessage.java
-//                  $Date: 2004/09/07 13:23:06 $
-//              $Revision: 1.6 $
+//                  $Date: 2004/09/13 15:26:53 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
@@ -21,7 +21,7 @@ import at.einspiel.simme.nanoxml.XMLParseException;
  * 
  * @author kariem
  */
-public class LoginMessage implements Message {
+public class LoginMessage implements IMessage {
 	/** The element name of the string representation */
 	public static final String ELEMENT_NAME = "loginresult";
 
@@ -172,15 +172,15 @@ public class LoginMessage implements Message {
 	}
 
 	//
-	// missing Message implementation
+	// missing IMessage implementation
 	//
 
-	/** @see Message#getMessage() */
+	/** @see IMessage#getMessage() */
 	public String getMessage() {
 		return getInfo();
 	}
 
-	/** @see Message#getId() */
+	/** @see IMessage#getId() */
 	public byte getId() {
 		if (success) {
 			return LOGIN_OK;

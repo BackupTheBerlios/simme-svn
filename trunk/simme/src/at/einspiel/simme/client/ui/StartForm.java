@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //  Java Source File: StartForm.java
-//             $Date: 2004/09/07 13:26:55 $
-//         $Revision: 1.3 $
+//             $Date: 2004/09/13 15:26:53 $
+//         $Revision: 1.4 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -36,7 +36,6 @@ public class StartForm extends List implements CommandListener {
     super("SimME", List.IMPLICIT, CHOICES, null);
     this.sim = s;
     addCommand(UIUtils.CMD_QUIT);
-    addCommand(UIUtils.CMD_CHOOSE);
     setCommandListener(this);
   }
 

@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: Sim.java
-//               $Date: 2004/09/07 13:23:30 $
-//           $Revision: 1.6 $
+//               $Date: 2004/09/13 15:26:53 $
+//           $Revision: 1.7 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client;
 
@@ -40,8 +40,7 @@ public class Sim extends MIDlet {
 	/** @see MIDlet#pauseApp() */
 	protected void pauseApp() {
 		// important in case of incoming call
-		// TODO break current connection and
-		// post wait method on server
+		// TODO break current connection and post wait method on server
 	}
 
 	/**

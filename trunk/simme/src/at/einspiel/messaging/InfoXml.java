@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: InfoXml.java
-//                  $Date: 2004/08/25 15:34:24 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/09/13 15:26:53 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.messaging;
 
@@ -11,7 +11,7 @@ import at.einspiel.simme.nanoxml.XMLElement;
 /**
  * @author kariem
  */
-public class InfoXml extends AbstractInfo implements ISimpleInfo {
+public class InfoXml extends AbstractInfo {
 
 	/** optional game information */
 	private XMLElement xmlElement;
@@ -40,7 +40,7 @@ public class InfoXml extends AbstractInfo implements ISimpleInfo {
 	protected void addXmlInfo(XMLElement xml) {
 		xml.addChild(xmlElement);
 	}
-	
+
 	/** @see at.einspiel.messaging.ISimpleInfo#isXml() */
 	public boolean isXml() {
 		return true;
