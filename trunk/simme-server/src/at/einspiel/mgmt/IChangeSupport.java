@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: IChangeSupport.java
-//                  $Date: 2003/12/30 10:18:25 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/09/07 13:29:07 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.mgmt;
 
@@ -17,12 +17,12 @@ public interface IChangeSupport {
     * Adds a state listener to this object.
     * @param listener the listener.
     */
-   public void addStateListener(StateListener listener);
+   public void addStateListener(IStateListener listener);
 
    /**
     * Removes a state listener.
     * @param listener listener to be removed.
     */
-   public void removeStateListener(StateListener listener);
+   public void removeStateListener(IStateListener listener);
    
 }

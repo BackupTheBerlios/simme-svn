@@ -32,17 +32,17 @@ public class SimpleClientMessage extends SendableUI implements Message {
 		this("Information", msg);
 	}
 
-	/** @see Message#getMessage() */
+	/** @see at.einspiel.messaging.Message#getMessage() */
 	public String getMessage() {
 		return getXmlString();
 	}
 
-	/** @see Message#getId() */
+	/** @see at.einspiel.messaging.SendableUI#getId() */
 	public byte getId() {
 		return 0;
 	}
 
-	/** @see Message#getInfo() */
+	/** @see at.einspiel.messaging.Message#getInfo() */
 	public String getInfo() {
 		return getInfoObject().getText();
 	}

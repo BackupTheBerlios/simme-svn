@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: ChangeSupport.java
-//                  $Date: 2004/09/02 10:20:38 $
-//              $Revision: 1.3 $
+//                  $Date: 2004/09/07 13:29:07 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package at.einspiel.mgmt;
 
@@ -22,16 +22,16 @@ public class ChangeSupport implements IChangeSupport, Serializable {
 	// the state listeners
 	private Set listeners;
 
-	/** @see IChangeSupport#addStateListener(StateListener) */
-	public void addStateListener(StateListener listener) {
+	/** @see IChangeSupport#addStateListener(IStateListener) */
+	public void addStateListener(IStateListener listener) {
 		if (listeners == null) {
 			listeners = new HashSet();
 		}
 		listeners.add(listener);
 	}
 
-	/** @see IChangeSupport#removeStateListener(StateListener) */
-	public void removeStateListener(StateListener listener) {
+	/** @see IChangeSupport#removeStateListener(IStateListener) */
+	public void removeStateListener(IStateListener listener) {
 		if (listeners != null) {
 			listeners.remove(listener);
 		}
@@ -46,7 +46,7 @@ public class ChangeSupport implements IChangeSupport, Serializable {
 		if (listeners != null) {
 			for (Iterator i = listeners.iterator(); i.hasNext();) {
 				// propagate event to state listeners
-				((StateListener) i.next()).updateState(evt);
+				((IStateListener) i.next()).updateState(evt);
 			}
 		}
 	}
