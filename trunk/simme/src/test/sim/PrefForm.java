@@ -10,11 +10,11 @@ import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.List;
 import javax.microedition.lcdui.Screen;
+import javax.microedition.lcdui.StringItem;
 import javax.microedition.lcdui.TextField;
 
 import test.sim.util.PersonalPrefs;
 import test.sim.util.PrefsException;
-
 
 /**
  * A List that gives the user choices to customize this application.
@@ -24,24 +24,34 @@ import test.sim.util.PrefsException;
 public class PrefForm extends List implements CommandListener {
 
    // list items
-   private static final String[] MAIN =
-   { "Personal", "Colors", "Options", "Help" };
+   private static final String[] MAIN = { "Personal", "Colors", "Options", "Help" };
 
    // user prefs
    private static final String[] LOCATION =
-   {
-      "AT", "DE", "CH", "ES", "FR", "UK", "other EU", "other Europe", "US", "CA",
-      "Central America", "South America", "North Africa", "Central Africa",
-      "Southern Africa", "Middle East", "Central Asia", "Far East",
-      "Australia & Oceania"
-   };
-   private static final String[] LANGUAGE =
-   { "Deutsch", "English", "Français", "Español" };
-
+      {
+         "AT",
+         "DE",
+         "CH",
+         "ES",
+         "FR",
+         "UK",
+         "other EU",
+         "other Europe",
+         "US",
+         "CA",
+         "Central America",
+         "South America",
+         "North Africa",
+         "Central Africa",
+         "Southern Africa",
+         "Middle East",
+         "Central Asia",
+         "Far East",
+         "Australia & Oceania" };
+   private static final String[] LANGUAGE = { "Deutsch", "English", "Français", "Español" };
 
    private Sim parent;
    private List myself;
-
 
    /**
     * Creates a new PrefForm object.
@@ -53,7 +63,6 @@ public class PrefForm extends List implements CommandListener {
       this.parent = parent;
       init();
    }
-
 
    private void init() {
       addCommand(new Command("Back", Command.BACK, 0));
@@ -99,50 +108,35 @@ public class PrefForm extends List implements CommandListener {
       }
 
       // set for this Form accordingly
-      final TextField tfNick =
-         new TextField(
-            "Nick", data[0], 8, TextField.ANY | TextField.NON_PREDICTIVE);
-      final TextField tfPass =
-         new TextField(
-            "Pass", data[1], 8,
-            TextField.ANY | TextField.SENSITIVE | TextField.NON_PREDICTIVE);
-      final TextField tfWin =
-         new TextField(
-            "Win-Msg", data[2], 20, TextField.ANY | TextField.NON_PREDICTIVE);
+      final TextField tfNick = new TextField("Nick", data[0], 8, TextField.ANY);
+      final TextField tfPass = new TextField("Pass", data[1], 8, TextField.ANY);
+      final TextField tfWin = new TextField("Win-Msg", data[2], 20, TextField.ANY);
 
       final ChoiceGroup cLang;
 
       if (data[3].equals("Deutsch")) {
-         cLang = new ChoiceGroup("Sprache", ChoiceGroup.POPUP, LANGUAGE, null);
+         cLang = new ChoiceGroup("Sprache", ChoiceGroup.EXCLUSIVE, LANGUAGE, null);
       } else {
          String[] lang = new String[LANGUAGE.length + 1];
          lang[0] = data[3];
          System.arraycopy(LANGUAGE, 0, lang, 1, LANGUAGE.length);
-         cLang = new ChoiceGroup("Sprache", ChoiceGroup.POPUP, lang, null);
+         cLang = new ChoiceGroup("Sprache", ChoiceGroup.EXCLUSIVE, lang, null);
       }
 
-      final TextField tfInfo =
-         new TextField("Info (opt.)", data[4], 8, TextField.ANY);
+      final TextField tfInfo = new TextField("Info (opt.)", data[4], 8, TextField.ANY);
 
       final ChoiceGroup cLoc;
 
       if (data[5].equals("AT")) {
-         cLoc =
-            new ChoiceGroup(
-               "Location (opt.)", ChoiceGroup.POPUP, LOCATION, null);
+         cLoc = new ChoiceGroup("Location (opt.)", ChoiceGroup.EXCLUSIVE, LOCATION, null);
       } else {
          String[] location = new String[LOCATION.length + 1];
          location[0] = data[5];
          System.arraycopy(LOCATION, 0, location, 1, LOCATION.length);
-         cLoc =
-            new ChoiceGroup(
-               "Location (opt.)", ChoiceGroup.POPUP, location, null);
+         cLoc = new ChoiceGroup("Location (opt.)", ChoiceGroup.EXCLUSIVE, location, null);
       }
 
-      final TextField tfPlatform =
-         new TextField(
-            "Client Model", data[6], data[6].length(),
-            TextField.ANY | TextField.UNEDITABLE);
+      final StringItem siPlatform = new StringItem("Client Model", data[6]);
 
       // add items to form
       frmPrefs.append(tfNick);
@@ -151,46 +145,47 @@ public class PrefForm extends List implements CommandListener {
       frmPrefs.append(cLang);
       frmPrefs.append(tfInfo);
       frmPrefs.append(cLoc);
-      frmPrefs.append(tfPlatform);
+      frmPrefs.append(siPlatform);
 
       // command handling
       frmPrefs.addCommand(new Command("Save & Back", Command.BACK, 0));
       frmPrefs.addCommand(new Command("Cancel", Command.CANCEL, 0));
 
-      frmPrefs.setCommandListener(
-         new CommandListener() {
-            public void commandAction(Command c, Displayable d) {
-               if (c.getCommandType() == Command.BACK) {
-                  String[] newData =
+      frmPrefs.setCommandListener(new CommandListener() {
+         public void commandAction(Command c, Displayable d) {
+            if (c.getCommandType() == Command.BACK) {
+               String[] newData =
                   {
-                     tfNick.getString(), tfPass.getString(), tfWin.getString(),
+                     tfNick.getString(),
+                     tfPass.getString(),
+                     tfWin.getString(),
                      cLang.getString(cLang.getSelectedIndex()),
-                     tfInfo.getString(), cLoc.getString(
-                        cLoc.getSelectedIndex()), tfPlatform.getString()
-                  };
-                  prefs.setSavedData(newData);
-
-                  try {
-                     if (newRecord) {
-                        prefs.save();
-                     } else {
-                        prefs.update();
-                     }
-                  } catch (PrefsException e) {
-                     ; // ??
-                  }
-               }
+                     tfInfo.getString(),
+                     cLoc.getString(cLoc.getSelectedIndex()),
+							siPlatform.getText()};
+               prefs.setSavedData(newData);
 
                try {
-                  prefs.close();
+                  if (newRecord) {
+                     prefs.save();
+                  } else {
+                     prefs.update();
+                  }
                } catch (PrefsException e) {
                   ; // ??
                }
-
-               // show last display
-               Display.getDisplay(parent).setCurrent(myself);
             }
-         });
+
+            try {
+               prefs.close();
+            } catch (PrefsException e) {
+               ; // ??
+            }
+
+            // show last display
+            Display.getDisplay(parent).setCurrent(myself);
+         }
+      });
 
       return frmPrefs;
    }
