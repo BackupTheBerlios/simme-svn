@@ -12,9 +12,7 @@ import junit.framework.TestCase;
 public class NetTest extends TestCase {
 	private static final String LOGIN_PAGE = "Login";
 
-	private static final String SERVER = "http://localhost:8080/simme/";
-	//private static final String SERVER =
-	// "http://128.131.111.157:8080/simme/";
+	private static final String SERVER = ITestRequest.TEST_SERVER;
 	private Request req;
 
 	/** @see TestCase#setUp() */
