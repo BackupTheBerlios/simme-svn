@@ -37,6 +37,8 @@ class Zeichenblatt extends Canvas implements CommandListener {
    /** game */
    private Game game;
 
+   private String moveMessage;
+
    private Zeichenblatt zeichenblatt;
 
    int node[][] = new int[6][2];
@@ -91,7 +93,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
          int key = keyCode - 49;
 
          //System.out.println(key);
-         game.selectNode((byte) key);
+         moveMessage = game.selectNode((byte) key);
       }
    }
 
@@ -104,8 +106,8 @@ class Zeichenblatt extends Canvas implements CommandListener {
 
    /** @see Canvas#paint(Graphics) */
    protected void paint(Graphics g) {
-      byte i = 0; // byte < int  (byte [127-128]) 
-      byte j = 0; // byte < int  (byte [127-128]) 
+      byte i = 0; // byte < int  (byte [127-128])
+      byte j = 0; // byte < int  (byte [127-128])
 
       //fixNodePosition();
       g.setColor(bg);
@@ -180,16 +182,16 @@ class Zeichenblatt extends Canvas implements CommandListener {
       DrawUtils.drawLine(g, xPInfo1, yPInfo1middle, xPInfo2, yPInfo1middle, linewidththick);
       g.setColor(p2c1);
       DrawUtils.drawLine(g, xPInfo1, yPInfo2middle, xPInfo2, yPInfo2middle, linewidththick);
-      
+
       // Spielernamen zeichnen
       g.setColor(0);
       g.drawString(game.getP1Name(), xPInfo3, yPInfo1 + linewidththick / 2, 0);
       g.drawString(game.getP2Name(), xPInfo3, yPInfo2 + linewidththick / 2, 0);
-      
+
       // Spielerinfo zeichnen
       DrawUtils.drawStringWithBorder(g, game.getP1Info(), xPInfo5, yPInfo1 + linewidththick / 2, 0);
       DrawUtils.drawStringWithBorder(g, game.getP2Info(), xPInfo5, yPInfo2 + linewidththick / 2, 0);
-      
+
       // derzeitigen Spieler kennzeichnen
       g.setColor(0);
       if (game.getPlayersTurn() == Game.PLAYER1) {
@@ -208,13 +210,16 @@ class Zeichenblatt extends Canvas implements CommandListener {
             linewidththick - 2,
             0,
             360);
-      } 
-      
+      }
+
       // am Ende den jeweiligen Gewinner anzeigen
       if (game.isGameOver()) {
          drawWinner(g);
       } */
-
+      if (moveMessage != "")
+      {
+        g.drawString(moveMessage, width / 3, height - height / 6, 0);
+      }
       if (game.getWinner() == Game.PLAYER1) {
          g.drawString("Red wins", width / 3, height - height / 6, 0);
       } else if (game.getWinner() == Game.PLAYER2) {

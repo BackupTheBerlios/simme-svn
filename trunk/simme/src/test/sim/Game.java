@@ -83,28 +83,37 @@ public class Game {
     *         activated/deactivated, edge was coloured). <code>false</code>,
     *         if no changes have been made to the current game state.
     */
-   public boolean selectNode(byte index) {
+   public String selectNode(byte index) {
+
+     String result="";
+
       if ((index < 0) || (index > 5)) {
-         return false;
+         return "Enter 0-5!";
       }
 
       if (gameOver) {
-         return false;
+         return "Start new game!";
       }
 
       Node nodeAtIndex = nodes[index];
 
-      if (activeNode == -1) { // activeNode is not set
+      if (activeNode == -1)
+      { // activeNode is not set
 
-         if (nodeAtIndex.disabled) {
-            return false;
+         if (nodeAtIndex.disabled)
+         {
+            return "Node closed!";
          }
 
          activeNode = index;
          nodeAtIndex.activated = true;
 
-         return true;
-      } else if (activeNode == index) { // activeNode is set, and selected
+         return "";
+      }
+      else
+
+      if (activeNode == index)
+      { // edge with length 0; e.g. Node 1 to Node 1
 
          // set node to inactive
          nodeAtIndex.activated = false;
@@ -112,11 +121,14 @@ public class Game {
          // set active node to nothing, and exit
          activeNode = -1;
 
-         return true;
-      } else { // a second node is activated
+         return index + "already chosen!";
+      }
+      else
+      { // a second node is activated
 
          // test if edge still not owner by P1 nor P2
-         if (getEdgeOwner(activeNode, index) == NEUTRAL) {
+         if (getEdgeOwner(activeNode, index) == NEUTRAL)
+         {
             setEdgeOwner(activeNode, index, currentPlayer);
 
             // switch players and see if someone has won
@@ -129,11 +141,13 @@ public class Game {
             // disable node to be disabled
             disableNodes();
 
-            return true;
+            return "";
          }
+         else
+           {
+             return "Edge allr selected!";
+           }
       }
-
-      return false;
    }
 
    /**
@@ -176,7 +190,7 @@ public class Game {
    private void endTurn(byte a, byte b) {
       // only the player who just did his move may lose.
       byte player = currentPlayer ? PLAYER1 : PLAYER2;
-      
+
       moveNr++;
 
       // if someone has lost, last edge drawn was deciding
@@ -211,7 +225,7 @@ public class Game {
     * @return <code>true</code> if the node at <code>index</code> is
     *         activated, <code>false</code> if the node at <code>index</code>
     *         is not activated or an invalid index (index&lt;0 or index&gt;5)
-    *         was supplied. 
+    *         was supplied.
     */
    public boolean isActivated(byte index) {
       if ((index < 0) || (index > 5)) {
@@ -229,7 +243,7 @@ public class Game {
     * @return <code>true</code> if the node at <code>index</code> is
     *         disabled, <code>false</code> if the node at <code>index</code>
     *         is not disabled or an invalid index (index&lt;0 or index&gt;5)
-    *         was supplied. 
+    *         was supplied.
     */
    public boolean isDisabled(byte index) {
       if ((index < 0) || (index > 5)) {
@@ -252,7 +266,7 @@ public class Game {
    /**
     * Returns the winner of this game.
     *
-    * @return {@link #PLAYER1}, if the first player has won this game, 
+    * @return {@link #PLAYER1}, if the first player has won this game,
     *         {@link #PLAYER2}, if the second player has won this game, and
     *         {@link #NEUTRAL}, if the game is not over yet.
     */
