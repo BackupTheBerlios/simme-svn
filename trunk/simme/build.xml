@@ -95,22 +95,22 @@
     
     <!-- build simme.jar to include in client -->
     <target name="simme-jar" depends="preverify">
-        <mkdir dir="${build}/bin"/>
+        <mkdir dir="${build}"/>
         <jar basedir="${dir.preverify}"
-             jarfile="${build}/bin/SimME.jar"
+             jarfile="${build}/SimME.jar"
              manifest="${bin}/MANIFEST.MF">
              <fileset dir="${basedir}" includes="${resources}/**"/>
         </jar>    
-        <copy file="${build}/bin/SimME.jar" tofile="${build}/bin/SimME-${DSTAMP}${TSTAMP}.jar"/>
+        <copy file="${build}/SimME.jar" tofile="${build}/SimME-${DSTAMP}${TSTAMP}.jar"/>
     </target>
     <target name="simme-jar-small" depends="preverify-obfuscate">
-        <mkdir dir="${build}/bin"/>
+        <mkdir dir="${build}"/>
         <jar basedir="${dir.obfuscate}/preverified"
-             jarfile="${build}/bin/SimME-small.jar"
+             jarfile="${build}/SimME-small.jar"
              manifest="${bin}/MANIFEST.MF">
              <fileset dir="${basedir}" includes="${resources}/**"/>
         </jar>
-        <copy file="${build}/bin/SimME-small.jar" tofile="${build}/bin/SimME-small-${DSTAMP}${TSTAMP}.jar"/>
+        <copy file="${build}/SimME-small.jar" tofile="${build}/SimME-small-${DSTAMP}${TSTAMP}.jar"/>
     </target>
 
 	<!-- build simme.jar to include in server -->    
