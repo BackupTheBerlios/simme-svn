@@ -1,3 +1,10 @@
+// ----------------------------------------------------------------------------
+// [Simme-Server]
+//       Java Source File: UserManager.java
+//                  $Date: 2003/12/29 07:24:27 $
+//              $Revision: 1.2 $
+// ----------------------------------------------------------------------------
+
 package at.einspiel.simme.server;
 
 import java.util.*;
@@ -60,11 +67,11 @@ class UserManager {
      * @param mu2 second user.
      */
     void startGame(ManagedUser mu1, ManagedUser mu2) {
-        // TODO start game with mu mu2
+        // TODO start game with mu1 mu2
         try {
             // mu1 is the first player
             ManagedGame game = new ManagedGame(mu1, mu2);
-            game.initializeGame();
+            game.startGame();
         } catch (RuntimeException ex) {
             System.err.print(new Date() + ": "); // add date for err tracing
             ex.printStackTrace();

@@ -1,8 +1,16 @@
+// ----------------------------------------------------------------------------
+// [Simme-Server]
+//       Java Source File: ServerGame.java
+//                  $Date: 2003/12/29 07:24:27 $
+//              $Revision: 1.3 $
+// ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import at.einspiel.base.*;
+import at.einspiel.base.IGame;
 import at.einspiel.base.Result;
 import at.einspiel.base.User;
 import at.einspiel.simme.client.Game;
@@ -22,7 +30,10 @@ public class ServerGame implements IGame {
     /** times each player needed to perform moves */
     private long time1, time2;
 
-    private StopWatch stopwatch;
+    /** moves that were performed */
+    private List savedMoves; // used to reconstruct game later
+    
+    private final StopWatch stopwatch;
     private Game game;
     private boolean running;
     private boolean gameover;
@@ -35,7 +46,7 @@ public class ServerGame implements IGame {
     /** game id */
     private String id;
 
-    int moves;
+    byte nbMoves;
     User winner;
 
     /**
@@ -67,6 +78,8 @@ public class ServerGame implements IGame {
         // initialize game status
         running = false;
         gameover = false;
+        // create stopwatch
+        stopwatch = new StopWatch();
     }
 
     /**
@@ -79,19 +92,12 @@ public class ServerGame implements IGame {
         this.player2 = p2;
     }
 
-    /** initializes the game */
-    public void initializeGame() {
-        // TODO write initialization code
-    }
-
     /** Starts the game */
     public void startGame() {
         running = true;
         gameover = false;
+        savedMoves = new ArrayList();
         game.start();
-        if (stopwatch == null) {
-            stopwatch = new StopWatch();
-        }
         stopwatch.start();
     }
 
@@ -108,7 +114,7 @@ public class ServerGame implements IGame {
             stopwatch.stop();
             running = false;
             gameover = true;
-            moves = game.getMoveNr();
+            nbMoves = game.getMoveNr();
         }
     }
 
@@ -257,6 +263,11 @@ public class ServerGame implements IGame {
                     } else {
                         time2 += elapsed;
                     }
+
+                    // add move to the list of performed moves
+                    savedMoves.add(new Byte(edge));
+                    
+                    // stop game, if this was the lastmove
                     if (game.isGameOver()) {
                        stopGame();
                     }

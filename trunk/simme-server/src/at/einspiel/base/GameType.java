@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: GameType.java
-//                  $Date: 2003/12/28 13:08:24 $
-//              $Revision: 1.1 $
+//                  $Date: 2003/12/29 07:24:27 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.base;
 
@@ -14,10 +14,43 @@ package at.einspiel.base;
  */
 public class GameType {
 
+   private String title;
+   private String description;
+   
+
    /**
-    * Creates a simple GameType
+    * Creates a new instance of <code>GameType</code>.
+    * @param title the title.
+    * @param description the description.
     */
-   public GameType() {
+   public GameType(String title, String description) {
+      super();
+      this.title = title;
+      this.description = description;
    }
 
+   /**
+    * @return Returns the description.
+    */
+   public String getDescription() {
+      return description;
+   }
+   /**
+    * @param description The description to set.
+    */
+   public void setDescription(String description) {
+      this.description = description;
+   }
+   /**
+    * @return Returns the title.
+    */
+   public String getTitle() {
+      return title;
+   }
+   /**
+    * @param title The title to set.
+    */
+   public void setTitle(String title) {
+      this.title = title;
+   }
 }
