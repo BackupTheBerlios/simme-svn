@@ -21,6 +21,9 @@ public class LoginResult {
 
    /** login message */
    private String message;
+   
+   /** response url */
+   private String url;
 
    /**
     * Creates a new <code>LoginResult</code> from the data in the xml string. If
@@ -35,7 +38,8 @@ public class LoginResult {
       try {
          element.parseString(xmlString.trim());
          setSucceed(element.getAttributeBoolean("succeed"));
-         setMessage((String) element.getAttribute("msg"));
+         setMessage((String)element.getAttribute("msg"));
+         setUrl((String)element.getAttribute("url"));
       } catch (XMLParseException xex) {
          setSucceed(false);
          setMessage("Reply had errors.");
@@ -49,9 +53,10 @@ public class LoginResult {
     *        otherwise <code>false</code>.
     * @param msg the message with additional information.
     */
-   public LoginResult(boolean succeeded, String msg) {
+   public LoginResult(boolean succeeded, String msg, String url) {
       setSucceed(succeeded);
       setMessage(msg);
+      setUrl(url);
    }
 
    /**
@@ -63,7 +68,13 @@ public class LoginResult {
    public String toString() {
       XMLElement element = new XMLElement();
       element.setName(ELEMENT_NAME);
-      element.setAttribute("succeed", succeed ? "1" : "0");
+      if (succeed) {
+          element.setAttribute("succeed", "1");
+          // only write URL if succeed == true
+          element.setAttribute("url", url);
+      } else {
+          element.setAttribute("succeed", "0");
+      }
       element.setAttribute("msg", message);
 
       ByteArrayOutputStream bas = new ByteArrayOutputStream();
@@ -99,6 +110,15 @@ public class LoginResult {
    }
 
    /**
+    * Returns the url.
+    *
+    * @return the url which will be used after a successful login.
+    */
+   public String getUrl() {
+      return url;
+   }
+
+   /**
     * Sets the message.
     * @param string the message to set.
     */
@@ -113,5 +133,13 @@ public class LoginResult {
     */
    public void setSucceed(boolean b) {
       succeed = b;
+   }
+
+   /**
+    * Sets the url.
+    * @param string the url to set.
+    */
+   public void setUrl(String string) {
+      url = string;
    }
 }

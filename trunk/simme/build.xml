@@ -1,33 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="SimME" default="deploy">
+<!-- :mode=ant mode: -->
+<project default="build" name="SimME">
  
-    <property name="deploy.dir" value="D:/Devel/j2me-wtk104/apps/SimME"/>
-    <property name="deploy.srcdir" value="${deploy.dir}/src"/>
+    <property name="deploy-14.dir" value="D:/Devel/j2me-wtk104/apps/SimME"/>
+    <property name="deploy-14.srcdir" value="${deploy.dir}/src"/>
 
-    <property name="deploy2.dir" value="D:/Devel/j2me-wtk/apps/SimME"/>
-    <property name="deploy2.srcdir" value="${deploy2.dir}/src"/>
+    <property name="deploy-2.dir" value="D:/Devel/j2me-wtk/apps/SimME"/>
+    <property name="deploy-2.srcdir" value="${deploy2.dir}/src"/>
 
     <property name="src" value="src"/>
-    <property name="cls" value="classes"/>
-    <property name="client-package" value="test/sim" />
+    <property name="cls" value="cls"/>
+    <property name="client-package" value="test/sim"/>
 
- 
-    <target name="deploy">
-	  <copy todir="${deploy.srcdir}" >
-		<fileset dir="${src}">
-		  <include name="${client-package}/**/*.java"/>
-		  <include name="nanoxml/*.java"/>
-		</fileset>
-      </copy>
-    </target>
-
-    <target name="deploy2">
-	  <copy todir="${deploy2.srcdir}" >
-		<fileset dir="${src}">
-		  <include name="${client-package}/**/*.java"/>
-		  <include name="nanoxml/*.java"/>
-		</fileset>
-      </copy>
+    <target name="initbuild">
+        <path id="project.class.path">
+            <pathelement path="D:\Devel\j2me-wtk104\lib\midpapi.zip/"/>
+            <pathelement path="D:\Devel\JUnit\junit.jar"/>
+        </path>
+        <mkdir dir="${cls}"/>
     </target>
     
+    <!-- build simme -->
+    <target name="build" depends="initbuild">
+        <javac srcdir="${src}" destdir="${cls}">
+            <classpath refid="project.class.path"/>
+        </javac>
+    </target>
+
+    <!-- delete created classes -->
+    <target name="clean">
+        <delete dir="${cls}"/>
+    </target>
+    
+    <!-- deployment to wtk-104 -->
+    <target name="deploy">
+      <copy todir="${deploy-14.srcdir}">
+        <fileset dir="${src}">
+          <include name="${client-package}/**/*.java"/>
+          <include name="nanoxml/*.java"/>
+        </fileset>
+      </copy>
+    </target>
+
+    <!-- deployment to wtk-2.0 -->
+    <target name="deploy2">
+      <copy todir="${deploy-2.srcdir}">
+        <fileset dir="${src}">
+          <include name="${client-package}/**/*.java"/>
+          <include name="nanoxml/*.java"/>
+        </fileset>
+      </copy>
+    </target>
 </project>
