@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: GamePlayServlet.java
-//                  $Date: 2004/09/13 23:43:48 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/09/15 23:37:13 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.servlet;
 
@@ -78,7 +78,6 @@ public class GamePlayServlet extends AbstractServlet {
 	 */
 	private String moveReceive() {
 		IMessage msg = u.getClientMessage();
-		getServletContext().log("User " + u.getNick() + " called move receive");
 		if (msg == null) {
 			return new MoveMessageXML((byte) -1).getMessage();
 		}
