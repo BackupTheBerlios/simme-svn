@@ -1,13 +1,14 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: SessionManagerTest.java
-//                  $Date: 2003/12/30 10:18:25 $
-//              $Revision: 1.3 $
+//                  $Date: 2004/02/23 09:10:36 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
 import at.einspiel.base.User;
 import at.einspiel.base.UserException;
+import at.einspiel.db.UserDB;
 import junit.framework.TestCase;
 
 /**
@@ -106,7 +107,7 @@ public class SessionManagerTest extends TestCase {
     void removeUsers() {
         try {
             for (int i = 0; i < nicks.length; i++) {
-                User u = User.getUserByNick(nicks[i]);
+                User u = UserDB.getUserByNick(nicks[i]);
                 u.delete();
             }
         } catch (Exception e) {

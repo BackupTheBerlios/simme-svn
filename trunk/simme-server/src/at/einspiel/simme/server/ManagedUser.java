@@ -1,14 +1,15 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: ManagedUser.java
-//                  $Date: 2003/12/30 23:04:47 $
-//              $Revision: 1.4 $
+//                  $Date: 2004/02/23 09:10:36 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
 import at.einspiel.base.Result;
 import at.einspiel.base.User;
 import at.einspiel.base.UserException;
+import at.einspiel.db.UserDB;
 import at.einspiel.messaging.LoginMessage;
 import at.einspiel.messaging.Message;
 import at.einspiel.mgmt.IChangeSupport;
@@ -72,7 +73,7 @@ public class ManagedUser extends User implements IChangeSupport {
     */
    public static ManagedUser getManagedUserByNick(String nick)
          throws UserException {
-      ManagedUser user = new ManagedUser(User.getUserByNick(nick));
+      ManagedUser user = new ManagedUser(UserDB.getUserByNick(nick));
       return user;
    }
 
@@ -89,7 +90,7 @@ public class ManagedUser extends User implements IChangeSupport {
     */
    public static ManagedUser getManagedUser(String nick, String pwd)
          throws UserException {
-      ManagedUser user = new ManagedUser(User.getUser(nick, pwd));
+      ManagedUser user = new ManagedUser(UserDB.getUser(nick, pwd));
       return user;
    }
 
@@ -119,7 +120,7 @@ public class ManagedUser extends User implements IChangeSupport {
    /**
     * Returns the current state of the user.
     * 
-    * @return The current state (see {@link UserState#getState()}).
+    * @return The current state.
     */
    UserState getUserState() {
       return state;

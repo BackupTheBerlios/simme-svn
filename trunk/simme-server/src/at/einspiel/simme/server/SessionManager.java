@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: SessionManager.java
-//                  $Date: 2003/12/30 23:04:47 $
-//              $Revision: 1.3 $
+//                  $Date: 2004/02/23 09:10:36 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
@@ -10,6 +10,7 @@ import java.util.*;
 
 import at.einspiel.base.User;
 import at.einspiel.base.UserException;
+import at.einspiel.db.UserDB;
 import at.einspiel.messaging.LoginMessage;
 import at.einspiel.messaging.SimpleClientMessage;
 
@@ -79,7 +80,7 @@ public class SessionManager {
       String response = null;
       // TODO check version with most current version and inform client
       try {
-         User userFromDB = User.getUser(u.getNick(), u.getPwd());
+         User userFromDB = UserDB.getUser(u.getNick(), u.getPwd());
          if (!userFromDB.equals(u)) {
             u.saveToDB();
          }

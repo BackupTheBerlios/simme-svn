@@ -1,8 +1,7 @@
 package at.einspiel.db;
 
-import at.einspiel.base.User;
-import at.einspiel.base.UserException;
-
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 import junit.framework.TestCase;
@@ -14,49 +13,20 @@ import junit.framework.TestCase;
  */
 public class DatabaseTest extends TestCase {
 
-   private String[] nicks = { "one", "two", "three", "four", "five", "six" };
-   private String[] pwds = { "pwd1", "pwd2", "pwd3", "pwd4", "pwd5", "pwd6" };
-
-   /**
-    * Tests adding and removal.
-    * 
-    * @throws SQLException error in db.
-    */
-   public void testAddingAndRemoval() throws SQLException {
-      User u = new User(nicks[0], pwds[0]);
-      assertEquals(1, u.saveToDB());
-      assertEquals(1, u.delete());
+   Database db;
+   
+   /** @see junit.framework.TestCase#setUp() */
+   protected void setUp() {
+      db = new Database();
    }
-
-   /**
-    * Tests login process.
-    * 
-    * @throws SQLException error in db.
-    * @throws UserException error while creating user.
+   
+   /** 
+    * Tests simple query execution 
+    * @throws SQLException if an error occurs while executing the query.
     */
-   public void testLogin() throws SQLException, UserException {
-      long millis1 = System.currentTimeMillis();
-      for (int i = 0; i < nicks.length; i++) {
-         User u = User.getUser(nicks[i], pwds[1]);
-         assertEquals(User.LOCATION_DEFAULT, u.getLocation());
-      }
-      long millis2 = System.currentTimeMillis();
-      System.out.println("adding 6 new users in " + (millis2 - millis1) + "ms.");
-      for (int i = 0; i < nicks.length; i++) {
-         User u = User.getUser(nicks[i], pwds[1]);
-         assertEquals(1, u.delete());
-      }
-      long millis3 = System.currentTimeMillis();
-      System.out.println("removing 6 users in " + (millis3 - millis2) + "ms.");
-      System.out.println("adding and removing 6 users in " + (millis3 - millis1) + "ms.");
-   }
-
-   /** @see junit.framework.TestCase#tearDown() */
-   protected void tearDown() throws Exception {
-      for (int i = 0; i < nicks.length; i++) {
-         User u = User.getUserByNick(nicks[i]);
-         u.delete();
-      }
-
+   public void testCreateConnection() throws SQLException {
+      ResultSet rs = db.executeQuery("SELECT * FROM " + UserDB.TABLE_USER);
+      ResultSetMetaData rsMeta= rs.getMetaData();
+      assertTrue(rsMeta.getColumnCount() > 3);
    }
 }

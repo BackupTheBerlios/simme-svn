@@ -29,7 +29,7 @@ public class Database {
     private static final String SERVER_URL = "jdbc:postgresql://127.0.0.1/einspiel";
     private static final String USER = "einspiel";
     private static final String PWD = System.getProperty("db.password");
-
+    
     private Connection conn;
 
     private static File errorFile = null;
@@ -443,5 +443,15 @@ public class Database {
      */
     public ResultSet executeQuery(String table, Map whereParams) throws SQLException {
         return executeQuery(table, null, whereParams);
+    }
+    
+    /**
+     * Executs a <i>SELECT *</i> from the given table.
+     * @param table the table.
+     * @return a result set containing all results.
+     * @throws SQLException see {@link #executeQuery(String)}
+     */
+    public ResultSet selectAll(String table) throws SQLException {
+       return executeQuery("SELECT * FROM " + table);
     }
 }
