@@ -112,21 +112,7 @@
         <delete dir="${build}"/>
     </target>
     
-    <target name="build" depends="compile">
-        <description>
-            Creates the simme-client libraries, without test classes.
-        </description>
-        <jar destfile="../lib/simme-client.jar" index="true" update="true">
-            <fileset dir="${cls}">
-		        <patternset>
-		            <include name="**/*.class"/>
-		            <exclude name="**/*Test*"/>
-		            <exclude name="**/tests/*"/>
-		        </patternset>
-            </fileset>
-        </jar>
-    </target>
-    
+    <!-- build simme.jar to include in client -->
     <target name="simme-jar" depends="preverify">
         <mkdir dir="${build}/bin"/>
         <jar basedir="${dir.preverify}"
@@ -143,7 +129,24 @@
              <fileset dir="${basedir}" includes="${resources}/**"/>
         </jar>    
     </target>
+
+	<!-- build simme.jar to include in server -->    
+    <target name="build" depends="compile">
+        <description>
+            Creates the simme-client libraries, without test classes.
+        </description>
+        <jar destfile="../lib/simme-client.jar" index="true" update="true">
+            <fileset dir="${cls}">
+		        <patternset>
+		            <include name="**/*.class"/>
+		            <exclude name="**/*Test*"/>
+		            <exclude name="**/tests/*"/>
+		        </patternset>
+            </fileset>
+        </jar>
+    </target>
     
+
     <!-- deployment to wtk-104 -->
     <target name="deploy">
       <copy todir="${deploy-14.srcdir}">
