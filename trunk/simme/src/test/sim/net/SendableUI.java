@@ -1,7 +1,5 @@
 package test.sim.net;
 
-import java.io.Serializable;
-
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -36,7 +34,7 @@ import nanoxml.XMLParseException;
  *   
  * @author kariem
  */
-public class SendableUI implements Serializable {
+public class SendableUI {
 
     private Displayable displayable;
     private String id;
@@ -180,7 +178,7 @@ public class SendableUI implements Serializable {
                String name = element.getAttribute("name", null);
 
                if (name != null) {
-                   listElements.add(name);
+                   listElements.addElement(name);
                }
            }
            
@@ -196,7 +194,7 @@ public class SendableUI implements Serializable {
         xml.setAttribute("title", title);
         xml.setAttribute("id", id);
         if ((list) && (listElements != null) && (!listElements.isEmpty())) {
-            xml.setAttribute("list", Boolean.TRUE);
+            xml.setAttribute("list", XMLElement.TRUE);
             Enumeration enum = listElements.elements();
             while (enum.hasMoreElements()) {
                 String el = (String) enum.nextElement();

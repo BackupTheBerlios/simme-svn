@@ -21,7 +21,7 @@ public class ManagedUser extends User {
    public ManagedUser(User u) {
       super(
          u.getNick(),
-         u.getPassword(),
+         u.getPwd(),
          u.getWinmsg(),
          u.getLang(),
          u.getInfo(),

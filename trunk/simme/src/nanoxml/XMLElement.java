@@ -1,7 +1,7 @@
 /* XMLElement.java
  *
- * $Revision: 1.7 $
- * $Date: 2003/07/24 11:23:04 $
+ * $Revision: 1.8 $
+ * $Date: 2003/09/11 21:22:26 $
  * $Name:  $
  *
  * This file is part of NanoXML 2 Lite.
@@ -116,6 +116,10 @@ import java.util.Vector;
  * @version 2.2
  */
 public class XMLElement {
+   
+   public static final String TRUE = "1";
+   public static final String FALSE= "0";
+   
    /**
     * The attributes given to the element.
     *
@@ -526,7 +530,7 @@ public class XMLElement {
     * @return see {@link #getAttributeBoolean(String, String, String, boolean)}.
     */
    public boolean getAttributeBoolean(String name, boolean defaultValue) {
-      return getAttributeBoolean(name, "1", "0", defaultValue);
+      return getAttributeBoolean(name, TRUE, FALSE, defaultValue);
    }
 
    /**
