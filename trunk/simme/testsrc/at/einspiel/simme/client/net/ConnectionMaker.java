@@ -1,4 +1,4 @@
-package at.einspiel.simme.client.tests;
+package at.einspiel.simme.client.net;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -83,8 +83,7 @@ public class ConnectionMaker implements HttpConnection {
     }
 
     /** @see HttpConnection#setRequestProperty(String, String) */
-    public void setRequestProperty(String key, String value)
-        throws IOException {
+    public void setRequestProperty(String key, String value) {
         conn.setRequestProperty(key, value);
     }
 
@@ -99,42 +98,42 @@ public class ConnectionMaker implements HttpConnection {
     }
 
     /** @see javax.microedition.io.HttpConnection#getExpiration() */
-    public long getExpiration() throws IOException {
+    public long getExpiration() {
         return conn.getExpiration();
     }
 
     /** @see javax.microedition.io.HttpConnection#getDate() */
-    public long getDate() throws IOException {
+    public long getDate() {
         return conn.getDate();
     }
 
     /** @see javax.microedition.io.HttpConnection#getLastModified() */
-    public long getLastModified() throws IOException {
+    public long getLastModified() {
         return conn.getLastModified();
     }
 
     /** @see javax.microedition.io.HttpConnection#getHeaderField(java.lang.String) */
-    public String getHeaderField(String field) throws IOException {
+    public String getHeaderField(String field) {
         return conn.getHeaderField(field);
     }
 
     /** @see javax.microedition.io.HttpConnection#getHeaderFieldInt(java.lang.String, int) */
-    public int getHeaderFieldInt(String arg0, int arg1) throws IOException {
+    public int getHeaderFieldInt(String arg0, int arg1) {
         return conn.getHeaderFieldInt(arg0, arg1);
     }
 
     /** @see javax.microedition.io.HttpConnection#getHeaderFieldDate(java.lang.String, long) */
-    public long getHeaderFieldDate(String arg0, long arg1) throws IOException {
+    public long getHeaderFieldDate(String arg0, long arg1) {
         return conn.getHeaderFieldDate(arg0, arg1);
     }
 
     /** @see javax.microedition.io.HttpConnection#getHeaderField(int) */
-    public String getHeaderField(int arg0) throws IOException {
+    public String getHeaderField(int arg0) {
         return conn.getHeaderField(arg0);
     }
 
     /** @see javax.microedition.io.HttpConnection#getHeaderFieldKey(int) */
-    public String getHeaderFieldKey(int arg0) throws IOException {
+    public String getHeaderFieldKey(int arg0) {
         return conn.getHeaderFieldKey(arg0);
     }
 
@@ -164,7 +163,7 @@ public class ConnectionMaker implements HttpConnection {
     }
 
     /** @see javax.microedition.io.Connection#close() */
-    public void close() throws IOException {
+    public void close() {
         conn.disconnect();
     }
 

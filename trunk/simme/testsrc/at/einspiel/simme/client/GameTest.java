@@ -1,4 +1,4 @@
-package at.einspiel.simme.client.tests;
+package at.einspiel.simme.client;
 
 import junit.framework.TestCase;
 
@@ -27,6 +27,7 @@ public class GameTest extends TestCase {
      */
     protected void setUp() {
         g = new Game();
+        g.start();
     }
 
     /** Tests simple selections */

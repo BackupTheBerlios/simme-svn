@@ -1,10 +1,8 @@
-package at.einspiel.simme.client.tests;
-
-import junit.framework.TestCase;
-
-import at.einspiel.simme.client.net.Request;
+package at.einspiel.simme.client.net;
 
 import java.io.IOException;
+
+import junit.framework.TestCase;
 
 /**
  * Class used to Test class network methods.
@@ -21,18 +19,12 @@ public class NetTest extends TestCase {
       req = new TestRequest();
    }
 
-   /**
-    * Tests connecting to a server
-    *
-    * @throws IOException if a problem has occured while sending the request.
-    */
-   public void testConnection() throws IOException {
+   /** Tests connecting to a server */
+   public void testConnection() {
       req.sendRequest(SERVER, ".");
    }
 
-   /**
-    * Tests building URLs
-    */
+   /** Tests building URLs */
    public void testBuildURL() {
       req.setParam("user", "username");
       assertEquals("?user=username", req.getParamString(false));
@@ -47,12 +39,8 @@ public class NetTest extends TestCase {
       assertEquals("user=username&pwd=password", req.getParamString(true));
    }
 
-   /**
-    * Tests sending via GET
-    *
-    * @throws IOException if a problem has occured while sending the request.
-    */
-   public void testGetSubmission() throws IOException {
+   /** Tests sending via GET */
+   public void testGetSubmission() {
       req.setParam("user", "username");
       assertEquals("?user=username", req.getParamString(false));
 
@@ -62,12 +50,8 @@ public class NetTest extends TestCase {
       req.sendRequest(SERVER, "doLogin", false);
    }
 
-   /**
-    * Tests sending via POST
-    *
-    * @throws IOException if a problem has occured while sending the request.
-    */
-   public void testPostSubmission() throws IOException {
+   /** Tests sending via POST */
+   public void testPostSubmission() {
       req.setParam("user", "username2");
       assertEquals("user=username2", req.getParamString(true));
 

@@ -1,9 +1,6 @@
-package at.einspiel.simme.client.tests;
-
-import at.einspiel.simme.client.net.LoginMessage;
+package at.einspiel.simme.client.net;
 
 import java.io.IOException;
-
 import java.net.URL;
 
 import javax.microedition.io.HttpConnection;
@@ -17,13 +14,12 @@ import javax.microedition.io.HttpConnection;
 public class TestLoginMessage extends LoginMessage {
    
    /** @see LoginMessage#LoginMessage(String, String, String, String) */
-   public TestLoginMessage(String nick, String pwd, String clientmodel, String version)
-      throws IOException {
+   public TestLoginMessage(String nick, String pwd, String clientmodel, String version) {
       super(nick, pwd, clientmodel, version);
    }
 
    /** @see LoginMessage#LoginMessage(String, String, String) */
-   public TestLoginMessage(String nick, String pwd, String version) throws IOException {
+   public TestLoginMessage(String nick, String pwd, String version) {
       this(nick, pwd, null, version);
    }
 

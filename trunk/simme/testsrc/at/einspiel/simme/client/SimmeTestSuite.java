@@ -1,7 +1,9 @@
-package at.einspiel.simme.client.tests;
+package at.einspiel.simme.client;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import at.einspiel.simme.client.net.NetTest;
+import at.einspiel.simme.client.net.SendableUITest;
 
 /**
  * Testing simme module
@@ -19,7 +21,7 @@ public class SimmeTestSuite {
         TestSuite suite = new TestSuite("Test for SimME client");
         suite.addTestSuite(MoveTest.class);
         suite.addTestSuite(GameTest.class);
-        //suite.addTestSuite(NetTest.class);
+        suite.addTestSuite(NetTest.class);
         suite.addTestSuite(SendableUITest.class);
         return suite;
     }

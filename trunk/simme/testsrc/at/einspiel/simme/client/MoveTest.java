@@ -1,4 +1,4 @@
-package at.einspiel.simme.client.tests;
+package at.einspiel.simme.client;
 
 import at.einspiel.simme.client.Move;
 import junit.framework.TestCase;

@@ -1,4 +1,4 @@
-package at.einspiel.simme.client.tests;
+package at.einspiel.simme.client.net;
 
 import at.einspiel.simme.client.net.Request;
 
