@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: MoveReceiver.java
-//                  $Date: 2004/09/13 15:22:00 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/09/13 23:38:26 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client.net;
 
@@ -73,7 +73,7 @@ class MoveReceiver {
 
 	/**
 	 * Tries to receive the next move from the server
-	 * @return
+	 * @return the received move.
 	 */
 	Move getMove() {
 		msg = null;
@@ -149,6 +149,7 @@ class MoveReceiver {
 			}
 			// set message from response
 			msg = mmsg.getInfo();
+			Logger.debug(getClass(), "received Move: " + mmsg.getMove());
 
 			return new Move(mmsg.getMove());
 		} catch (IOException e) {
@@ -159,6 +160,6 @@ class MoveReceiver {
 			msg = response;
 			interrupted = true;
 			return null;
-		} 
+		}
 	}
 }
