@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
-//    Java Source File: Zeichenblatt.java
-//               $Date: 2004/09/13 15:26:53 $
-//           $Revision: 1.11 $
+//    Java Source File: GameBoard.java
+//               $Date: 2004/09/16 08:28:49 $
+//           $Revision: 1.1 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -20,7 +20,7 @@ import at.einspiel.simme.client.util.DrawUtils;
  * 
  * @author kariem
  */
-class Zeichenblatt extends Canvas implements CommandListener {
+class GameBoard extends Canvas implements IDynamicUI, CommandListener {
 
 	private static final byte NB_NODES = Game.NB_NODES;
 
@@ -72,7 +72,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
 	 *            <code>true</code> to play against the computer,
 	 *            <code>false</code> to play against a human opponent.
 	 */
-	Zeichenblatt(boolean singlePlayer) {
+	GameBoard(boolean singlePlayer) {
 		ColorMgmt.setDisplay(Sim.getDisplay());
 
 		p1c1 = ColorMgmt.p1c1;
@@ -110,7 +110,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
 	}
 
 	/** Creates a new screen to play. Two human players. */
-	Zeichenblatt() {
+	GameBoard() {
 		this(false);
 	}
 
@@ -158,10 +158,9 @@ class Zeichenblatt extends Canvas implements CommandListener {
 		int c1 = nc1;
 		int c2 = nc2;
 
-		// Kanten zeichnen
+		// draw edges
 		for (i = 0; i < NB_NODES; i++) {
 			for (j = 0; j < NB_NODES - 1; j++) {
-				boolean dotted = false;
 
 				switch (game.getEdgeOwner(i, j)) {
 					case Game.NEUTRAL :
@@ -177,16 +176,15 @@ class Zeichenblatt extends Canvas implements CommandListener {
 					case Game.PLAYER2 :
 						c1 = p2c1;
 						c2 = p2c2;
-						dotted = true;
 						break;
 				}
 
 				DrawUtils.drawLineWithBorder(g, node[i][0], node[i][1], node[j][0], node[j][1],
-						linewidth, c1, c2, dotted);
+						linewidth, c1, c2, false);
 			}
 		}
 
-		// Punkte zeichnen
+		// draw corners
 		for (i = 0; i < NB_NODES; i++) {
 			if (game.isDisabled(i)) {
 				c1 = ndc1;
@@ -313,11 +311,20 @@ class Zeichenblatt extends Canvas implements CommandListener {
 		if (c == CMD_CANCEL) {
 			displayable = Sim.getMainScreen();
 		} else if (c == CMD_NEWGAME) {
-			displayable = new Zeichenblatt(single);
+			displayable = new GameBoard(single);
 		}
 
 		if (displayable != null) {
 			display.setCurrent(displayable);
 		}
+	}
+
+	/**
+	 * This implementation directly calls {@link Canvas#repaint()}.
+	 * 
+	 * @see at.einspiel.simme.client.ui.IDynamicUI#updateDisplay()
+	 */
+	public void updateDisplay() {
+		repaint();
 	}
 }
