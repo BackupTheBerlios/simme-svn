@@ -20,7 +20,6 @@ public class ManagedGame extends ServerGame {
         super(p1, p2);
         p1.setGame(this);
         p2.setGame(this);
-        startGame();
     }
 
     /**

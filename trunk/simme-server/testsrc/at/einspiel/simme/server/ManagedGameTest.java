@@ -32,6 +32,7 @@ public class ManagedGameTest extends TestCase {
       // create game
       game = new ManagedGame(player1, player2);
       assertNotNull(game);
+      game.startGame();
    }
 
    /** Tests ManagedGame constructor */
