@@ -2,6 +2,7 @@ package at.einspiel.simme.server.management;
 
 import at.einspiel.simme.server.base.User;
 import at.einspiel.simme.server.base.UserException;
+import at.einspiel.simme.server.messaging.SimpleClientMessage;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,7 +12,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import test.sim.net.LoginResult;
-import test.sim.net.SendableUI;
 
 /**
  * This class is intended to be used for User management. Each user who
@@ -66,11 +66,8 @@ public class SessionManager {
      * @return an xml string containing the formatted message.
      */
     public static String makeMessage(String title, String message) {
-       SendableUI sui = new SendableUI();
-       sui.setTitle(title);
-       sui.setText(message);
-       return sui.getXmlString();
-    }   
+        return new SimpleClientMessage(title, message).getMessage();
+    }
 
     /**
      * Adds a user to the list of managed users.
@@ -116,6 +113,24 @@ public class SessionManager {
             return new LoginResult(false, response, baseUrl + MGMT_PAGE);
         }
     }
+    
+    /* *
+     * Sets the given user into the WAITING state. If another user is waiting
+     * for a game to start, a new game will be created and the two players may
+     * play. If no waiting user is available yet, <code>mu</code> will be added
+     * to the waiting list.
+     * 
+     * @param mu the user
+     * @return a string containing progress information for the client.
+     *
+    public String waitForGame(ManagedUser mu) {
+        if (mu.)
+    }
+
+    public String getMessage(ManagedUser mu) {
+        
+    }*/
+    
 
     /**
      * Adds the user to the list of managed users.
@@ -181,7 +196,6 @@ public class SessionManager {
     //         return new Integer(mu1.getState()).compareTo(new Integer(mu2.getState()));
     //      }
     //   }
-
 
     /**
      * Returns a copy of the current users.

@@ -23,7 +23,7 @@ public class SimpleXmlMessage implements Message {
       xml.setAttribute("msg", msg);
    }
 
-   /** @see at.einspiel.simme.server.messaging.Message#getMessage() */
+   /** @see Message#getMessage() */
    public String getMessage() {
       return xml.toString();
    }

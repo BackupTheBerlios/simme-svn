@@ -16,8 +16,8 @@ class UserManager {
     private static final int DEF_SECONDS_WAITING = 600; // 10 minutes
 
     private static int updateInterval = DEF_UPDATE_INTERVAL;
-    private static int maxSecondsIdle = DEF_SECONDS_IDLE; // 5 minutes
-    private static int maxSecondsWaiting = DEF_SECONDS_WAITING; // 10 minutes
+    private static int maxSecondsIdle = DEF_SECONDS_IDLE;
+    private static int maxSecondsWaiting = DEF_SECONDS_WAITING;
 
     private Map allUsers;
     UserUpdater updater;
@@ -25,6 +25,7 @@ class UserManager {
 
     UserManager(Map users) {
         this.allUsers = users;
+        // create new user updater that manages user states and their timeouts
         updater = new UserUpdater(allUsers.values());
     }
     
@@ -196,5 +197,4 @@ class UserManager {
     public static void setUpdateInterval(int i) {
         updateInterval = i;
     }
-
 }

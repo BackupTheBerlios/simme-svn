@@ -11,6 +11,8 @@ import at.einspiel.simme.server.base.UserException;
  */
 public class ManagedUser extends User {
 
+    private static final int ACCURACY = 1000;
+
     private UserState state;
     private long lastStatusUpdate;
     
@@ -111,7 +113,7 @@ public class ManagedUser extends User {
      * @return The time in seconds since the last update.
      */
     int secondsSinceLastUpdate() {
-        return (int) ((System.currentTimeMillis() - lastStatusUpdate) / 1000);
+        return (int) ((System.currentTimeMillis() - lastStatusUpdate) / ACCURACY);
     }
 
     /**
@@ -138,5 +140,4 @@ public class ManagedUser extends User {
     UserState getState() {
         return state;
     }
-
 }

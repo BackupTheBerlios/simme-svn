@@ -1,7 +1,7 @@
 /************************************************************************
 ** PROJECT:   Simme-Server
 ** $Workfile: ManagedGame.java $
-** $Revision: 1.1 $
+** $Revision: 1.2 $
 ** LANGUAGE:  Java, JDK version 1.4
 **
 ** COPYRIGHT: Frequentis Nachrichtentechnik Ges.m.b.H.
@@ -17,6 +17,9 @@
 ** the written permission of Frequentis Nachrichtentechnik.
 **
 ** $Log: ManagedGame.java,v $
+** Revision 1.2  2003/09/25 21:50:45  kariem
+** updated
+**
 ** Revision 1.1  2003/09/19 14:35:17  kariem
 ** user management
 **
