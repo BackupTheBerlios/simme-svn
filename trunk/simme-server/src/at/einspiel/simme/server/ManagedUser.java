@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: ManagedUser.java
-//                  $Date: 2004/04/06 22:28:31 $
-//              $Revision: 1.6 $
+//                  $Date: 2004/09/02 10:25:10 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server;
 
@@ -130,7 +130,7 @@ public class ManagedUser extends User implements IChangeSupport {
      * 
      * @return The time in seconds since the last update.
      */
-    int secondsSinceLastUpdate() {
+    public int secondsSinceLastUpdate() {
         return (int) ((System.currentTimeMillis() - lastStatusUpdate) / ACCURACY);
     }
 
@@ -146,7 +146,7 @@ public class ManagedUser extends User implements IChangeSupport {
      * Returns the users state
      * @return the user's state
      */
-    UserState getState() {
+    public UserState getState() {
         return state;
     }
 

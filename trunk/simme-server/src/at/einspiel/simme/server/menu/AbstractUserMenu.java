@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: AbstractUserMenu.java
-//                  $Date: 2004/06/07 09:26:45 $
-//              $Revision: 1.1 $
+//                  $Date: 2004/09/02 10:21:49 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
@@ -17,7 +17,7 @@ import at.einspiel.base.User;
  * 
  * @author kariem
  */
-public abstract class AbstractUserMenu extends AbstractMenu {
+abstract class AbstractUserMenu extends AbstractMenu {
 
     User u;
     

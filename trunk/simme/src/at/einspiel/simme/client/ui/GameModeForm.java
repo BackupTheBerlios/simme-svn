@@ -57,9 +57,9 @@ public class GameModeForm extends List implements CommandListener {
 
 					try {
 						String[] personalInfo = PersonalPrefs.getPlayerInfo();
-						ConnectionAlert infoAlert = new ConnectionAlert(personalInfo);
-						d.setCurrent(infoAlert);
-						infoAlert.startConnection(d);
+						ConnectionAlert connectionAlert = new ConnectionAlert(personalInfo);
+						d.setCurrent(connectionAlert);
+						connectionAlert.startConnection(d);
 						break;
 
 					} catch (PrefsException pex) {
@@ -137,7 +137,6 @@ public class GameModeForm extends List implements CommandListener {
 							npe.printStackTrace();
 						}
 
-						Logger.debug("sending message");
 						loginMsg.sendRequest(Sim.getProperty("simme.page.login"));
 
 						// get response
@@ -151,7 +150,7 @@ public class GameModeForm extends List implements CommandListener {
 						if (result.isSuccess()) {
 							final String url = result.getUrl();
 							// save nickname and url somewhere in order to be
-							// easily accessible
+							// easily accessible without using prefs
 							Sim.setNick(loginData[0]);
 
 							DynamicUI dUI = new DynamicUI("SimME online", result.getMessage(),

@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: IMenu.java
-//                  $Date: 2004/08/25 15:43:11 $
-//              $Revision: 1.4 $
+//                  $Date: 2004/09/02 10:21:49 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
@@ -14,7 +14,7 @@ import at.einspiel.base.User;
  * 
  * @author kariem
  */
-interface IMenu extends Cloneable {
+public interface IMenu extends Cloneable {
 
 	/** The default id for menus. The current value is <code>0</code>. */
 	String DEFAULT_ID = "0";
