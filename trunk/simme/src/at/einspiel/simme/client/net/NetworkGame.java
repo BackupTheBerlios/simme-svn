@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: NetworkGame.java
-//                  $Date: 2004/09/13 15:26:53 $
-//              $Revision: 1.3 $
+//                  $Date: 2004/09/14 22:30:38 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client.net;
 
@@ -50,13 +50,42 @@ public class NetworkGame extends GameOnePlayer {
 	/** @see GameOnePlayer#doOtherPlayersMove() */
 	protected void doOtherPlayersMove() {
 		Logger.debug(getClass(), "waiting for other player's move");
-		remoteMove = pr.receiveMove();
+
+		// receive the next move
+		remoteMove = null;
+		do {
+			remoteMove = pr.receiveMove();
+		} while (!isAlreadySelected(remoteMove));
+
+		// if move == null, an error has occured
 		if (remoteMove == null) {
 			setMoveMessage(pr.getMessage());
 			return;
 		}
 		setEdgeOwner(remoteMove.getEdge());
 		endTurn(remoteMove);
+	}
+
+	/**
+	 * Indicates whether the given move is already selected by a player.
+	 * 
+	 * @param m
+	 *            the move in question.
+	 * @return <code>false</code> if the move's edge is already selected in
+	 *         this game, <code>true</code> if the edge's owner is
+	 *         {@linkplain at.einspiel.simme.client.Game#NEUTRAL}, or
+	 *         <code>m</code> is <code>null</code>.
+	 */
+	private boolean isAlreadySelected(Move m) {
+		if (m == null) {
+			// there was an error, save pr.getMessage()
+			return true;
+		}
+		byte selection = m.getEdge();
+		if (this.getEdgeOwner(selection) != NEUTRAL) {
+			return false;
+		}
+		return true;
 	}
 
 	/** @see at.einspiel.simme.client.GameOnePlayer#informOtherPlayer(byte) */
