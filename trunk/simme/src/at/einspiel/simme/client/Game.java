@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: Game.java
-//               $Date: 2004/09/16 08:29:35 $
-//           $Revision: 1.11 $
+//               $Date: 2004/09/16 18:07:59 $
+//           $Revision: 1.12 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client;
 
@@ -251,7 +251,8 @@ public abstract class Game {
 		byte owner = getEdgeOwner(edgeIndex);
 		if (owner != NEUTRAL) {
 			byte[] nodeIdxs = Move.getNodeIndices(edgeIndex);
-			moveMessage = "Kante " + nodeIdxs[0] + "-" + nodeIdxs[1] + " bereits gewählt!";
+			moveMessage = "Kante " + (nodeIdxs[0] + 1) + "-" + (nodeIdxs[1] + 1)
+					+ " bereits gewählt!";
 			return false;
 		}
 
@@ -539,7 +540,8 @@ public abstract class Game {
 
 	/**
 	 * Sets the dynamic UI.
-	 * @param ui the dynamic user interface to set.
+	 * @param ui
+	 *            the dynamic user interface to set.
 	 */
 	public void setDynamicUI(IDynamicUI ui) {
 		this.ui = ui;
@@ -551,7 +553,7 @@ public abstract class Game {
 			ui.updateDisplay();
 		}
 	}
-	
+
 	/**
 	 * Returns the number of moves that were executed since the start of the
 	 * game.
