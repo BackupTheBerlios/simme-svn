@@ -1,32 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="build" name="SimME">
 
-	<!-- wtk directories -->
-	<property name="wtk14" value="D:/Devel/j2me-wtk104"/>
-    <property name="deploy-14.dir" value="${wtk14}/apps/SimME"/>
-    <property name="deploy-14.srcdir" value="${deploy-14.dir}/src"/>
-    <property name="deploy-2.dir" value="D:/Devel/j2me-wtk/apps/SimME"/>
-    <property name="deploy-2.srcdir" value="${deploy-2.dir}/src"/>
-
-	<!-- debug jad-file -->
-	<property name="debug.jad" value="SimME-debug.jad"/>
-
-	<!-- directories used for building -->
-    <property name="bin" value="bin"/>
-    <property name="build" value="build"/>
-    <property name="cls" value="cls"/>
-    <property name="cls-client" value="cls-client"/>
-    <property name="client-package" value="at/einspiel/simme/client"/>
-    <property name="dir.obfuscate" value="${build}/obfuscate"/>
-    <property name="dir.preverify" value="${build}/preverify"/>
-    <property name="resources" value="res"/>
-    <property name="src" value="src"/>
-    <property name="testsrc" value="testsrc"/>
-
-    <!-- misc libraries for building -->
-    <property name="lib.junit" value="../lib/junit.jar"/>
-    <property name="lib.midp" value="../lib/midpapi.zip"/>
-    <property name="lib.proguard" value="../lib/proguard.jar"/>
+    <property file="build-xml.properties"/>
 
     <!-- build all simme sources -->
     <target name="compile">
@@ -41,6 +16,7 @@
 
     <!-- compile only classes to be deployed on client -->
     <target name="compile-client">
+        <tstamp/>
         <mkdir dir="${cls-client}"/>
         <javac srcdir="${src}" destdir="${cls-client}" target="1.1"
                bootclasspath="${lib.midp}" />
@@ -125,6 +101,7 @@
              manifest="${bin}/MANIFEST.MF">
              <fileset dir="${basedir}" includes="${resources}/**"/>
         </jar>    
+        <copy file="${build}/bin/SimME.jar" tofile="${build}/bin/SimME-${DSTAMP}${TSTAMP}.jar"/>
     </target>
     <target name="simme-jar-small" depends="preverify-obfuscate">
         <mkdir dir="${build}/bin"/>
@@ -132,7 +109,8 @@
              jarfile="${build}/bin/SimME-small.jar"
              manifest="${bin}/MANIFEST.MF">
              <fileset dir="${basedir}" includes="${resources}/**"/>
-        </jar>    
+        </jar>
+        <copy file="${build}/bin/SimME-small.jar" tofile="${build}/bin/SimME-small-${DSTAMP}${TSTAMP}.jar"/>
     </target>
 
 	<!-- build simme.jar to include in server -->    
