@@ -2,11 +2,11 @@
 <!--
    [Simme-Server]
           Java ServerPage: showOnline.jsp
-                    $Date: 2003/12/28 18:21:43 $
-                $Revision: 1.3 $
+                    $Date: 2004/09/02 10:15:54 $
+                $Revision: 1.4 $
 -->
 
-<%@page import="at.einspiel.simme.server.management.*"%>
+<%@page import="at.einspiel.simme.server.*"%>
 
 <html>
 <head><title>Online Users - Simme</title></head>
