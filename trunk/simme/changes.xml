@@ -2,11 +2,28 @@
 <?xml-stylesheet type="text/xsl" href="changes-html.xsl"?>
 <changelog title="Changelog SimME Client">
 
-	<release name="0.0.5 (alpha)" date="2004-09-15" >
-		<changers>
-			<changer><name>Kariem Hussein</name></changer>
-		</changers>
+	<release name="0.0.6 (beta)" date="2004-12-22" >
 		<changes>
+			<changer><name>kariem</name></changer>
+			<change>
+				<description>List menus in SimME online now offer a "Main" button</description>
+				<bugs><bug id="2459">resolved</bug></bugs>
+			</change>
+			<change>
+				<description>cleaned up build files</description>
+			</change>
+			<change>
+				<description>changed message when selecting an edge twice</description>
+				<bugs><bug id="2456">resolved</bug></bugs>
+			</change>
+		</changes>
+	</release>
+
+	<release name="0.0.5 (alpha)" date="2004-09-15">
+		<changes>
+			<changer>
+				<name>kariem</name>
+			</changer>
 			<change>
 				<description>First alpha release</description>
 			</change>

@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="changes-html.xsl"?>
+<!--<?xml-stylesheet type="text/xsl" href="changes-txt.xsl"?>-->
 <changelog title="Changelog SimME Server">
 
+	<release name="0.0.6 (beta)" date="2004-12-22" >
+		<changes>
+			<changer><name>kariem</name></changer>
+			<change>
+				<description>cleaned up build files</description>
+			</change>
+		</changes>
+	</release>
+
 	<release name="0.0.5 (alpha)" date="2004-09-15" >
-		<changers>
-			<changer><name>Kariem Hussein</name></changer>
-		</changers>
 		<changes>
 			<change>
 				<description>First alpha release</description>

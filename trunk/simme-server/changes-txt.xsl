@@ -13,35 +13,47 @@
 
   <xsl:template match="/">
     <xsl:value-of select="changelog/@title"/>
-      <xsl:text>&#xA;</xsl:text>
+    <xsl:text>&#xA;</xsl:text>
 
-      <xsl:for-each select="changelog/release">
+    <xsl:for-each select="changelog/release">
       <xsl:sort select="@date" order="descending"/>
-        <xsl:text>&#xA;&#xA;&#x9;</xsl:text>
-          <xsl:text>[</xsl:text>
-          <xsl:value-of select="@date"/>
-          <xsl:text>]</xsl:text>
-        <xsl:text> Release </xsl:text><xsl:value-of select="@name"/>
+      <xsl:text>&#xA;&#xA;&#x9;</xsl:text>
+      <xsl:text>[</xsl:text>
+      <xsl:value-of select="@date"/>
+      <xsl:text>]</xsl:text>
+      <xsl:text> Release </xsl:text>
+      <xsl:value-of select="@name"/>
 
-          <xsl:apply-templates select="changes"/>
+      <xsl:apply-templates select="changes"/>
     </xsl:for-each>
   </xsl:template>
 
 
   <xsl:template match="changes">
-      <xsl:text>&#xA;</xsl:text>
-      <xsl:for-each select="change">
-        <xsl:text>&#xA;&#x9;&#x9;# </xsl:text>
-        <xsl:apply-templates select="description"/>
-        <xsl:apply-templates select="bugs"/>
-      </xsl:for-each>
+    <xsl:text>&#xA;</xsl:text>
+    <xsl:for-each select="change">
+      <xsl:text>&#xA;&#x9;&#x9;* </xsl:text>
+      <xsl:apply-templates select="description"/>
+      <xsl:apply-templates select="bugs"/>
+      <xsl:apply-templates select="changer"/>
+      <xsl:apply-templates select="../changer"/>
+    </xsl:for-each>
   </xsl:template>
 
   <xsl:template match="bugs">
-      (<xsl:for-each select="bug">
-        <xsl:sort select="@id"/>
-          Bug <xsl:value-of select="@id"/>
-    </xsl:for-each>)
+    <xsl:text> [</xsl:text>
+    <xsl:for-each select="bug">
+      <xsl:sort select="@id"/>
+      <xsl:text> #</xsl:text>
+      <xsl:value-of select="@id"/>
+    </xsl:for-each>
+    <xsl:text> ]</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="changer">
+    <xsl:text> (</xsl:text>
+    <xsl:value-of select="name"/>
+    <xsl:text>)</xsl:text>
   </xsl:template>
 
   <xsl:template match="@*|node()">
