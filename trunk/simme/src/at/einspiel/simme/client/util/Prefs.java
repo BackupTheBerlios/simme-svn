@@ -22,7 +22,7 @@ import javax.microedition.rms.RecordStoreNotOpenException;
 public class Prefs {
 	static final byte INITIAL_SIZE = 15;
 	RecordStore rs;
-	RecordEnumeration enum;
+	RecordEnumeration recEnum;
 	String name;
 	byte nbRecs;
 	byte[] data;
@@ -64,7 +64,7 @@ public class Prefs {
 	public void open() throws PrefsException {
 		try {
 			rs = RecordStore.openRecordStore("user", true);
-			enum = rs.enumerateRecords(null, null, false);
+			recEnum = rs.enumerateRecords(null, null, false);
 		} catch (RecordStoreFullException e) {
 			throw new PrefsException(e.getMessage());
 		} catch (RecordStoreNotFoundException e) {
@@ -106,7 +106,7 @@ public class Prefs {
 	 *         otherwise.
 	 */
 	public boolean hasNext() {
-		return enum.hasNextElement();
+		return recEnum.hasNextElement();
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class Prefs {
 	 *         otherwise.
 	 */
 	public boolean hasPrevious() {
-		return enum.hasPreviousElement();
+		return recEnum.hasPreviousElement();
 	}
 
 	/**
@@ -147,7 +147,7 @@ public class Prefs {
 	 */
 	public byte[] readNext() throws PrefsException {
 		try {
-			return enum.nextRecord();
+			return recEnum.nextRecord();
 		} catch (InvalidRecordIDException e) {
 			throw new PrefsException(e.getMessage());
 		} catch (RecordStoreNotOpenException e) {
@@ -169,7 +169,7 @@ public class Prefs {
 	public void writeNext(byte[] b) throws PrefsException {
 		try {
 			// go through recordset and change information
-			int id = enum.nextRecordId();
+			int id = recEnum.nextRecordId();
 			rs.setRecord(id, b, 0, b.length);
 		} catch (RecordStoreNotOpenException e) {
 			throw new PrefsException(e.getMessage());
@@ -238,8 +238,8 @@ public class Prefs {
 	}
 
 	void resetEnum() {
-		enum.rebuild();
-		enum.reset();
+		recEnum.rebuild();
+		recEnum.reset();
 	}
 
 	/**

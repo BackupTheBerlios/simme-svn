@@ -1,7 +1,7 @@
 /* XMLElement.java
  *
- * $Revision: 1.7 $
- * $Date: 2004/09/22 18:22:45 $
+ * $Revision: 1.8 $
+ * $Date: 2004/09/28 21:06:08 $
  * $Name:  $
  *
  * This file is part of NanoXML 2 Lite.
@@ -257,10 +257,10 @@ public class XMLElement {
         this.children = new Vector();
         this.entities = entities;
 
-        Enumeration enum = this.entities.keys();
+        Enumeration e = this.entities.keys();
 
-        while (enum.hasMoreElements()) {
-            Object key = enum.nextElement();
+        while (e.hasMoreElements()) {
+            Object key = e.nextElement();
             Object value = this.entities.get(key);
 
             if (value instanceof String) {
@@ -853,12 +853,12 @@ public class XMLElement {
         writer.write(this.name);
 
         if (!this.attributes.isEmpty()) {
-            Enumeration enum = this.attributes.keys();
+            Enumeration e = this.attributes.keys();
 
-            while (enum.hasMoreElements()) {
+            while (e.hasMoreElements()) {
                 writer.write(' ');
 
-                String key = (String) enum.nextElement();
+                String key = (String) e.nextElement();
                 String value = (String) this.attributes.get(key);
                 writer.write(key);
                 writer.write('=');
@@ -881,10 +881,10 @@ public class XMLElement {
         } else {
             writer.write('>');
 
-            Enumeration enum = this.enumerateChildren();
+            Enumeration e = this.enumerateChildren();
 
-            while (enum.hasMoreElements()) {
-                XMLElement child = (XMLElement) enum.nextElement();
+            while (e.hasMoreElements()) {
+                XMLElement child = (XMLElement) e.nextElement();
                 child.write(writer);
             }
 

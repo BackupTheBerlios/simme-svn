@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme]
 //       Java Source File: DynamicUI.java
-//                  $Date: 2004/09/22 19:11:39 $
-//              $Revision: 1.15 $
+//                  $Date: 2004/09/28 21:06:08 $
+//              $Revision: 1.16 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -197,9 +197,9 @@ public class DynamicUI implements IDynamicUI, CommandListener {
 	private Displayable makeList(ISimpleInfo infoObject) {
 		List l = new List(infoObject.getTitle(), List.IMPLICIT);
 
-		Enumeration enum = infoObject.getListElements().elements();
-		while (enum.hasMoreElements()) {
-			String name = (String) enum.nextElement();
+		Enumeration e = infoObject.getListElements().elements();
+		while (e.hasMoreElements()) {
+			String name = (String) e.nextElement();
 
 			if (name != null) {
 				l.append(name, null);

@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 //[Simme]
 //    Java Source File: GameBoard.java
-//               $Date: 2004/09/22 18:25:42 $
-//           $Revision: 1.2 $
+//               $Date: 2004/09/28 21:06:08 $
+//           $Revision: 1.3 $
 //----------------------------------------------------------------------------
 package at.einspiel.simme.client.ui;
 
@@ -197,9 +197,9 @@ class GameBoard extends Canvas implements IDynamicUI {
 		}
 		// see if there are actions for the end of the game
 		if (endGameActions != null && !endGameActions.isEmpty()) {
-			Enumeration enum = endGameActions.elements();
-			while (enum.hasMoreElements()) {
-				ActionCommand ac = (ActionCommand) enum.nextElement();
+			Enumeration e = endGameActions.elements();
+			while (e.hasMoreElements()) {
+				ActionCommand ac = (ActionCommand) e.nextElement();
 				cmdMgr.addActionCommand(ac);
 			}
 		}

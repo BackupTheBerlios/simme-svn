@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: MenuTester.java
-//                  $Date: 2004/06/07 09:25:45 $
-//              $Revision: 1.3 $
+//                  $Date: 2004/09/28 21:06:06 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
@@ -184,10 +184,10 @@ public class MenuTester extends JFrame {
 
             if (xml.getAttributeBoolean("list")) {
                 JPanel interiorPanel = new JPanel(new GridLayout(0, 1));
-                Enumeration enum = xml.enumerateChildren();
+                Enumeration e = xml.enumerateChildren();
                 int itemPos = 0;
-                while (enum.hasMoreElements()) {
-                    XMLElement element = (XMLElement) enum.nextElement();
+                while (e.hasMoreElements()) {
+                    XMLElement element = (XMLElement) e.nextElement();
                     String childName = element.getContent();
                     JButton btnChild = new JButton(childName);
                     btnChild.addActionListener(new ButtonListener(itemPos));
