@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // [Simme-Server]
 //       Java Source File: MenuTester.java
-//                  $Date: 2004/04/06 22:27:05 $
-//              $Revision: 1.2 $
+//                  $Date: 2004/06/07 09:25:45 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package at.einspiel.simme.server.menu;
 
@@ -30,7 +30,7 @@ public class MenuTester extends JFrame {
             .getResource("test-menumanager-simplenavigation.xml");
 
     private MenuManager mgr;
-    private JPanel contentPane;
+    private JSplitPane splitPane;
     private JPanel centerPane;
     // back button on top
     JButton backButton;
@@ -48,19 +48,23 @@ public class MenuTester extends JFrame {
     public MenuTester(URL menuUrl) throws MenuCreateException, IOException {
         super("Menu Tester");
 
-        contentPane = new JPanel(new BorderLayout());
+        JPanel contentPane = new JPanel(new BorderLayout());
         setContentPane(contentPane);
 
         // editor pane
         textPane = new JEditorPane();
         JScrollPane scroll = new JScrollPane(textPane);
         scroll.setPreferredSize(new Dimension(300, 500));
+        scroll.setMinimumSize(new Dimension(300, 500));
         scroll.setBorder(new TitledBorder("Source"));
-        contentPane.add(scroll, BorderLayout.WEST);
+//        contentPane.add(scroll, BorderLayout.WEST);
 
         // center pane
         centerPane = new JPanel();
-        contentPane.add(centerPane, BorderLayout.CENTER);
+//        contentPane.add(centerPane, BorderLayout.CENTER);
+        
+        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scroll, centerPane);
+        contentPane.add(splitPane, BorderLayout.CENTER);
 
         // meta controls
         JPanel controls = new JPanel();
@@ -121,9 +125,9 @@ public class MenuTester extends JFrame {
 
     private void loadPanel(JPanel panel) {
         oldPanel = centerPane;
-        contentPane.remove(centerPane);
+        splitPane.remove(centerPane);
         centerPane = panel;
-        contentPane.add(centerPane, BorderLayout.CENTER);
+        splitPane.setRightComponent(centerPane);
         pack();
     }
 
@@ -192,7 +196,7 @@ public class MenuTester extends JFrame {
                 }
                 add(interiorPanel, BorderLayout.CENTER);
             } else if (name.equals("text")) {
-                String text = (String) xml.getAttribute("msg");
+                String text = xml.getAttribute("msg");
                 if (text == null || text.length() == 0) {
                     if (xml.countChildren() > 0) {
                         text = ((XMLElement) xml.getChildren().elementAt(0)).getContent();
