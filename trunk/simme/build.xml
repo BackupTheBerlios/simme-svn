@@ -16,7 +16,7 @@
     <property name="build" value="build"/>
     <property name="cls" value="cls"/>
     <property name="cls-client" value="cls-client"/>
-    <property name="client-package" value="test/sim"/>
+    <property name="client-package" value="at/einspiel/simme/client"/>
     <property name="dir.obfuscate" value="${build}/obfuscate"/>
     <property name="dir.preverify" value="${build}/preverify"/>
     <property name="resources" value="res"/>
@@ -114,6 +114,7 @@
     <target name="clean">
         <delete dir="${cls}"/>
         <delete dir="${build}"/>
+        <delete dir="${cls-client}"/>
     </target>
     
     <!-- build simme.jar to include in client -->
@@ -157,6 +158,7 @@
         <fileset dir="${src}">
           <include name="${client-package}/**/*.java"/>
           <include name="nanoxml/*.java"/>
+          <exclude name="**/*Test*,**/tests/*"/>
         </fileset>
       </copy>
     </target>
@@ -167,6 +169,7 @@
         <fileset dir="${src}">
           <include name="${client-package}/**/*.java"/>
           <include name="nanoxml/*.java"/>
+          <exclude name="**/*Test*,**/tests/*"/>
         </fileset>
       </copy>
     </target>

@@ -7,7 +7,7 @@ import at.einspiel.simme.client.net.Request;
 import java.io.IOException;
 
 /**
- * Class used to Test class {@link test.sim.Game}
+ * Class used to Test class network methods.
  *
  * @author kariem
  */

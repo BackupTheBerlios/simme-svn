@@ -3,15 +3,15 @@ package at.einspiel.simme.client;
 import java.util.Random;
 
 /**
- * Game class with random AI.
+ * Game class with random AI. This class only implements the method to perform
+ * non-player moves.
  * 
  * @author kariem
  */
 public class GameRandomAI extends Game {
 
-    /** @see test.sim.Game#performComputerMove() */
-    protected void performComputerMove() {
-
+    /** @see Game#performComputerMove() */
+    void performComputerMove() {
         if (!gameOver) {
             Random random = new Random();
             byte edge = (byte) Math.abs(random.nextInt() % NB_EDGES);

@@ -1,7 +1,7 @@
 /* XMLElement.java
  *
- * $Revision: 1.1 $
- * $Date: 2003/10/03 09:21:01 $
+ * $Revision: 1.2 $
+ * $Date: 2003/10/03 18:34:32 $
  * $Name:  $
  *
  * This file is part of NanoXML 2 Lite.
@@ -112,7 +112,7 @@ import java.util.Vector;
  * </ul>
  * </p>
  *
- * @see nanoxml.XMLParseException
+ * @see XMLParseException
  *
  * @author Marc De Scheemaecker
  *         &lt;<A href="mailto:cyberelf@mac.com">cyberelf@mac.com</A>&gt;
@@ -526,7 +526,7 @@ public class XMLElement {
      *
      * @return element's name.
      *
-     * @see nanoxml.XMLElement#setName(java.lang.String) setName(String)
+     * @see XMLElement#setName(java.lang.String) setName(String)
      */
     public String getName() {
         return this.name;
@@ -798,7 +798,7 @@ public class XMLElement {
      *     <li><code>name</code> is a valid XML identifier
      * </ul></dd></dl>
      *
-     * @see nanoxml.XMLElement#getName()
+     * @see XMLElement#getName()
      */
     public void setName(String name) {
         this.name = name;
@@ -807,7 +807,7 @@ public class XMLElement {
     /**
      * Writes the XML element to a string.
      *
-     * @see nanoxml.XMLElement#write(java.io.Writer) write(Writer)
+     * @see XMLElement#write(java.io.Writer) write(Writer)
      */
     public String toString() {
         try {
@@ -836,7 +836,7 @@ public class XMLElement {
      *
      * @throws IOException If the data could not be written to the writer.
      *
-     * @see nanoxml.XMLElement#toString()
+     * @see XMLElement#toString()
      */
     public void write(Writer writer) throws IOException {
         if (this.name == null) {

@@ -181,7 +181,7 @@ public class PlayRequest {
             this((byte) - 1);
         }
 
-        /** @see test.sim.net.Request#reset() */
+        /** @see Request#reset() */
         public void reset() {
             super.reset();
             interrupted = false;

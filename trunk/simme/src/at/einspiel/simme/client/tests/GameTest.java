@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 import at.einspiel.simme.client.Game;
 
 /**
- * Class used to Test class {@link test.sim.Game}
+ * Class used to Test class {@link Game}
  *
  * @author kariem
  */
