@@ -1,7 +1,8 @@
 MIDlet-1: SimME, /icons/SimME.png, test.sim.Sim
 MIDlet-Icon: /icons/SimME.png
-MIDlet-Jar-Size: 43240
+MIDlet-Jar-Size: 48845
 MIDlet-Jar-URL: http://www.einspiel.at/simme/SimME.jar
 MIDlet-Name: SimME
 MIDlet-Vendor: Georg Spielmann & Kariem Hussein
-MIDlet-Version: 0.01
+MIDlet-Version: 0.02
+server.base: http://www.einspiel.at:8080/simme/
