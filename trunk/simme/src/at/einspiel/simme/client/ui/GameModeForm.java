@@ -54,35 +54,22 @@ public class GameModeForm extends List implements CommandListener {
 			switch (getSelectedIndex()) {
 				case 0 :
 					// Internet Spiel
-					// get preferences
-					PersonalPrefs prefs = PersonalPrefs.getInstance();
 
-					// load nick name, password and additional info
 					try {
-						prefs.open();
+						String[] personalInfo = PersonalPrefs.getPlayerInfo();
+						ConnectionAlert infoAlert = new ConnectionAlert(personalInfo);
+						d.setCurrent(infoAlert);
+						infoAlert.startConnection(d);
+						break;
 
-						if (prefs.currentSize() == 0) {
-							// empty prefs => error message
-							StringBuffer buf = new StringBuffer();
-							buf.append("Nick name and password have to be entered. Please ");
-							buf.append("set your options in \"Settings | Internet\" in the ");
-							buf.append("main menu.");
-							throw new PrefsException(buf.toString());
-						}
-
-						prefs.load();
 					} catch (PrefsException pex) {
+						// preferences could not be retrieved.
 						Alert error = new Alert("Fehler", pex.getMessage(), null,
 								AlertType.ERROR);
 						error.setTimeout(Alert.FOREVER);
 						d.setCurrent(error, this);
 						return;
 					}
-
-					ConnectionAlert infoAlert = new ConnectionAlert(prefs.getSavedData());
-					d.setCurrent(infoAlert);
-					infoAlert.startConnection(d);
-					break;
 
 				case 1 :
 					// Lokales Spiel (2 Spieler)

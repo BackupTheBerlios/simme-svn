@@ -1,5 +1,6 @@
 package at.einspiel.simme.client.ui;
 
+import at.einspiel.logging.Logger;
 import at.einspiel.simme.client.Sim;
 import at.einspiel.simme.client.util.PersonalPrefs;
 import at.einspiel.simme.client.util.PrefsException;
@@ -53,7 +54,7 @@ public class PrefForm extends List implements CommandListener {
 
         try {
             prefs.open();
-            System.out.println("PrefsSize: " + prefs.currentSize());
+            Logger.debug("PrefsSize: " + prefs.currentSize());
 
             if (prefs.currentSize() == 0) {
                 newRecord = true;
