@@ -167,13 +167,13 @@ public class Request {
          if (sender.isStarted()) {
             System.out.println("sender is started");
             while (sender.isAlive()) {
-               System.out.println("sender is alive");
                try {
-                  wait(10000);
+                  wait(5000);
                } catch (InterruptedException e) {
                   ;
                }
             }
+				System.out.println("getting response " + System.currentTimeMillis());
             return response;
          }
       }
@@ -233,21 +233,17 @@ public class Request {
       }
 
       public void run() {
-         System.out.println("running connectionthread");
          try {
             sendRequest(post);
          } catch (IOException e) {
             // TODO do something here
-
-         } finally {
-            System.out.println("stopping connectionthread");
          }
       }
 
       private void sendRequest(boolean post) throws IOException {
          try {
             c = getHttpConnection(url.toString());
-
+				/*
             c.setRequestMethod(HttpConnection.POST);
             c.setRequestProperty("IF-Modified-Since", "25 Nov 2001 15:17:19 GMT");
             c.setRequestProperty("User-Agent","Profile/MIDP-1.0 Configuration/CLDC-1.0");
@@ -270,8 +266,8 @@ public class Request {
             t.setCommandListener(this);
             */
             
-            setResponse(new byte[] {});
-            /*
+            //setResponse(new byte[] {});
+            
             c.setRequestProperty("User-Agent", "Profile/MIDP-1.0 Configuration/CLDC-1.0");
             // TODO add content language via param
             // c.setRequestProperty("Content-Language", "en-CA");
@@ -321,7 +317,8 @@ public class Request {
             byte[] responseCopy = new byte[counter];
             System.arraycopy(localResponse, 0, responseCopy, 0, counter);
 
-            setResponse(localResponse);*/
+				System.out.println("setting response " + System.currentTimeMillis());
+            setResponse(localResponse);//*/
             
          } finally {
             if (is != null) {

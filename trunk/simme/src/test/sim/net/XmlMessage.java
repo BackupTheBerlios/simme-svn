@@ -42,6 +42,9 @@ public class XmlMessage {
     */
    public XmlMessage(String data) throws IOException {
       xmlElement = new XMLElement();
+      if ((data == null) || (data.length() == 0)) {
+      	throw new IOException("Supplied String is empty");
+      }
       xmlElement.parseFromReader(new StringReader(data));
       request = new Request();
    }

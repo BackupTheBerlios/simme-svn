@@ -7,7 +7,7 @@ import java.io.IOException;
  *  
  * @author kariem
  */
-public class Statusmessage extends XmlMessage {
+public class StatusMessage extends XmlMessage {
 
    /**
     * @param data
