@@ -7,7 +7,7 @@ import at.einspiel.simme.nanoxml.XMLElement;
 /**
  * Represents a single game with all its states. Provides methods to start,
  * end, pause a game and uses a <code>Canvas</code> to draw itself to the
- * display
+ * display.
  *
  * @author kariem
  */
@@ -48,12 +48,10 @@ public class Game {
     private String p1Info;
     private String p2Info;
     /** the move message */
-    private String moveMessage = "";
-
-    private Move tmpMove;
+    private String moveMessage;
 
     /**
-     * Initializes a new game and starts it.
+     * Initializes a new game. The game has to be started manually.
      *
      * @see #start()
      */
@@ -62,9 +60,11 @@ public class Game {
     }
 
     /**
-     * Initializes a new game with the values found in the given xml element.
+     * Initializes a new game with the values found in the given xml element. 
+     * The game has to be started manually.
      * 
      * @param gameInfo xml element that holds information about the game.
+     * @see #start()
      */
     public Game(XMLElement gameInfo) {
         if (gameInfo != null) {
@@ -78,7 +78,6 @@ public class Game {
             // set to some default values
             setGameInfo("Player 1", "Player 2", "AT", "AT");
         }
-        tmpMove = new Move((byte) 0);
     }
 
     /** May be used to start/restart the game. */
@@ -172,13 +171,36 @@ public class Game {
      * @param edgeIndex the index of the edge to be selected.
      * @return whether the edge was successfully selected.
      */
-    public boolean selectEdge(byte edgeIndex) {
+    public final boolean selectEdge(byte edgeIndex) {
         byte owner = getEdgeOwner(edgeIndex);
         if (owner != NEUTRAL) {
-            moveMessage = "Edge selected!";
+            moveMessage = "Edge already selected!";
             return false;
         }
 
+        doMove(edgeIndex);
+
+        if (gameOver) {
+            if (currentPlayer) {
+                moveMessage = "You lost.";
+            } else {
+                moveMessage = "You won this game!";
+            }
+        } else { // reset move message
+            moveMessage = null;
+        }
+
+        return true;
+    }
+
+    /**
+     * Performs the move for the specified edge. The owner of the edge will be
+     * the currenlty active player. Additionally the two nodes of the edge will
+     * be set to deactivated and the active node is reset.
+     * 
+     * @param edgeIndex the index
+     */
+    protected void doMove(byte edgeIndex) {
         // deselect nodes, if contained in edge
         byte[] edgeNodes = Move.getNodeIndices(edgeIndex);
         nodes[edgeNodes[0]].activated = false;
@@ -188,38 +210,12 @@ public class Game {
         setEdgeOwner(edgeIndex);
 
         // switch players and see if someone has won
-        tmpMove.setEdge(edgeIndex);
-        endTurn(tmpMove);
-
-        performComputerMove();
-
-        // disable node to be disabled
-        disableNodes();
-
-        if (gameOver) {
-            if (currentPlayer) {
-                moveMessage = "I am sorry, you lost.";
-            } else {
-                moveMessage = "You win!";
-            }
-        } else { // reset move message
-            moveMessage = null;
-        }
-
-        return true;
-
+        Move m = new Move(edgeIndex);
+        endTurn(m);
     }
 
     private boolean edgeTo(byte secondNode) {
         return selectEdge(Move.getEdgeIndex(activeNode, secondNode));
-    }
-
-    /** 
-     * Performs a computer move. This method has to be implemented in subclasses
-     * in order to perform any computer move.
-     */
-    protected void performComputerMove() {
-        // implement this in subclasses
     }
 
     /** Searches for nodes to be disabled and sets them accordingly. */
@@ -252,11 +248,14 @@ public class Game {
 
     /**
      * Ends a turn for this game. Connected edges are searched for a win
-     * condition. The other player may make his move.
+     * condition. Afterwards the other player may make his move.
      *
      * @param m the move.
      */
-    void endTurn(Move m) {
+    final void endTurn(Move m) {
+        // disable nodes to be disabled
+        disableNodes();
+        
         // only the player who just did his move may lose.
         byte player = currentPlayer ? PLAYER1 : PLAYER2;
 
@@ -390,7 +389,16 @@ public class Game {
         return currentPlayer ? PLAYER2 : PLAYER1;
     }
 
-    void setEdgeOwner(byte index) {
+    /**
+     * Sets the edge owner for the edge index <code>index</code> to the current
+     * player. Undo information is added at this point.
+     * 
+     * @param index the edge index.
+     * 
+     * @throws ArrayIndexOutOfBoundsException if the index is out of range
+     *         (0-14).
+     */
+    void setEdgeOwner(byte index) throws ArrayIndexOutOfBoundsException {
         edges[index] = currentPlayer ? PLAYER1 : PLAYER2;
         undoStack.push(new Byte(index));
     }

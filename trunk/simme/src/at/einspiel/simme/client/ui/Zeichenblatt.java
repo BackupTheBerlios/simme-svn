@@ -7,6 +7,11 @@ import at.einspiel.simme.client.GameRandomAI;
 import at.einspiel.simme.client.Sim;
 import at.einspiel.simme.client.util.DrawUtils;
 
+/**
+ * The visual component for the interaction with the game. 
+ * 
+ * @author kariem
+ */
 class Zeichenblatt extends Canvas implements CommandListener {
 
     private static final byte NB_NODES = Game.NB_NODES;
@@ -15,7 +20,6 @@ class Zeichenblatt extends Canvas implements CommandListener {
     private static byte linewidth;
     private static final Command CMD_CANCEL = new Command("Abbruch", Command.CANCEL, 1);
     private static final Command CMD_NEWGAME = new Command("Neu", Command.OK, 1);
-    private static final Command CMD_NEWGAME_SINGLE = new Command("Neu", Command.OK, 1);
 
     /** Inner and outer colors of player1's lines */
     private static int p1c1, p1c2;
@@ -77,11 +81,11 @@ class Zeichenblatt extends Canvas implements CommandListener {
         bg = ColorMgmt.bg;
 
         // start a new Game()
+        this.single = singlePlayer;
         if (singlePlayer) {
-           setGame(new GameRandomAI());
+            setGame(new GameRandomAI());
         } else {
-           setGame(new Game());
-            single = true;
+            setGame(new Game());
         }
 
         // add cancel command
@@ -90,7 +94,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
 
         width = getWidth();
         height = getHeight();
-        System.out.println("pointer events :" + hasPointerEvents());
+        System.out.println("pointer events :" + hasPointerEvents()); 
         setDisplayParameters(false);
     }
 
@@ -109,9 +113,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
     }
     
 
-    /**
-     * @see Canvas#keyPressed(int)
-     */
+    /** @see Canvas#keyPressed(int) */
     public void keyPressed(int keyCode) {
         if (((keyCode >= KEY_NUM1) && (keyCode <= KEY_NUM6)) || (keyCode == KEY_NUM0)) {
             int key = keyCode - 49;
@@ -138,11 +140,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
         graphics.fillRect(0, 0, width, height);
 
         if (game.getWinner() != 0) {
-            if (!single) {
-                addCommand(CMD_NEWGAME_SINGLE);
-            } else {
-                addCommand(CMD_NEWGAME);
-            }
+            addCommand(CMD_NEWGAME);
         }
 
         int c1 = nc1;
@@ -311,9 +309,7 @@ class Zeichenblatt extends Canvas implements CommandListener {
 
     }
 
-    /**
-     * @see CommandListener#commandAction(Command, Displayable)
-     */
+    /** @see CommandListener#commandAction(Command, Displayable) */
     public void commandAction(Command c, Displayable d) {
         Display display = Sim.getDisplay();
 
@@ -321,11 +317,9 @@ class Zeichenblatt extends Canvas implements CommandListener {
         if (c == CMD_CANCEL) {
             displayable = Sim.getMainScreen();
         } else if (c == CMD_NEWGAME) {
-            displayable = new Zeichenblatt();
-        } else if (c == CMD_NEWGAME_SINGLE) {
-            displayable = new Zeichenblatt(true);
+            displayable = new Zeichenblatt(single);
         }
-        
+
         if (displayable != null) {
             display.setCurrent(displayable);
         }

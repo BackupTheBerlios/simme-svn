@@ -8,10 +8,10 @@ import java.util.Random;
  * 
  * @author kariem
  */
-public class GameRandomAI extends Game {
+public class GameRandomAI extends GameOnePlayer {
 
-    /** @see Game#performComputerMove() */
-    protected void performComputerMove() {
+    /** @see GameOnePlayer#doOtherPlayersMove() */
+    protected void doOtherPlayersMove() {
         if (!gameOver) {
             Random random = new Random();
             byte edge = (byte) Math.abs(random.nextInt() % NB_EDGES);
@@ -24,5 +24,4 @@ public class GameRandomAI extends Game {
             endTurn(new Move(edge));
         }
     }
-
 }

@@ -56,6 +56,7 @@ public class GameTest extends TestCase {
         // 0 enabled
         assertFalse(g.isDisabled(n0));
         assertTrue(g.selectNode(n1));
+        assertTrue(g.getMoveNr() == 1); // one move has been performed
 
         // select 0-2
         assertTrue(g.selectNode(n0));
@@ -63,6 +64,7 @@ public class GameTest extends TestCase {
         // 0 enabled
         assertFalse(g.isDisabled(n0));
         assertTrue(g.selectNode(n2));
+        assertTrue(g.getMoveNr() == 2); // two moves have been performed
 
         // select 0-3
         assertTrue(g.selectNode(n0));
@@ -70,6 +72,7 @@ public class GameTest extends TestCase {
         // 0 enabled
         assertFalse(g.isDisabled(n0));
         assertTrue(g.selectNode(n3));
+        assertTrue(g.getMoveNr() == 3); // three moves have been performed
 
         // select 0-4
         assertTrue(g.selectNode(n0));
@@ -77,6 +80,7 @@ public class GameTest extends TestCase {
         // 0 enabled
         assertFalse(g.isDisabled(n0));
         assertTrue(g.selectNode(n4));
+        assertTrue(g.getMoveNr() == 4); // four moves have been performed
 
         // select 0-5
         assertTrue(g.selectNode(n0));
@@ -84,6 +88,7 @@ public class GameTest extends TestCase {
         // 0 enabled
         assertFalse(g.isDisabled(n0));
         assertTrue(g.selectNode(n5));
+        assertTrue(g.getMoveNr() == 5); // five moves have been performed
 
         // 0 is disabled
         assertTrue(g.isDisabled(n0));
