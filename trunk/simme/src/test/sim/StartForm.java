@@ -8,7 +8,6 @@ import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.List;
 
-
 /**
  * A Form that shows some options - main menu of the game.
  *
@@ -16,9 +15,7 @@ import javax.microedition.lcdui.List;
  */
 public class StartForm extends List implements CommandListener {
 
-   private static final String[] CHOICES =
-   { "Spielen", "Einstellungen", "Info", "About" };
-
+   private static final String[] CHOICES = { "Spielen", "Einstellungen", "Info", "About" };
 
    private Sim sim;
    private GameModeForm gamemode;
@@ -36,13 +33,7 @@ public class StartForm extends List implements CommandListener {
       setCommandListener(this);
    }
 
-
-   /**
-    * DOCUMENT ME!
-    *
-    * @param cmd DOCUMENT ME!
-    * @param disp DOCUMENT ME!
-    */
+   /** @see CommandListener#commandAction(Command, Displayable) */
    public void commandAction(Command cmd, Displayable disp) {
       if (cmd.getCommandType() == Command.EXIT) {
          sim.destroyApp(false);
@@ -58,28 +49,17 @@ public class StartForm extends List implements CommandListener {
 
             case 1 : // Einstellungen
                d.setCurrent(new PrefForm(sim));
-
                break;
 
             case 2 : // Info
-
-               /*Alert alert = new Alert("Not Available", "Under Construction", null, AlertType.INFO);
-               alert.setTimeout(Alert.FOREVER);
-               Display.getDisplay(sim).setCurrent(alert, this);*/
                Info.showInfo(Display.getDisplay(sim));
-
                break;
 
             case 3 : // About
-
                Alert alert2 =
-                  new Alert(
-                     "About",
-                     "SimME\n by SPIESSEIN\n based on HEXI\n by Prof. Slany\n",
-                     null, AlertType.INFO);
+                  new Alert("About", "SimME\n by SPIESSEIN\n based on HEXI\n by Prof. Slany\n", null, AlertType.INFO);
                alert2.setTimeout(5000);
                Display.getDisplay(sim).setCurrent(alert2, this);
-
                break;
          }
       }

@@ -17,7 +17,7 @@ public class SimmeTestSuite {
     * @return the Test which is executed.
     */
    public static Test suite() {
-      TestSuite suite = new TestSuite();
+      TestSuite suite = new TestSuite("Test for SimME client");
       suite.addTestSuite(GameTest.class);
 
       return suite;
