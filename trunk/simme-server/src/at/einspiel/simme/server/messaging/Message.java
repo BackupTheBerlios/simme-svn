@@ -5,12 +5,12 @@ package at.einspiel.simme.server.messaging;
  * 
  * @author kariem
  */
-public abstract class Message {
+public interface Message {
 
    /**
     * String representation of this message.
     * 
     * @return String representation.
     */
-   public abstract String toString();
+   String getMessage();
 }

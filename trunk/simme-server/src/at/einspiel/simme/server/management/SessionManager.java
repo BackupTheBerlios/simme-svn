@@ -1,12 +1,10 @@
 package at.einspiel.simme.server.management;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
-import at.einspiel.simme.server.base.NoSuchUserException;
+import test.sim.net.LoginResult;
+import at.einspiel.simme.server.base.User;
+import at.einspiel.simme.server.base.UserException;
 
 /**
  * This class is intended to be used for User management. Each user who
@@ -58,22 +56,50 @@ public class SessionManager {
    /**
     * Adds a user to the list of managed users.
     * 
-    * @param nick The nickname of the new user.
+    * @param u the user
     * 
-    * @return The managed user that was added.
-    *     
-    * @see ManagedUser#ManagedUser(String)
+    * @return a login result
     */
-   public ManagedUser addUser(String nick) {
-      ManagedUser u;
+   public LoginResult addUser(User u) {
+      String response = null;
+      boolean success = false;
       try {
-         u = new ManagedUser(nick);
-         addUser(u);
-         return u;
-      } catch (NoSuchUserException e) {
-         e.printStackTrace();
+         User userCopy = User.getUser(u.getNick(), u.getPassword());
+         if (!userCopy.equals(u)) {
+            u.saveToDB();
+         }
+         addUser(new ManagedUser(u));
+         response = "Benutzer angemeldet";
+         success = true;
+      } catch (UserException e) {
+         success = false;
+         response = e.getMessage();
+      } finally {
+         return new LoginResult(success, response);
       }
-      return null;
+   }
+
+   /**
+    * Adds a user to the list of managed users.
+    * 
+    * @param nick The nickname of the new user.
+    * @param pwd the user's pwd.
+    * 
+    * @return a login result
+    */
+   public LoginResult addUser(String nick, String pwd) {
+      String response = null;
+      boolean success = false;
+      try {
+         addUser(ManagedUser.getManagedUser(nick, pwd));
+         response = "Benutzer angemeldet";
+         success = true;
+      } catch (UserException e) {
+         success = false;
+         response = e.getMessage();
+      } finally {
+         return new LoginResult(success, response);
+      }
    }
 
    /**
@@ -82,7 +108,8 @@ public class SessionManager {
     * @param user The user which is added.
     */
    public void addUser(ManagedUser user) {
-      System.out.println("[" + System.currentTimeMillis() + "] adding " + user.getNick());
+      System.out.println(
+         "[" + System.currentTimeMillis() + "] adding " + user.getNick());
       synchronized (users) {
          users.put(user.getNick(), user);
       }
@@ -97,12 +124,13 @@ public class SessionManager {
     *         <code>false</code> otherwise.
     */
    public boolean removeUser(String nick) {
-      System.out.println("[" + System.currentTimeMillis() + "] removing " + nick);
+      System.out.println(
+         "[" + System.currentTimeMillis() + "] removing " + nick);
       synchronized (users) {
          return users.remove(nick) != null;
       }
    }
-   
+
    /**
     * Shows the number of users currently managed.
     * 
@@ -111,7 +139,7 @@ public class SessionManager {
    public int getNumberOfUsers() {
       return users.size();
    }
-   
+
    /**
     * Returns an iterator over the currently managed users
     * 
@@ -154,25 +182,25 @@ public class SessionManager {
                continue;
             }
             long timeStarted = System.currentTimeMillis();
-            // TODO No updates for a long time => contact users (own thread)
-
             synchronized (users) {
                for (Iterator i = users.iterator(); i.hasNext();) {
                   ManagedUser mu = (ManagedUser) i.next();
-                  switch (mu.getState()) {
-                     case ManagedUser.STATE_IDLE :
-                        if (mu.secondsSinceLastUpdate() > getMaxSecondsIdle()) {
+                  switch (mu.getStateCategory()) {
+                     case UserState.STATE_IDLE :
+                        if (mu.secondsSinceLastUpdate()
+                           > getMaxSecondsIdle()) {
                            i.remove();
                         }
                         break;
 
-                     case ManagedUser.STATE_WAITING :
-                        if (mu.secondsSinceLastUpdate() > getMaxSecondsWaiting()) {
+                     case UserState.STATE_WAITING :
+                        if (mu.secondsSinceLastUpdate()
+                           > getMaxSecondsWaiting()) {
                            i.remove();
                         }
                         break;
 
-                     case ManagedUser.STATE_PLAYING :
+                     case UserState.STATE_PLAYING :
                         break;
                   }
                }
@@ -196,18 +224,18 @@ public class SessionManager {
       }
    }
 
-//   // currently not needed
-//   private class UserStateComparator implements Comparator {
-//
-//      /**
-//       * Compares two ManagedUsers by comparing their state.
-//       * @see java.util.Comparator#compare(Object, Object)
-//       */
-//      public int compare(Object o1, Object o2) {
-//         ManagedUser mu1 = (ManagedUser) o1, mu2 = (ManagedUser) o2;
-//         return new Integer(mu1.getState()).compareTo(new Integer(mu2.getState()));
-//      }
-//   }
+   //   // currently not needed
+   //   private class UserStateComparator implements Comparator {
+   //
+   //      /**
+   //       * Compares two ManagedUsers by comparing their state.
+   //       * @see java.util.Comparator#compare(Object, Object)
+   //       */
+   //      public int compare(Object o1, Object o2) {
+   //         ManagedUser mu1 = (ManagedUser) o1, mu2 = (ManagedUser) o2;
+   //         return new Integer(mu1.getState()).compareTo(new Integer(mu2.getState()));
+   //      }
+   //   }
 
    /**
     * Returns the maximum time in seconds that idle users are allowed to not
@@ -266,6 +294,15 @@ public class SessionManager {
     */
    public static void setUpdateInterval(int i) {
       updateInterval = i;
+   }
+
+   /**
+    * Returns the users.
+    * 
+    * @return the users.
+    */
+   public SortedMap getUsers() {
+      return users;
    }
 
 }

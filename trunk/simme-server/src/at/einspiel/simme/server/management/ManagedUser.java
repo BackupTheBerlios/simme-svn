@@ -1,7 +1,7 @@
 package at.einspiel.simme.server.management;
 
-import at.einspiel.simme.server.base.NoSuchUserException;
 import at.einspiel.simme.server.base.User;
+import at.einspiel.simme.server.base.UserException;
 
 /**
  * A user that is currently online. In addition to the members found in
@@ -11,14 +11,7 @@ import at.einspiel.simme.server.base.User;
  */
 public class ManagedUser extends User {
 
-   /** user has just logged in and has not yet started a game */
-   public static final int STATE_IDLE = 0;
-   /** user is waiting for other players to play with him */
-   public static final int STATE_WAITING = 1;
-   /** user is playing */
-   public static final int STATE_PLAYING = 2;
-
-   private int state;
+   private UserState state;
    private long lastStatusUpdate;
 
    /**
@@ -26,7 +19,14 @@ public class ManagedUser extends User {
     * @param u the user
     */
    public ManagedUser(User u) {
-      super(u.getNick(), u.getPassword(), u.getWinmsg(), u.getLang(), u.getInfo(), u.getLocation(), u.getClientmodel());
+      super(
+         u.getNick(),
+         u.getPassword(),
+         u.getWinmsg(),
+         u.getLang(),
+         u.getInfo(),
+         u.getLocation(),
+         u.getClientmodel());
       init();
    }
 
@@ -34,42 +34,58 @@ public class ManagedUser extends User {
     * Creates a new <code>ManagedUser</code> by querying the database with
     * the nickname.
     * 
-    * @param nick The nick name of the user.
+    * @param nick the user's nick name.
+    * @return the user with the corresponding nick name.
     * 
-    * @throws NoSuchUserException if the user with the given id cannot
+    * @throws UserException if the user with the given id cannot
     *         be found
     */
-   public ManagedUser(String nick) throws NoSuchUserException {
-      super(nick);
-      init();
+   public static ManagedUser getManagedUserByNick(String nick)
+      throws UserException {
+      ManagedUser user = new ManagedUser(User.getUserByNick(nick));
+      user.init();
+      return user;
+   }
+
+   /**
+    * Creates a new <code>ManagedUser</code> by querying the database with
+    * the nickname.
+    * 
+    * @param nick the user's nick name.
+    * @param pwd the user's passwort.
+    * @return either an already existing user with the given nick/password
+    *         combination, or a newly created user.
+    * @throws UserException if the user with the given id cannot
+    *         be found
+    */
+   public static ManagedUser getManagedUser(String nick, String pwd)
+      throws UserException {
+      ManagedUser user = new ManagedUser(User.getUser(nick, pwd));
+      user.init();
+      return user;
    }
 
    private void init() {
-      state = STATE_IDLE;
+      state = new UserState(this);
       lastStatusUpdate = System.currentTimeMillis();
    }
 
    /**
     * Sets the state of this user.
     * 
-    * @param state The new state. One of {@link #STATE_IDLE},
-    *        {@link #STATE_WAITING}, {@link #STATE_PLAYING}.
+    * @param state The new state (see {@link UserState#setState(int)}).
     */
-   public void setState(int state) {
-      if ((state >= 0) && (state <= 2)) {
-         this.state = state;
-         update();
-      }
+   public void setStateCategory(int state) {
+      this.state.setStateCategory(state);
    }
 
    /**
     * Returns the current state of the user.
     * 
-    * @return The current state. One of {@link #STATE_IDLE},
-    *         {@link #STATE_WAITING}, {@link #STATE_PLAYING}.
+    * @return The current state (see {@link UserState#getState()}).
     */
-   public int getState() {
-      return state;
+   public int getStateCategory() {
+      return state.getStateCategory();
    }
 
    /**
@@ -95,21 +111,15 @@ public class ManagedUser extends User {
     * @return User's state as String.
     */
    public String getStateAsString() {
-      String state = "unknown";
-      switch (getState()) {
-         case STATE_IDLE :
-            state = "idle";
-            break;
+      return state.getStateAsString();
+   }
 
-         case STATE_PLAYING :
-            state = "playing";
-            break;
-
-         case STATE_WAITING :
-            state = "waiting";
-            break;
-
-      }
+   /**
+    * Returns the users state
+    * @return the user's state
+    */
+   public UserState getState() {
       return state;
    }
+
 }

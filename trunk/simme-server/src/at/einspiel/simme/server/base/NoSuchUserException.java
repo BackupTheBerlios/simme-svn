@@ -5,7 +5,7 @@ package at.einspiel.simme.server.base;
  *
  * @author kariem
  */
-public class NoSuchUserException extends Exception {
+public class NoSuchUserException extends UserException {
 
    /**
     * Creates a new <code>NoSuchUserException</code> with the nick name
@@ -28,7 +28,7 @@ public class NoSuchUserException extends Exception {
    }
 
    private static String buildNickMissing(String nick) {
-      return ("The user \"" + nick + "\" cannot be found");
+      return ("Der Benutzer \"" + nick + "\" konnte nicht gefunden werden.");
    }
 
 }

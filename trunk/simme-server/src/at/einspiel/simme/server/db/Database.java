@@ -1,8 +1,12 @@
 package at.einspiel.simme.server.db;
 
+import java.io.*;
+
 import java.util.*;
+import java.util.Date;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 
 /**
  * Represents the interface to the database.
@@ -14,18 +18,31 @@ public class Database {
 
    private static final String DRIVER_CLASS = "org.postgresql.Driver";
    private static final String SERVER_URL =
-      "jdbc:postgresql://localhost/einspiel";
+      "jdbc:postgresql://127.0.0.1/einspiel";
    private static final String USER = "einspiel";
    private static final String PWD = "Weisahma";
 
    private Connection conn;
 
+   private static File errorFile = null;
+   private static PrintStream error = null;
+
    static {
+      // error log
+      try {
+         final SimpleDateFormat dater = new SimpleDateFormat("yyyyMMdd_hhmm");
+         String date = dater.format(new Date());
+         String userHome = System.getProperty("user.home");
+         errorFile = new File(userHome, "db-error_" + date + ".log");
+         error = new PrintStream(new FileOutputStream(errorFile));
+      } catch (FileNotFoundException e) {
+         e.printStackTrace();
+      }
       // load the driver
       try {
          Class.forName(DRIVER_CLASS);
       } catch (ClassNotFoundException e) {
-         e.printStackTrace();
+         e.printStackTrace(error);
       }
    }
 
@@ -71,9 +88,16 @@ public class Database {
     * @see Statement#executeUpdate(java.lang.String)
     */
    public int executeUpdate(String text) throws SQLException {
-      Statement stmt = getConnection().createStatement();
-      System.out.println("text=" + text);
-      return stmt.executeUpdate(text);
+
+      try {
+         Statement stmt = getConnection().createStatement();
+         System.out.println("text=" + text);
+         return stmt.executeUpdate(text);
+      } catch (SQLException e) {
+         // print to log but throw message
+         e.printStackTrace(error);
+         throw new SQLException(e.getMessage(), e.getSQLState());
+      }
    }
 
    /**
@@ -278,7 +302,8 @@ public class Database {
     *
     * @see #executeUpdate(String).
     */
-   public int update(String tableName, Map attrMap, Map whereMap) throws SQLException {
+   public int update(String tableName, Map attrMap, Map whereMap)
+      throws SQLException {
       StringBuffer buf = new StringBuffer("UPDATE ");
       buf.append(tableName);
 
@@ -324,7 +349,6 @@ public class Database {
       return executeUpdate(buf.toString());
 
    }
-
 
    /*
     *
