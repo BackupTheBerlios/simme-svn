@@ -28,7 +28,7 @@ import at.einspiel.simme.server.SessionManager;
 public abstract class AbstractServlet extends HttpServlet {
 
 	/** The locale of the requesting client. */
-	Locale clientLocale;
+	protected Locale clientLocale;
 	/** The user associated with this request. */
 	ManagedUser u;
 	
