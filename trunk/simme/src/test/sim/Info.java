@@ -40,7 +40,7 @@ public class Info {
 
 	public static void showInfo(Display display) {
 
-		Alert alert = new Alert("About MIDP");
+		Alert alert = new Alert("SimME HowTo");
 		alert.setTimeout(Alert.FOREVER);
 		alert.setString(howto);
 
