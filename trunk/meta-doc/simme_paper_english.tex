@@ -16,9 +16,9 @@
 	wsi@ist.tugraz.at
 \end{center}
 \begin{center}
-	Paul Sprenger\\
-	\emph{Technical Documentation}\\
-	sprenger@sbox.tugraz.at
+	Kariem Hussein\\
+	\emph{Architecture and Design}\\
+	kariem@users.berlios.de
 \end{center}
 \begin{center}
 	Georg Spielmann\\
@@ -26,9 +26,9 @@
 	schurli@users.berlios.de
 \end{center}
 \begin{center}
-	Kariem Hussein\\
-	\emph{Architecture and Design}\\
-	kariem@users.berlios.de
+	Paul Sprenger\\
+	\emph{Technical Documentation}\\
+	sprenger@sbox.tugraz.at
 \end{center}
 \end{multicols}
 \vspace{0.25in}
@@ -36,11 +36,14 @@
 
 \begin{abstract}
 
-	SimME is a multiplayer game for mobile devices (mobile phones, PDAs, ...)
-	developed to provide a basis for a gaming forum in which new games can
-	easily be integrated. The architecture described in this document is
-	targeted on assisting the implementation of multiplayer games for mobile
-	devices.
+	This paper presents SimME, a multiplayer game for mobile devices (mobile
+	phones, PDAs, ...), based on Ramsey's theory. Mobile devices usually have
+	limited resources, small displays, and software development poses a
+	challenge, even to experienced programmers. SimME a.k.a. Hexi was first
+	introduced as a java applet implementation, and is available at
+	\textit{\mbox{http://www.dbai.tuwien.ac.at/proj/ramsey/}}. The SimME project
+	aims at providing an extensible platform for multiplayer games over the
+	Internet on mobile phones and similar devices.
 
 \end{abstract}
 
@@ -49,21 +52,22 @@
 
 	A lot of game developers, particulary developers working in the area of
 	wireless communication, are confronted with the same problem: a two player
-	game is usually limited to infrared or bluetooth communication, depending on
-	the device capabilities. A server-based version for multiplayer gaming is
-	unlikely, due to limited resources on mobile devices.
+	game is usually limited to a point-to-point connection (infrared or
+	bluetooth communication), depending on the device capabilities. A
+	server-based implementation on mobile devices for multiplayer gaming is
+	unlikely, due to limited resources.
 
-	On the basis of this consideration the SimME project tries to create a
-	platform in which a server-based multiplayer version of an existing game can
-	be created with minimal effort. The communication is based on internet
-	technologies, a domain where most mobile device vendors focus their
-	development.
+	The SimME platform provides an extensible set of classes to ease the
+	development of simple multiplayer games for mobile devices. The
+	communication is based on internet technologies, a domain where most mobile
+	device vendors focus their development.
 
-	Because of the strict partitioning of game logic and communication between
-	client and server, we have achieved that the server-side only has to
-	implement the communication protocol between client and server. In fact, the
-	server is only a mean of documented communication. Games could be viewed at
-	a later point in time and player performance can be logged and compared.
+	As a game needs information exchange, the two participating parties have to
+	agree on a common protocol. The main purpose of the SimME server is to act
+	as a match-making provider. Clients connect to the server to choose their
+	opponent. The game is "managed" by the server, i.e. the server creates the
+	game and sends meta-information to the clients. See section
+	\ref{sec:architecture} for details.
 
 	Figure \ref{fig:communication} shows how users can play SimME over the
 	internet.
@@ -79,226 +83,153 @@
 
 \section{Applied Theory - Ramsey's Theorem}
 
-	The game's rules build on Ramsey's theorem. Here is a short description
-	\cite{wiki}:
+	The game's rules build on Ramsey's theorem \cite{wiki}. A close analysis of
+	the relation between the game and the underlying Ramsey theory can be found
+	in \cite{slany_paper}.
 
-	Ramsey's Theorem, named after the English mathematician Frank P. Ramsey,
-	states that in colouring a large complete graph, one will find complete
-	subgraphs all of the same colour. In a precise statement, for any pair of
-	positive integers (r,s), there exists an integer R(r,s) such that for any
-	complete graph on R(r,s) vertices, whose edges are coloured red or blue,
-	there exists either a complete subgraph on r vertices which is entirely
-	blue, or a complete subgraph on s vertices which is entirely red. Here
-	R(r,s) signifies an integer that depends on both r and s. This initiated the
-	combinatorial theory, now called Ramsey theory, that seeks regularity amid
-	disorder
+	SimME is based on the \emph{Party Puzzle} which describes the following
+	problem: Given a set of 6 people at a party, how many people do need to
+	randomly select, so that either 3 of them know one another, or 3 of them
+	don't know each other. The answer to this question corresponds to the Ramsey
+	number R(3,3) = 6.
 
-	\subsection{Ramsey Numbers}
+	Let's call them \emph{A}, \emph{B}, \emph{C}, \emph{D}, \emph{E}, \emph{F}
+	and \emph{G}, so that we only have to consider 2 cases:
 
-		The numbers R(r,s) in Ramsey's theorem (and their extensions to more
-		than two colours) are known as Ramsey numbers. An upper bound for R(r,s)
-		can be extracted from the proof of the theorem, and other arguments give
-		lower bounds. However, there is a vast gap between the tightest lower
-		bounds and the tightest upper bounds. Consequently, there are very few
-		numbers r and s for which we know the exact value of R(r,s).
+	\begin{enumerate}
 
-		At the time of writing, even the exact value of R(5,5) is unknown,
-		although it is known to lie between 43 and 49 (inclusive), and, barring
-		a breakthrough in theory, it is probably the case that the exact value
-		of R(6,6) will remain unknown forever.
+		\item In the first case, suppose A knows three (or more) of the
+		others, say, B, C and D. If either B and C, B and D, or C and D are
+		mutual acquaintances, then A and the acquainted pair make three
+		people who know one another. Otherwise B, C and D are mutual
+		strangers.
 
-		\begin{quotation}
+		\item In the second case, suppose A knows only two (or fewer) of the
+		others, say, B and C. If either D and F, D and E, or E and F are
+		strangers, then A and the unacquainted pair make three people who do
+		not know one another. Otherwise D, E and F are mutual acquaintances.
 
-			Imagine an alien force, vastly more powerful than us landing on
-			Earth and demanding the value of R(5, 5) or they will destroy our
-			planet. In that case, we should marshal all our computers and all
-			our mathematicians and attempt to find the value. But suppose,
-			instead, that they asked for R(6, 6), we should attempt to destroy
-			the aliens---\emph{Paul Erd\"os}
+	\end{enumerate}
 
-		\end{quotation}
-
-	\subsection{Party Puzzle}
-
-		This theory brings us to the Party Puzzle which consists in the question
-		of how many people do you have to take, randomly chosen, on a party so
-		that either 3 of them know each other mutually or 3 of them don?t know
-		each other mutually. The answer to this question corresponds to the
-		Ramsey number R(3,3) = 6.
-
-		Let's name the 6 people A, B, C, D, E, F and G then we only have to
-		consider 2 cases:
-
-		\begin{itemize}
-
-			\item In the first case, suppose A knows three (or more) of the
-			others, say, B, C and D. If either B and C, B and D, or C and D are
-			mutual acquaintances, then A and the acquainted pair make three
-			people who know one another. Otherwise B, C and D are mutual
-			strangers.
-
-			\item In the second case, suppose A knows only two (or fewer) of the
-			others, say, B and C. If either D and F, D and E, or E and F are
-			strangers, then A and the unacquainted pair make three people who do
-			not know one another. Otherwise D, E and F are mutual acquaintances.
-
-		\end{itemize}
-
-		This puzzle can be illustrated by our game SimME in which the 6 people
-		are represented by 6 vertices. The relationship between two people --
-		strangers or acquaintances -- is represented by colored edges between
-		the corresponding vertices.
+	This puzzle can be illustrated by SimME, where the 6 people are represented
+	by 6 vertices at the corners of a hexagon. The relationship between two
+	people -- strangers or acquaintances -- is represented by coloured edges
+	between the corresponding vertices.
 
 
 \section{Description of the Game}
 
-	SimME describes the the party puzzle, a special case of the Ramsey theory.
-	The game board consists of six points arranged at the corners of a hexagon.
-	One point is connected to the other five points. At each turn, one player
-	connects two points. The player who connects three points with a triangle
-	loses the game.
+	The game board consists of six nodes, arranged at the corners of a hexagon.
+	Each node is connected to the five other points. At each turn, one player
+	connects two points. The first player who interconnects three points with a
+	triangle loses the game.
 
 	Figure \ref{fig:gameboard} shows an empty game board on the client device.
-	As the game progresses, connections between points (edges) are marked with
-	the player's colour.
+	As the game progresses, each move is indicated by painting an edge in the
+	player's colour. As there is an odd number of connectable edges, the game
+	can never end in a draw.
 
 	\begin{figure}[h]
 	\begin{center}
 		\includegraphics{pics/simme-screen.png}
-		\caption{SimME game board on mobile phone}
+		\caption{Initial SimME game board on mobile phone}
 		\label{fig:gameboard}
 	\end{center}
 	\end{figure}
 
-	The game can never end in a draw, there is always a winner. Due to the
-	odd number of connections between the vertices of the hexagon, there can
-	never be a stalemate. A close analysis of this game and the underlying
-	Ramsey theory was done in the paper \emph{Graph Ramsey games} by
-	Wolfgang Slany \cite{slany_paper}.
-
-	The game is designed for mobile phones and allows either to play against
-	the computer, or against another human player over the web. Therefor the
-	game has a client-server architecture. More on this in section
-	\ref{sec:architecture}.
-
-
 \section{Current State of Development}
 
-	Until now the game SimME was implemented in the following versions:
+	Currently SimME supports a \emph{one-player}, \emph{local multi-player} and an
+	\emph{internet-based multiplayer} mode.
 
-	\begin{itemize}
-		\item one player game (against a computer opponent)
-		\item local multiplayer game (two players - one device)
-		\item multiplayer game (with an external game server)
-	\end{itemize}
+	\begin{description}
 
-	The main focus lied on the strict isolation of client and server, to design
-	game logic and communication between client and server as modular as
-	possible. This should ensure optimal extensibility and allow for simple
-	development of future games.
-
-	A close look on the architecture follows in section \ref{sec:architecture}.
-	Let's first take a closer look at the items stated above.
-
-	\begin{enumerate}
-
-		\item \textit{one player game (against a computer opponent)}
+		\item [\textit{One player game (against a computer opponent)}]
 
 			A computer opponent is implemented. As described in section
 			\ref{sec:ci} at this time there is no \textit{intelligent} computer
 			opponent integrated in the game SimME, but an opponent taking
 			randomised turns.
 
-			The portation of a learning computer opponent, implemented as a java
-			applet Version of the game (called HEXI) from Wolfgang Slany, is
-			planned \cite{slany_paper}.
+			A learning computer opponent, as implemented in the java applet of
+			the game HEXI \cite{slany_paper}, is planned for a future version. .
 
-		\item \textit{local multiplayer game (two players - one device)}
+		\item [\textit{Local multiplayer game (two players - one device)}]
 
-			In this Version of the game SimME two players play local against
-			each other. They share one mobile device an take turns one after the
-			other.
+			This playing mode allows two players to play a local game against
+			each other, sharing one mobile device.
 
-			A local multiplayer game version will be the starting point
-			for implementing a server based version of other games in the
-			future.
+		\item [\textit{Multiplayer game (with an external game server)}]
 
-		\item \textit{multiplayer game (with an external game server)}
+			Two human players connect to a game server, using their mobile
+			device. This server is responsible for match-making, as there are
+			usually more than only two people connected.
 
-			This version of the game is uses the design described in section
-			\ref{sec:architecture}. Two human players connect to a game server,
-			using their mobile device. This server is responsible for
-			match-making, as there are usually more than only two people
-			connected.
+			This multiplayer mode is based on the single player mode. The
+			opponent replaces the computer player. Instead of waiting for the
+			computer player, the game transparently exchanges information with
+			the server, and shows the results after receiving the opponent's
+			move.
 
-			In the current implementation (limited by MIDP 1.0), all
-			communication passes the server.
+			In the current implementation all communication passes the server.
 
-	\end{enumerate}
+	\end{description}
 
-	With these three game layouts the porting of an existing game to the
-	SimME-platform can be described.
-
-
-\section{Going online} \label{sec:going_online}
-
-	Starting from a local multiplayer game, it is easy to implement the
-	communication between two clients using an external server. The task is to
-	create an interface used by the server and the client to communicate with
-	each other.
-
-	\begin{figure}[h]
-	\begin{center}
-		\includegraphics{pics/interface-usage.png}
-		\caption{General game implementation: server manages a multiplayer game}
-		\label{fig:interface}
-	\end{center}
-	\end{figure}
-
-	How to build this interface? In a first step, the game's logic is
-	abstracted. This abstract representation is used for single player games and
-	multiplayer games on the client. The single player game extends the abstract
-	game with simple AI logic, while a multiplayer game implementation that uses
-	the intenet adds transparent network communication. The SimME server uses
-	the general implementation and creates a \emph{managed game} for each
-	multiplayer game. This is illustrated in figure \ref{fig:interface}.
-
-	Whenever a move at player 1's mobile phone is performed, the managed game is
-	updated accordingly. Player 2's mobile phone takes note of the updated game
-	information, and updates its "local" game. In fact the game is transparently
-	played at three locations, but the same implementation does not allow
-	illegal or duplicate moves to be performed.
 
 
 \section{Design and Architecture} \label{sec:architecture}
 
-	As already said in section \ref{sec:going_online}, the game server can be
-	seen as sole mediator between the game clients. The server has no access to
-	the game logic, though it uses the client classes to verify correct
-	gameplay, and to log the game as it progresses.
+	Optimal extensibility (simple development of future games) is ensured by
+	strictly separating game logic and communication.
 
-	With this approach, the game may be played between players on different
-	continents, using the internet as mediation. Figure \ref{fig:communication}
-	shows an example of two users, that use their mobile phones to connect to
-	the internet, in order to play a game of SimME.
+	The game server can be seen as a sole mediator between the game clients. It
+	has no direct access to the client's game logic, though it uses the client
+	classes to verify correct gameplay, and to log the game as it progresses.
 
-	\subsection{Advantages of the separation of server and game logic}
+	The game may be played between players on different continents. Figure
+	\ref{fig:communication} shows an example of two players using their mobile
+	phones to connect to the Internet, in order to play a game of SimME.
 
-		Because of the separation of the game logic from the server, the server
-		is nothing more than a link between the two players. All game internal
-		check-ups are done by the clients and so the server is not charged.
+	\subsection{Game Interface Reuse} \label{sec:interface}
 
-		Further on its guaranteed that no \textit{needless information} is
-		transferred. For example an illegal game turn is not transferred to the
-		server, because the validation of moves is done in the clients. So the
-		illegal turn will never arrive at the server or the second player.
+		The task is to create a simple interface, used by the server and the
+		client to communicate with each other.
+
+		How to build this interface? In a first step, the game's logic is
+		abstracted. This abstract representation is used for single player and
+		multiplayer games on the client. The single player game extends the
+		abstract game with simple AI logic, while a multiplayer game
+		implementation (\emph{network aware}) that uses the Internet adds
+		transparent network communication. The SimME server uses the abstract
+		representation of the game and creates a \emph{managed game} two
+		competing clients. This is illustrated in figure \ref{fig:interface}.
+
+		\begin{figure}[h]
+		\begin{center}
+			\includegraphics{pics/interface-usage.png}
+			\caption{General game implementation: server manages a multiplayer game}
+			\label{fig:interface}
+		\end{center}
+		\end{figure}
+
+		Whenever a move at player 1's mobile phone is performed, the managed
+		game is updated accordingly. Player 2's mobile phone receives updated
+		game information, and consequently updates its "local" game. Effectively
+		the game is transparently played at three locations. The game logic
+		implementation, used by all parties, does not allow illegal or duplicate
+		moves to be performed.
+
+		It is guaranteed that no redundant information is transferred. The
+		clients and the server "know" about the correct state of the game at
+		every point in time.
 
 	\subsection{Communication between client and server}
 
-		The communication between client and server uses two different types of
-		communication. On the one hand the client sends direct HTTP-requests, on
-		the other hand the server answers with XML content. Figure
-		\ref{fig:com_client_server} illustrates this.
+		There are two different implementations employed for the client server
+		communication. The client sends direct HTTP requests to the web
+		application running on the server. The server's answer is more
+		structured, and contains XML content. Figure \ref{fig:com_client_server}
+		illustrates this.
 
 		\begin{figure}[h]
 		\begin{center}
@@ -309,58 +240,50 @@
 		\end{figure}
 
 		The communication interface is backed by dynamic menus, created and
-		administrated by the game server. These dynamic menus can be reused by
-		other games because they are organised in interface-classes and
-		consequently are modular. The layout and content is defined in XML and
-		can be exchanged at run-time.
+		administrated by the game server. The menus are used to create a dynamic
+		user interface at the client side, comparable to very simple HTML or WML
+		pages.
+
+		These dynamic menus can be reused by other games because they are
+		organised in interface classes and consequently are modular. The layout
+		and content is defined in XML and can be exchanged at run-time.
 
 	\subsection{Internal administration on the server}
 
-		The internal data organisation on the server side is carried out by
-		means of a database, containing informations about the games currently
-		running and about registered players. Further on with this database also
-		the different games, implemented on the SimME-platform, will be
-		administrated.
+		The server's web application serializes the data in a relational
+		database. Currently running games are only represented in the server's
+		application memory. Information about registered players and completed
+		games are saved to the database. The same database will be used for
+		future games being implemented on the SimME-platform.
 
-		Thus information about currently registered players, running games, and
-		so on can be obtained via SQL statements.
-
-		One of our next goals is to implement, alternatively to improve, the
-		statistic part of the database. In this way statistics about gaming
-		behaviour, win-lose statistics and much more can be implemented.
+		Information about currently registered and online players, games in
+		progress etc., can be accessed with a web browser.
 
 
 \section{Computational Intelligence} \label{sec:ci}
 
-	At the current state of development there is no implementation of a CI
-	gaming unit available on the SimME-server. The same game (also known under
-	the name of HEXI) was realised as a java applet by Wolfgang Slany. In this
-	version of the game, playable on
-	\textit{http://www.dbai.tuwien.ac.at/proj/ramsey/} a learning computer
-	opponent is implemented. You can take a closer look on the implementation of
-	this CI gaming unit in \cite{slany_paper}
-
-	\noindent Online version of this paper:\\
-	http://www.dbai.tuwien.ac.at/ftp/papers/slany/dbai-tr-99-34.ps.gz
+	In SimME's predecessor, the java applet Hexi \cite{slany_paper} (also
+	available at \textit{http://www.dbai.tuwien.ac.at/proj/ramsey/}), the game
+	provides a learning computer opponent. Online version of this paper:
+	\textit{http://www.dbai.tuwien.ac.at/ftp/papers/slany/dbai-tr-99-34.ps.gz}
 
 	\subsection{CI Player for SimME}
 
-		The CI gaming unit mentioned above will be integrated in the single
-		player version of the game SimME. On the client as on the server side.
-		Through the implementation of the CI gaming unit on the SimME-server we
-		get the possibility to record statistics about gaming strategies,
-		because sole moves and therefor whole game matches could be logically
-		analysed.
+		Based on that implementation a CI gaming unit will be integrated in the
+		game SimME, on the client as well as on the server side. By implementing
+		the gaming unit at the SimME server, it is possible to record statistics
+		as basis for game strategies. Game matches could be logically analysed
+		to further improve these strategies.
 
-		Furtheron the learning CI gaming unit could even \textit{learn} from
-		matches played by two human players.
+		This is not limited to games against the computer, it even supports the
+		analysis of matches between two human players.
 
-		Based on these statistics an adjustment of gaming levels of the
-		CI-gaming-unit could be done, so to each player a CI player with the
-		same gaming level can be assigned.
+		The CI gaming unit's difficutly can be adjusted to the player's gaming
+		level, to provide just enough competition for new and experienced
+		players.
 
 
-\section{Look-out on future developments}
+\section{Outlook}
 
 	In this section some ideas are listed we will implement in the future.
 
@@ -383,24 +306,28 @@
 
 		\end{quotation}
 
-		The last sentence of this quotation describes our approach to useful
-		communication forms between players really good. The idea is to provide
-		some \emph{hardcoded} sentences which can be sent to the second player.
-		In the first place its a very time saving way to communicate in written
-		form - which is important because of the online costs of mobile devices.
-		Secondly, with fixed sentences, a database can be used for translating
-		these sentences to different languages at minimal costs.
+		The last sentence matches our approach to useful communication forms
+		between players. The idea is to provide a set of \emph{fixed} phrases
+		which can be sent to the opponent player during gameplay. This approach
+		is a time saving way to communicate with the opponent.
 
-		Of course it is also planned to implement a chat functionality to aid a
-		free form of communication.
+		Communication between players is important, in order to maintain a
+		stable user base. As a mobile phone does not provide very much space for
+		communication while showing the game board, several pre-defined phrases
+		will be very usefull for the players. The phrases can even be localized,
+		so that a French player sends "Bien jou\'e" and his English speaking
+		opponents receives "Good Game".
+
+		It is also planned to implement chat functionality for more flexible
+		communication.
 
 	\subsection{Integration of a CI gaming unit}
 
 		As described in section \ref{sec:ci} a CI gaming unit will be integrated
-		in the SimME server and optionally on client side. It is possible that
-		this unit uses too much space, which is a scarce resource on most mobile
-		phones. This unit supports a challenging single player version one the
-		one hand, and improves the value of game statistics on the other hand.
+		in the SimME server and optionally on client side. On a mobile device
+		this unit may exceed space restrictions. This unit supports a
+		challenging single player game mode one the one hand, and improves the
+		value of game statistics on the other hand.
 
 		The CI gaming unit implemented by Wolfgang Slany is a learning opponent,
 		so the recorded games will be used by the CI gaming unit to improve the
@@ -424,12 +351,6 @@
 
 		\end{itemize}
 
-
-\section{Conclusion}
-
-	The game itself is under development, and some additional features are being
-	implemented at the time of this writing. We hope that we could give a
-	thorough overview of SimME and the game's design.
 
 
 
