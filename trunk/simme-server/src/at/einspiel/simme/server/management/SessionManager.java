@@ -2,7 +2,6 @@ package at.einspiel.simme.server.management;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -197,17 +196,18 @@ public class SessionManager {
       }
    }
 
-   private class UserStateComparator implements Comparator {
-
-      /**
-       * Compares two ManagedUsers by comparing their state.
-       * @see java.util.Comparator#compare(Object, Object)
-       */
-      public int compare(Object o1, Object o2) {
-         ManagedUser mu1 = (ManagedUser) o1, mu2 = (ManagedUser) o2;
-         return new Integer(mu1.getState()).compareTo(new Integer(mu2.getState()));
-      }
-   }
+//   // currently not needed
+//   private class UserStateComparator implements Comparator {
+//
+//      /**
+//       * Compares two ManagedUsers by comparing their state.
+//       * @see java.util.Comparator#compare(Object, Object)
+//       */
+//      public int compare(Object o1, Object o2) {
+//         ManagedUser mu1 = (ManagedUser) o1, mu2 = (ManagedUser) o2;
+//         return new Integer(mu1.getState()).compareTo(new Integer(mu2.getState()));
+//      }
+//   }
 
    /**
     * Returns the maximum time in seconds that idle users are allowed to not

@@ -22,6 +22,15 @@ public class ManagedUser extends User {
    private long lastStatusUpdate;
 
    /**
+    * Creates a new <code>ManagedUser</code> with the given properties.
+    * @param u the user
+    */
+   public ManagedUser(User u) {
+      super(u.getNick(), u.getPassword(), u.getWinmsg(), u.getLang(), u.getInfo(), u.getLocation(), u.getClientmodel());
+      init();
+   }
+
+   /**
     * Creates a new <code>ManagedUser</code> by querying the database with
     * the nickname.
     * 
@@ -32,6 +41,10 @@ public class ManagedUser extends User {
     */
    public ManagedUser(String nick) throws NoSuchUserException {
       super(nick);
+      init();
+   }
+
+   private void init() {
       state = STATE_IDLE;
       lastStatusUpdate = System.currentTimeMillis();
    }

@@ -29,19 +29,21 @@ public class User implements Comparable {
    /**
     * Creates a new <code>User</code> with the given properties.
     * @param nick Nickname of user.
-    * @param password Password of user.
+    * @param pwd Password of user.
     * @param winmsg Win message, written after game ending in success for user.
     * @param lang Indicating user language.
     * @param info Additional information on user.
     * @param location Additional information on user location.
+    * @param client the model of the users's client.
     */
-   public User(String nick, String password, String winmsg, byte lang, String info, String location) {
+   public User(String nick, String pwd, String winmsg, byte lang, String info, String location, String client) {
       setNick(nick);
-      setPassword(password);
+      setPassword(pwd);
       setWinmsg(winmsg);
       setLang(lang);
       setInfo(info);
       setLocation(location);
+      setClientmodel(client);
    }
 
    /**
@@ -51,7 +53,7 @@ public class User implements Comparable {
     * @param password Password of user.
     */
    public User(String nick, String password) {
-      this(nick, password, "", LANG_DE, "", LOCATION_DEFAULT);
+      this(nick, password, null, LANG_DE, null, LOCATION_DEFAULT, null);
    }
 
    /**
