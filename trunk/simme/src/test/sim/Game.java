@@ -61,9 +61,9 @@ public class Game {
       
       
       // set to some default values - has to be changed.
-      p1Name = "First Player";
+      p1Name = "Player 1";
 		p1Info = "AT";
-      p2Name = "Second One";
+      p2Name = "Player 2";
 		p2Info = "DE";      
    }
 
