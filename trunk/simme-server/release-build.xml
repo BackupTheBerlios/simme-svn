@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  [Simme-Server]
+    Ant build file: build.xml
+             $Date: 2004/09/15 23:30:48 $
+         $Revision: 1.1 $
+
+	Used in order to facilitate creation of releases and changelogs.
+	
+ -->
+<project name="SimME Server Rel" basedir="." default="packages">
+	<description>Create releases for SimME Server</description>
+
+	<property file="ant-build.properties" />
+	<property file="ant-release.properties" />
+
+	<target name="-init">
+		<tstamp />
+		<mkdir dir="${rel.dir}" />
+		<mkdir dir="${rel.dir.backup}" />
+		<!-- create release documentation -->
+		<xslt in="changes.xml" out="changes.html" style="changes-html.xsl" />
+		<xslt in="changes.xml" out="changes.txt" style="changes-txt.xsl" />
+	</target>
+
+	<target name="sources"
+	        depends="-init"
+	        description="Creates a source distribution."
+	>
+		<!-- create tar gzip bzip2 and zip files -->
+		<property name="rel.filename.src"
+		          value="${rel.backupfile}-src-${DSTAMP}"
+		/>
+
+		<tar destfile="${rel.filename.src}.tar">
+			<tarfileset dir="${src}" prefix="/src" />
+			<tarfileset dir="${src.test}" prefix="/testsrc" />
+			<tarfileset dir="${doc}" prefix="/doc" />
+			<tarfileset dir="${module}" prefix="/${module}" />
+			<tarfileset dir="${lib-ant}" prefix="/${lib-ant}" />
+			<tarfileset dir=".">
+				<include name="*ant*" />
+				<include name="*.properties" />
+				<include name="build.xml" />
+				<include name="javadoc.xml" />
+				<include name="release.xml" />
+				<include name="README*" />
+				<includesfile name="releasefiles.txt" />
+			</tarfileset>
+		</tar>
+		<gzip src="${rel.filename.src}.tar"
+		      destfile="${rel.dir}/${rel.filename}-src-${rel.version}.tar.gz"
+		/>
+	</target>
+
+
+	<target name="binaries"
+	        depends="-init"
+	        description="Creates the binary distribution."
+	>
+		<property name="rel.filename.bin"
+		          value="${rel.backupfile}-bin-${DSTAMP}"
+		/>
+
+		<tar destfile="${rel.filename.bin}.tar">
+			<tarfileset file="${deploy.war}" />
+			<tarfileset dir=".">
+				<includesfile name="releasefiles.txt" />
+			</tarfileset>
+		</tar>
+
+		<gzip src="${rel.filename.bin}.tar"
+		      destfile="${rel.dir}/${rel.filename}-bin-${rel.version}.tar.gz"
+		/>
+	</target>
+
+
+	<!-- ================================= 
+          target: packages              
+         ================================= -->
+	<target name="packages"
+	        depends="sources,binaries"
+	        description="Creates all necessary packages"
+	/>
+
+
+</project>
