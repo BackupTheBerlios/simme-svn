@@ -1,6 +1,6 @@
 package at.einspiel.simme.server.management;
 
-import at.einspiel.simme.server.messaging.Message;
+import at.einspiel.simme.client.net.Message;
 import at.einspiel.simme.server.messaging.SimpleClientMessage;
 
 /**

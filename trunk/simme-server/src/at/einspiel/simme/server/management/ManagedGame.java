@@ -1,38 +1,10 @@
-/************************************************************************
-** PROJECT:   Simme-Server
-** $Workfile: ManagedGame.java $
-** $Revision: 1.2 $
-** LANGUAGE:  Java, JDK version 1.4
-**
-** COPYRIGHT: Frequentis Nachrichtentechnik Ges.m.b.H.
-**            Spittelbreitengasse 34
-**            A-1120 VIENNA
-**            AUSTRIA
-**            tel +43 1 811 50-0
-**
-** The copyright to the computer program(s) herein
-** is the property of Frequentis Nachrichtentechnik
-** Ges.m.b.H., Austria.
-** The program(s) shall not be used and/or copied without
-** the written permission of Frequentis Nachrichtentechnik.
-**
-** $Log: ManagedGame.java,v $
-** Revision 1.2  2003/09/25 21:50:45  kariem
-** updated
-**
-** Revision 1.1  2003/09/19 14:35:17  kariem
-** user management
-**
-**
-************************************************************************/
-
 package at.einspiel.simme.server.management;
 
 import at.einspiel.simme.server.base.ServerGame;
 import at.einspiel.simme.server.base.User;
 
 /**
- * Represents a game managed by the server.
+ * Represents a game that is managed by the server.
  * 
  * @author kariem
  */
@@ -43,9 +15,9 @@ public class ManagedGame extends ServerGame {
      * 
      * @param p1 the first user.
      * @param p2 the second user.
-     * @throws Exception if both users are the same.
+     * @throws RuntimeException if both users are the same.
      */
-    public ManagedGame(ManagedUser p1, ManagedUser p2) throws Exception {
+    public ManagedGame(ManagedUser p1, ManagedUser p2) throws RuntimeException {
         super(p1, p2);
     }
 

@@ -1,8 +1,9 @@
 package at.einspiel.simme.server.base;
 
-import at.einspiel.simme.client.Game;
-
 import java.util.Date;
+
+import at.einspiel.simme.client.Game;
+import at.einspiel.simme.client.Move;
 
 /**
  * Represents a game that is played between two users.
@@ -40,50 +41,56 @@ public class ServerGame {
      * @param p1 first player
      * @param p2 second player
      *
-     * @throws Exception if rules are broken.
+     * @throws RuntimeException if rules are broken.
      */
-    public ServerGame(User p1, User p2) throws Exception {
+    public ServerGame(User p1, User p2) throws RuntimeException {
         String nick1 = p1.getNick();
         String nick2 = p2.getNick();
         if (nick1.equals(nick2)) {
-            throw new Exception("Users have same nick names.");
+            throw new RuntimeException("Users have same nick names.");
         }
 
         this.player1 = p1;
         this.player2 = p2;
         game = new Game();
         setDate(new Date());
-        
-        // set id to something meaningful
+
+        // set id to something unique
         id = date + "#~#" + nick1 + "#~#" + nick2;
-        
+
         // initialize game status
         running = false;
         gameover = false;
     }
 
-    /**
-     * Starts the game
-     */
+    /** initializes the game */
+    public void initializeGame() {
+        // TODO write initialization code
+    }
+
+    /** Starts the game */
     public void startGame() {
         running = true;
         game.start();
+        if (stopwatch == null) {
+            stopwatch = new StopWatch();
+        }
         stopwatch.start();
     }
 
-    /**
-     * Stops the game
-     */
+    /** Stops the game */
     public void stopGame() {
-        stopwatch.stop();
-        running = false;
-        gameover = true;
-        moves = game.getMoveNr();
+        if (!gameover) {
+            stopwatch.stop();
+            running = false;
+            gameover = true;
+            moves = game.getMoveNr();
+        }
     }
 
     /** Cancels this game. */
     public void cancelGame() {
-        // TODO implement this
+        // TODO implement cancel game on server
     }
 
     /**
@@ -92,11 +99,7 @@ public class ServerGame {
      * @return The length of this game.
      */
     public long getLength() {
-        if (gameover) {
-            return stopwatch.getDuration();
-        }
-
-        return 0;
+        return stopwatch.getTotalDuration();
     }
 
     /**
@@ -122,7 +125,7 @@ public class ServerGame {
      * 
      * @return <code>true</code> if the game is running.
      */
-    protected boolean isRunning() {
+    public boolean isRunning() {
         return running;
     }
 
@@ -134,34 +137,47 @@ public class ServerGame {
         return id;
     }
 
-    /**
-     * Class that is used to stop the length of this game
-     */
+    /** Class that is used to stop the length of this game */
     class StopWatch {
         private long startTime;
-        private long accumulatedTime;
-        private boolean running;
+        private long lastPause;
+        private long lastDuration;
+        private long totalDuration;
+        private boolean started;
 
-        public void start() {
+        void start() {
             startTime = System.currentTimeMillis();
-            accumulatedTime = 0;
-            running = true;
+            lastPause = startTime;
+            totalDuration = 0;
+            started = true;
         }
 
-        public void stop() {
-            accumulatedTime = System.currentTimeMillis() - startTime;
-            running = false;
+        long pause() {
+            pause(System.currentTimeMillis());
+            return lastDuration;
         }
 
-        public long getDuration() {
-            if (running) {
-                return 0;
+        void stop() {
+            long time = System.currentTimeMillis();
+            pause(time);
+            totalDuration = time - startTime;
+            started = false;
+        }
+
+        long getTotalDuration() {
+            if (started) {
+                return System.currentTimeMillis() - startTime;
             }
-
-            return accumulatedTime;
+            return totalDuration;
         }
+
+        private void pause(long time) {
+            lastDuration = time - lastPause;
+            lastPause = time;
+        }
+
     }
-    
+
     //
     // game method accessors
     //
@@ -169,11 +185,21 @@ public class ServerGame {
     /**
      * Returns the move number.
      * @return the move number.
-     */    
+     */
     public byte getMoveNr() {
         return game.getMoveNr();
     }
-    
+
+    /**
+     * Performs the given move.
+     * 
+     * @param m the move to perform.
+     * @return the move's result.
+     */
+    public Result makeMove(Move m) {
+        return selectEdge(m.getEdge()) ? Result.POSITIVE : Result.NEGATIVE;
+    }
+
     /**
      * Selects an edge in the game on the server.
      * 
@@ -181,8 +207,27 @@ public class ServerGame {
      * @return whether the selection has succeeded.
      */
     public boolean selectEdge(byte edge) {
-        return game.selectEdge(edge);
-        // TODO see how much time has passed and add to time1/time2
+        if (isRunning()) {
+            byte playersTurn = game.getPlayersTurn();
+            if (playersTurn == Game.NEUTRAL) {
+                return false; // do nothing
+            }
+
+            // make move
+            boolean edgeSelection = game.selectEdge(edge);
+            if (edgeSelection) {
+                long duration = stopwatch.pause();
+
+                // add duration to move time of player
+                if (playersTurn == Game.PLAYER1) {
+                    time1 += duration;
+                } else {
+                    time2 += duration;
+                }
+            }
+
+            return edgeSelection;
+        }
+        return false;
     }
-   
 }

@@ -1,5 +1,6 @@
 package at.einspiel.simme.server.messaging;
 
+import at.einspiel.simme.client.net.Message;
 import at.einspiel.simme.client.net.SendableUI;
 
 /**
@@ -33,8 +34,18 @@ public class SimpleClientMessage extends SendableUI implements Message {
         this("Information", msg);
     }
 
-    /** @see at.einspiel.simme.server.messaging.Message#getMessage() */
+    /** @see Message#getMessage() */
     public String getMessage() {
         return getXmlString();
+    }
+    
+    /** @see Message#getId() */
+    public byte getId() {
+        return 0;
+    }
+    
+    /** @see Message#getInfo() */
+    public String getInfo() {
+        return getText();
     }
 }

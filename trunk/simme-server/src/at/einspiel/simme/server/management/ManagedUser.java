@@ -1,6 +1,9 @@
 package at.einspiel.simme.server.management;
 
+import at.einspiel.simme.client.Move;
 import at.einspiel.simme.client.net.LoginResult;
+import at.einspiel.simme.client.net.Message;
+import at.einspiel.simme.server.base.Result;
 import at.einspiel.simme.server.base.User;
 import at.einspiel.simme.server.base.UserException;
 
@@ -16,6 +19,8 @@ public class ManagedUser extends User {
 
     private UserState state;
     private long lastStatusUpdate;
+    private ManagedGame game;
+    private Message clientMessage;
     
     /**
      * Simple default constructor.
@@ -78,13 +83,6 @@ public class ManagedUser extends User {
         lastStatusUpdate = System.currentTimeMillis();
     }
 
-    /** Starts a game against the first available opponent. */
-    public void startGame() {
-        // first set the user to waiting 
-        setStateCategory(UserState.STATE_WAITING);
-        // ... state manager will initialize the game, if possible
-    }
-    
     /**
      * Starts the login procedure. The result will be returned.
      * 
@@ -95,22 +93,21 @@ public class ManagedUser extends User {
         return SessionManager.getInstance().addUser(this, version);
     }
     
-    /**
-     * Sets the state of this user.
-     * 
-     * @param state The new state (see {@link UserState#setState(int)}).
-     */
-    void setStateCategory(int state) {
-        this.state.setStateCategory(state);
+    /** Starts a game against the first available opponent. */
+    public void startGame() {
+        // first set the user to waiting 
+        this.state.setStateCategory(UserState.STATE_WAITING);
+        // ... user manager will initialize the game, if possible
+        
     }
-
+    
     /**
      * Returns the current state of the user.
      * 
      * @return The current state (see {@link UserState#getState()}).
      */
-    int getStateCategory() {
-        return state.getStateCategory();
+    UserState getUserState() {
+        return state;
     }
 
     /**
@@ -131,19 +128,32 @@ public class ManagedUser extends User {
     }
 
     /**
-     * Shows the state of the user in a String representation.
-     * 
-     * @return User's state as String.
-     */
-    String getStateAsString() {
-        return state.getStateAsString();
-    }
-
-    /**
      * Returns the users state
      * @return the user's state
      */
     UserState getState() {
         return state;
+    }
+    
+    /**
+     * Sets the game for this user.
+     * @param game a reference to the game.
+     */
+    public void setGame(ManagedGame game) {
+        this.game = game;
+    }
+    
+    /**
+     * Selects an edge on the currently running game.
+     * @param edge the edge to select.
+     * @return the result of calling play.
+     */
+    public Result play(Move m) {
+       if (game != null) {
+          if (game.isRunning()) {
+             return game.makeMove(m);
+          }
+       }
+       return null;
     }
 }
