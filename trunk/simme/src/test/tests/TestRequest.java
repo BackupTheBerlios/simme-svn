@@ -10,6 +10,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
+import java.util.Hashtable;
+
 import javax.microedition.io.HttpConnection;
 
 import test.sim.net.Request;
@@ -22,15 +24,16 @@ import test.sim.net.Request;
  */
 public class TestRequest extends Request {
 
+   /** @see Request#Request(Hashtable) */
+   public TestRequest(Hashtable parameters) {
+      super(parameters);
+   }
+
    /** @see Request#Request() */
    public TestRequest() {
       super();
    }
 
-   /** @see Request#Request(String) */
-   public TestRequest(String text) {
-      super(text);
-   }
 
    /**
     * Overriden for testing purposes
